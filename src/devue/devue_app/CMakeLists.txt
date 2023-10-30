@@ -1,0 +1,19 @@
+﻿CMAKE_MINIMUM_REQUIRED (VERSION 3.8)
+
+ADD_EXECUTABLE(devue 
+	"src/devue_app.cpp"
+)
+
+TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/lib/glfw/include")
+
+TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/include/devue/devue_core")
+TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/include/devue/devue_gui")
+TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/include/devue/devue_common")
+TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/include/devue_shared")
+
+TARGET_LINK_LIBRARIES(devue devue_core)
+TARGET_LINK_LIBRARIES(devue devue_gui)
+
+TARGET_LINK_LIBRARIES(devue glad)
+TARGET_LINK_LIBRARIES(devue glfw)
+TARGET_LINK_LIBRARIES(devue imgui)
