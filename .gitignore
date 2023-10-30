@@ -9,3 +9,49 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+!lib/**/*.lib
+!lib/**/*.a
+!shared/**/*.lib
+!shared/**/*.a
+
+libdvsku/**/build/
+build/
+install/
+bin/
+
+# Executables
+*.exe
+*.out
+*.app
+
+.vs/
+out/
