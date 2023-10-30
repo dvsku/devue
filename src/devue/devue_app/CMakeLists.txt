@@ -2,17 +2,19 @@
 
 ADD_EXECUTABLE(devue 
 	"src/devue_app.cpp"
+	"src/dv_window.cpp"
 )
 
+TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/lib/glad/include")
+TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/lib/khr/include")
 TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/lib/glfw/include")
+TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/lib/imgui/include")
 
+TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/include/devue/devue_app")
 TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/include/devue/devue_core")
-TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/include/devue/devue_gui")
-TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/include/devue/devue_common")
 TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/include/devue_shared")
 
 TARGET_LINK_LIBRARIES(devue devue_core)
-TARGET_LINK_LIBRARIES(devue devue_gui)
 
 TARGET_LINK_LIBRARIES(devue glad)
 TARGET_LINK_LIBRARIES(devue glfw)
