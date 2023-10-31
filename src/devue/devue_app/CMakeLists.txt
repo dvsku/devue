@@ -3,6 +3,13 @@
 ADD_EXECUTABLE(devue 
 	"src/devue_app.cpp"
 	"src/gui/dv_gui.cpp"
+	"src/gui/components/dv_comp_scene.cpp"
+	"src/gui/components/dv_comp_assets.cpp"
+	"src/gui/components/dv_comp_hierarchy.cpp"
+	"src/gui/components/dv_comp_properties.cpp"
+	"src/gui/components/dv_comp_console.cpp"
+	"src/gui/components/dv_comp_dockspace.cpp"
+	"src/gui/components/dv_components.cpp"
 )
 
 TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/lib/glad/include")
