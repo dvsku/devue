@@ -1,6 +1,10 @@
 #include "gui/components/dv_comp_scene.hpp"
+#include "gui/components/dv_components.hpp"
 
 using namespace devue;
+
+dv_comp_scene::dv_comp_scene(dv_systems* systems, dv_components* components) 
+	: dv_comp(systems, components) {}
 
 void dv_comp_scene::render() {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoCollapse

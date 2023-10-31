@@ -3,8 +3,8 @@
 
 using namespace devue;
 
-dv_comp_dockspace::dv_comp_dockspace(dv_components* components) 
-	: m_components(components) {}
+dv_comp_dockspace::dv_comp_dockspace(dv_systems* systems, dv_components* components) 
+	: dv_comp(systems, components) {}
 
 void dv_comp_dockspace::render() {
 	ImGuiViewport* viewport = ImGui::GetMainViewport();

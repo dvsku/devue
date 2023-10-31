@@ -1,6 +1,10 @@
 #include "gui/components/dv_comp_hierarchy.hpp"
+#include "gui/components/dv_components.hpp"
 
 using namespace devue;
+
+dv_comp_hierarchy::dv_comp_hierarchy(dv_systems* systems, dv_components* components) 
+	: dv_comp(systems, components) {}
 
 void dv_comp_hierarchy::render() {
 	ImGui::PushStyleVar(ImGuiStyleVar_DisabledAlpha, 0.8f);
