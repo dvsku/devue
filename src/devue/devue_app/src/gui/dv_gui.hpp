@@ -1,5 +1,6 @@
 #include "graphics/dv_opengl_window.hpp"
 #include "gui/components/dv_components.hpp"
+#include "systems/dv_systems.hpp"
 
 namespace devue {
 	class dv_gui : public devue::core::dv_opengl_window {
@@ -22,6 +23,7 @@ namespace devue {
 		void on_mouse_move(double dx, double dy)				override final;
 
 	private:
+		dv_systems m_sytems;
 		dv_components m_components;
 	};
 }

@@ -32,6 +32,10 @@ dv_gui::~dv_gui() {}
 
 void dv_gui::prepare() {
 
+	dv_model model;
+	model.name = "test";
+
+	m_sytems.model.models[1U] = std::move(model);
 
 	glfwMaximizeWindow(m_native);
 }
