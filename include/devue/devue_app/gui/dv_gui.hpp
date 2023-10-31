@@ -1,10 +1,10 @@
 #include "graphics/dv_opengl_window.hpp"
 
 namespace devue {
-	class dv_window : public devue::core::dv_opengl_window {
+	class dv_gui : public devue::core::dv_opengl_window {
 	public:
-		dv_window(uint32_t width, uint32_t height, const std::string& title);
-		~dv_window();
+		dv_gui(uint32_t width, uint32_t height, const std::string& title);
+		~dv_gui();
 
 	private:
 		void prepare()				override final;

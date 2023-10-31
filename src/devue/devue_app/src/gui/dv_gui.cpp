@@ -1,4 +1,4 @@
-#include "dv_window.hpp"
+#include "gui/dv_gui.hpp"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "imgui.h"
@@ -22,53 +22,53 @@ static std::string _get_imgui_ver() {
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC
 
-dv_window::dv_window(uint32_t width, uint32_t height, const std::string& title)
+dv_gui::dv_gui(uint32_t width, uint32_t height, const std::string& title)
 	: dv_opengl_window(width, height, title) {}
 
-dv_window::~dv_window() {}
+dv_gui::~dv_gui() {}
 
 ///////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 
-void dv_window::prepare() {
+void dv_gui::prepare() {
 
 
 	glfwMaximizeWindow(m_native);
 }
 
-void dv_window::on_before_update() {
+void dv_gui::on_before_update() {
 
 }
 
-void dv_window::on_update() {
+void dv_gui::on_update() {
 
 }
 
-void dv_window::on_after_update() {}
+void dv_gui::on_after_update() {}
 
-void dv_window::on_gui_before_update() {
+void dv_gui::on_gui_before_update() {
 	glClearColor(0.185f, 0.185f, 0.185f, 1.00f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void dv_window::on_gui_update() {
+void dv_gui::on_gui_update() {
 	ImGui::ShowDemoWindow();
 }
 
-void dv_window::on_gui_after_update() {}
+void dv_gui::on_gui_after_update() {}
 
-void dv_window::on_resize(int width, int height) {
-
-}
-
-void dv_window::on_scroll(double dx, double dy) {
+void dv_gui::on_resize(int width, int height) {
 
 }
 
-void dv_window::on_mouse_button(int btn, int action, int modifier) {
+void dv_gui::on_scroll(double dx, double dy) {
 
 }
 
-void dv_window::on_mouse_move(double dx, double dy) {
+void dv_gui::on_mouse_button(int btn, int action, int modifier) {
+
+}
+
+void dv_gui::on_mouse_move(double dx, double dy) {
 
 }

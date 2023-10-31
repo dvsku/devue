@@ -2,7 +2,7 @@
 
 ADD_EXECUTABLE(devue 
 	"src/devue_app.cpp"
-	"src/dv_window.cpp"
+	"src/gui/dv_gui.cpp"
 )
 
 TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/lib/glad/include")
