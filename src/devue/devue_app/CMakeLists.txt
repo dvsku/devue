@@ -10,12 +10,14 @@ ADD_EXECUTABLE(devue
 	"src/gui/components/dv_comp_console.cpp"
 	"src/gui/components/dv_comp_dockspace.cpp"
 	"src/gui/components/dv_components.cpp"
+	"src/systems/dv_systems.cpp"
 )
 
 TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/lib/glad/include")
 TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/lib/khr/include")
 TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/lib/glfw/include")
 TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/lib/imgui/include")
+TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/lib/glm/include")
 
 TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/include/devue/devue_app")
 TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/include/devue/devue_core")
