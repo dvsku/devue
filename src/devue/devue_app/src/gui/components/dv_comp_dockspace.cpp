@@ -18,16 +18,27 @@ void dv_comp_dockspace::render() {
 		ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->WorkSize);
 
 		ImGuiID left_sidebar_dock = 0;
+		ImGuiID left_sidebar_dock_down = 0;
 		ImGuiID right_sidebar_dock = 0;
 		ImGuiID scene_dock = 0;
+		ImGuiID scene_dock_down = 0;
 
-		left_sidebar_dock = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.15f, nullptr, &scene_dock);
-		right_sidebar_dock = ImGui::DockBuilderSplitNode(scene_dock, ImGuiDir_Right, 0.1765f, nullptr, &scene_dock);
+		left_sidebar_dock = 
+			ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.15f, nullptr, &scene_dock);
+		
+		left_sidebar_dock_down = 
+			ImGui::DockBuilderSplitNode(left_sidebar_dock, ImGuiDir_Down, 0.50f, nullptr, &left_sidebar_dock);
 
-		ImGui::DockBuilderDockWindow("Assets##Window", left_sidebar_dock);
+		right_sidebar_dock = 
+			ImGui::DockBuilderSplitNode(scene_dock, ImGuiDir_Right, 0.1765f, nullptr, &scene_dock);
+
+		scene_dock_down = 
+			ImGui::DockBuilderSplitNode(scene_dock, ImGuiDir_Down, 0.20f, nullptr, &scene_dock);
+
+		ImGui::DockBuilderDockWindow("Assets##Window", left_sidebar_dock_down);
 		ImGui::DockBuilderDockWindow("Hierarchy##Window", left_sidebar_dock);
 		ImGui::DockBuilderDockWindow("Properties##Window", right_sidebar_dock);
-		ImGui::DockBuilderDockWindow("Console##Window", right_sidebar_dock);
+		ImGui::DockBuilderDockWindow("Console##Window", scene_dock_down);
 		ImGui::DockBuilderDockWindow("Scene##Window", scene_dock);
 
 		node = ImGui::DockBuilderGetNode(dockspace_id);
