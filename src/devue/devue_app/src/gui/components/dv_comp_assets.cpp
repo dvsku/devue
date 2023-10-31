@@ -1,6 +1,8 @@
 #include "gui/components/dv_comp_assets.hpp"
 
 using namespace devue;
+dv_comp_assets::dv_comp_assets(dv_systems* systems)
+	: m_systems(systems) {}
 
 void dv_comp_assets::render() {
 	ImGui::Begin("Assets##Window");

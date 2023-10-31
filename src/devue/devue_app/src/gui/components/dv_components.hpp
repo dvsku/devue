@@ -6,6 +6,7 @@
 #include "gui/components/dv_comp_hierarchy.hpp"
 #include "gui/components/dv_comp_properties.hpp"
 #include "gui/components/dv_comp_scene.hpp"
+#include "systems/dv_systems.hpp"
 
 namespace devue {
 	struct dv_components {
@@ -16,6 +17,7 @@ namespace devue {
 		dv_comp_properties	properties;
 		dv_comp_scene		scene;
 
-		dv_components();
+		dv_components() = delete;
+		dv_components(dv_systems* systems);
 	};
 }

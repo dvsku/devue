@@ -2,5 +2,5 @@
 
 using namespace devue;
 
-dv_components::dv_components() 
-	: dockspace(this) {}
+dv_components::dv_components(dv_systems* systems)
+	: dockspace(this), assets(systems) {}
