@@ -52,7 +52,14 @@ void dv_gui::on_gui_before_update() {
 }
 
 void dv_gui::on_gui_update() {
-	ImGui::ShowDemoWindow();
+	m_components.dockspace.render();
+	m_components.hierarchy.render();
+	m_components.assets.render();
+	m_components.scene.render();
+	m_components.properties.render();
+	m_components.console.render();
+
+	//ImGui::ShowDemoWindow();
 }
 
 void dv_gui::on_gui_after_update() {}

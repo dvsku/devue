@@ -2,4 +2,7 @@
 
 using namespace devue;
 
-void dv_comp_properties::render() {}
+void dv_comp_properties::render() {
+	ImGui::Begin("Properties##Window");
+	ImGui::End();
+}

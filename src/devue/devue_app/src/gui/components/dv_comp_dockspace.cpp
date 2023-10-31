@@ -1,4 +1,5 @@
 #include "gui/components/dv_comp_dockspace.hpp"
+#include "gui/components/dv_components.hpp"
 
 using namespace devue;
 
@@ -62,6 +63,8 @@ void dv_comp_dockspace::render() {
 	ImGui::DockSpace(dockspace_id, dockspace_size);
 
 	if (ImGui::BeginMenuBar()) {
+		ImGui::PushID("FileMenu");
+
 		if (ImGui::BeginMenu("File")) {
 			if (ImGui::MenuItem("Import##MenuItem")) {
 				/*std::string path = "";
@@ -73,6 +76,20 @@ void dv_comp_dockspace::render() {
 
 			ImGui::EndMenu();
 		}
+
+		ImGui::PopID();
+
+		ImGui::PushID("ViewMenu");
+
+		if (ImGui::BeginMenu("View")) {
+			if (ImGui::MenuItem("Console##MenuItem", "", &m_components->console.visible)) {
+
+			}
+
+			ImGui::EndMenu();
+		}
+
+		ImGui::PopID();
 
 		ImGui::EndMenuBar();
 	}
