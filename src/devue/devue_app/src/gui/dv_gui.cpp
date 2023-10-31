@@ -23,7 +23,7 @@ static std::string _get_imgui_ver() {
 // PUBLIC
 
 dv_gui::dv_gui(uint32_t width, uint32_t height, const std::string& title)
-	: dv_opengl_window(width, height, title) {}
+	: dv_opengl_window(width, height, title), m_components(&m_sytems) {}
 
 dv_gui::~dv_gui() {}
 
