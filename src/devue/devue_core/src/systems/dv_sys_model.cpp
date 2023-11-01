@@ -11,6 +11,14 @@ static dv_model _import_obj(const std::filesystem::path& path);
 static void set_min_y(dv_model& model);
 
 void dv_sys_model::prepare() {
+	// TEMP
+	m_importers.push_back({
+		{ 
+			{"Wavefront object", ".obj"}
+		},
+		_import_obj
+	});
+
 	create_filters();
 }
 
