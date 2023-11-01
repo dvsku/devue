@@ -12,6 +12,7 @@ ADD_EXECUTABLE(devue
 	"src/gui/components/dv_comp_dockspace.cpp"
 	"src/gui/components/dv_components.cpp"
 	"src/systems/dv_systems.cpp"
+	"src/utilities/dv_util_dialog.cpp"
 )
 
 TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/lib/glad/include")
@@ -26,7 +27,9 @@ TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/include/devue_shar
 TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${CMAKE_SOURCE_DIR}/src/devue/devue_app/src")
 
 TARGET_LINK_LIBRARIES(devue devue_core)
-
 TARGET_LINK_LIBRARIES(devue glad)
 TARGET_LINK_LIBRARIES(devue glfw)
 TARGET_LINK_LIBRARIES(devue imgui)
+TARGET_LINK_LIBRARIES(devue comctl32.lib)
+TARGET_LINK_LIBRARIES(devue propsys.lib)
+TARGET_LINK_LIBRARIES(devue shlwapi.lib)
