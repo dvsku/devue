@@ -78,11 +78,7 @@ void dv_comp_dockspace::render() {
 
 		if (ImGui::BeginMenu("File")) {
 			if (ImGui::MenuItem("Import##MenuItem")) {
-				/*std::string path = "";
-				ds_util_dialog::open_file_dialog(path);
-
-				if (!path.empty())
-					m_model_system.import(path);*/
+				m_components->assets.show_import_modal();
 			}
 
 			ImGui::EndMenu();
