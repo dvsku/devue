@@ -1,6 +1,13 @@
-﻿CMAKE_MINIMUM_REQUIRED (VERSION 3.8)
+﻿CMAKE_MINIMUM_REQUIRED (VERSION 3.12)
+
+# INCLUDE ALL HEADER FILES SO VS
+# CAN STOP FREAKING OUT
+FILE(GLOB_RECURSE DEVUE_CORE_HEADERS CONFIGURE_DEPENDS 
+	"${CMAKE_SOURCE_DIR}/include/devue/devue_core/*.hpp"
+)
 
 ADD_LIBRARY(devue_core STATIC
+	${DEVUE_CORE_HEADERS}
 	"src/graphics/dv_opengl_window.cpp"
 	"src/systems/dv_sys_model.cpp"
 	"src/systems/dv_sys_material.cpp"
