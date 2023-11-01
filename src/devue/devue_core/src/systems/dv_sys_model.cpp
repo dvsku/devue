@@ -56,6 +56,8 @@ void dv_sys_model::create_filters() {
 			m_import_filters.emplace_back(dv_file_filter(file_type));
 
 	std::sort(m_import_filters.begin(), m_import_filters.end(), compare_file_filters);
+
+	m_import_filters.push_back({ L"All files (*.*)\0", L"*.*\0" });
 }
 
 dv_model _import_obj(const std::filesystem::path& path) {
