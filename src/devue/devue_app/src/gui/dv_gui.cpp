@@ -32,6 +32,8 @@ dv_gui::~dv_gui() {}
 
 void dv_gui::prepare() {
 
+	m_sytems.model.prepare();
+
 	dv_model model;
 	model.name = "test";
 

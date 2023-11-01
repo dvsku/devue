@@ -1,5 +1,6 @@
 #include "systems/dv_sys_model.hpp"
 #include "obj_loader/include/obj_loader.h"
+#include "utilities/dv_util_string.hpp"
 
 #include <algorithm>
 
@@ -9,19 +10,8 @@ static dv_model _import_obj(const std::filesystem::path& path);
 
 static void set_min_y(dv_model& model);
 
-dv_sys_model::dv_sys_model() {
-	attach_importer({
-		{devue::core::dv_util_uuid::create(".obj")}, 
-		_import_obj
-	});
-}
-
-bool dv_sys_model::attach_importer(dv_model_importer&& importer) {
-	if (!importer.types.size()) return false;
-	if (!importer.fn)			return false;
-
-	m_importers.emplace_back(std::move(importer));
-	return true;
+void dv_sys_model::prepare() {
+	create_filters();
 }
 
 dv_model* dv_sys_model::get(const devue::uuid& uuid) {
@@ -29,11 +19,15 @@ dv_model* dv_sys_model::get(const devue::uuid& uuid) {
 	return &models[uuid];
 }
 
+const std::vector<dv_file_filter>& dv_sys_model::get_import_filters() {
+	return m_import_filters;
+}
+
 dv_model& dv_sys_model::import(const FILE_PATH& path) {
-	devue::uuid ex_uuid = devue::core::dv_util_uuid::create(path.extension().string());
+	std::string ext = path.extension().string();
 	
-	auto cmp_fn = [&](const devue::uuid& type) {
-		return type == ex_uuid;
+	auto cmp_fn = [&](const dv_file_type& type) {
+		return dv_util_string::contains(type.extensions, ext);
 	};
 
 	for (auto& importer : m_importers) {
@@ -50,6 +44,18 @@ dv_model& dv_sys_model::import(const FILE_PATH& path) {
 	}
 
 	throw std::runtime_error("Unsupported model type");
+}
+
+bool compare_file_filters(const dv_file_filter& a, const dv_file_filter& b) {
+	return a.name < b.name;
+}
+
+void dv_sys_model::create_filters() {
+	for (auto& importer : m_importers)
+		for (auto& file_type : importer.types)
+			m_import_filters.emplace_back(dv_file_filter(file_type));
+
+	std::sort(m_import_filters.begin(), m_import_filters.end(), compare_file_filters);
 }
 
 dv_model _import_obj(const std::filesystem::path& path) {
