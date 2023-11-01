@@ -8,7 +8,7 @@ using namespace devue;
 void dv_util_dialog::open_file_dialog(std::string& selected_path, const std::vector<core::dv_file_filter>& filters) {
     std::vector<COMDLG_FILTERSPEC> vff;
     for (const core::dv_file_filter& filter : filters)
-        vff.push_back({ filter.name.c_str(), filter.name.c_str() });
+        vff.push_back({ filter.name.c_str(), filter.extensions.c_str() });
 
     IFileDialog* pfd = NULL;
     IFileDialogEvents* pfde = NULL;
