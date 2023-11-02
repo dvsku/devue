@@ -17,7 +17,7 @@ namespace devue::core {
 		bool m_minimized		= false;
 
 	protected:
-		virtual void prepare();
+		virtual bool prepare();
 
 		virtual void on_before_update();
 		virtual void on_update() = 0;

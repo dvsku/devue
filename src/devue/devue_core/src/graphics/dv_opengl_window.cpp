@@ -85,14 +85,18 @@ void dv_opengl_window::run() {
 	LOG_MESSAGE("OpenGL renderer: \t{}", (char*)glGetString(GL_RENDERER));
 	LOG_MESSAGE("ImGUI version: \t\t{}", _get_imgui_ver());*/
 
-	prepare();
+	// Cancel running if prepare failed
+	if (!prepare()) return;
+
 	loop();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // PROTECTED
 
-void dv_opengl_window::prepare() {}
+bool dv_opengl_window::prepare() {
+	return true;
+}
 
 void dv_opengl_window::on_before_update() {}
 
