@@ -1,6 +1,7 @@
 #pragma once
 
 #include "scene/model/dv_scene_model.hpp"
+#include "scene/dv_camera.hpp"
 #include "utilities/dv_util_uuid.hpp"
 
 #include <unordered_map>
@@ -9,6 +10,8 @@ namespace devue::core {
 	class dv_scene {
 	public:
 		devue::uuid uuid = 0U;
+
+		dv_camera camera;
 		std::unordered_map<devue::uuid, dv_scene_model> models;
 
 		dv_scene()					= default;
