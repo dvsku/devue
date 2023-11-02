@@ -13,6 +13,7 @@ ADD_LIBRARY(devue_core STATIC
 	"src/systems/dv_sys_material.cpp"
 	"src/systems/dv_sys_rendering.cpp"
 	"src/systems/dv_sys_texture.cpp"
+	"src/systems/dv_sys_scene.cpp"
 	"src/utilities/dv_util_uuid.cpp"
 	"src/systems/dv_systems_bundle.cpp"
 	"src/importers/dv_file_type.cpp"
