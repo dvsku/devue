@@ -10,6 +10,8 @@ namespace devue::core {
 
 	class dv_sys_scene {
 	public:
+		dv_scene* current_scene = nullptr;
+
 		dv_sys_scene() = delete;
 		dv_sys_scene(dv_systems_bundle* systems);
 
@@ -22,9 +24,7 @@ namespace devue::core {
 		dv_scene* create_scene();
 
 	private:
-		dv_systems_bundle* m_systems	= nullptr;
-		dv_scene* m_current_scene		= nullptr;
-
+		dv_systems_bundle* m_systems = nullptr;
 		std::unordered_map<devue::uuid, dv_scene> m_scenes;
 	};
 }

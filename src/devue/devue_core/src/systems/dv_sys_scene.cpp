@@ -11,9 +11,9 @@ dv_scene* dv_sys_scene::create_scene() {
 		devue::uuid uuid = dv_util_uuid::create();
 
 		m_scenes[uuid] = dv_scene();
-		m_current_scene = &m_scenes[uuid];
+		current_scene = &m_scenes[uuid];
 
-		return m_current_scene;
+		return current_scene;
 	}
 	catch (...) {
 		return nullptr;
