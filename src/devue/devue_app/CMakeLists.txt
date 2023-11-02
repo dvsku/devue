@@ -4,6 +4,7 @@ ADD_EXECUTABLE(devue
 	"src/devue_app.cpp"
 	"src/gui/dv_gui.cpp"
 	"src/gui/base/dv_comp.cpp"
+	"src/gui/base/dv_selected.cpp"
 	"src/gui/components/dv_comp_scene.cpp"
 	"src/gui/components/dv_comp_assets.cpp"
 	"src/gui/components/dv_comp_hierarchy.cpp"
