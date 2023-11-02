@@ -7,12 +7,33 @@ dv_comp_hierarchy::dv_comp_hierarchy(dv_systems* systems, dv_components* compone
 	: dv_comp(systems, components) {}
 
 void dv_comp_hierarchy::render() {
+	// Just create the window if there's no
+	// active scene
+	if (!m_systems->scene.current_scene) {
+		ImGui::Begin("Hierarchy##Window");
+		ImGui::End();
+		return;
+	}
+
+	core::dv_scene* scene = m_systems->scene.current_scene;
+
 	ImGui::PushStyleVar(ImGuiStyleVar_DisabledAlpha, 0.8f);
 
 	ImGui::Begin("Hierarchy##Window");
 
+	ImGui::PushID("Hierarchy");
+
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-	if (ImGui::CollapsingHeader("Camera##SceneExplorerCamera")) {
+	if (ImGui::CollapsingHeader("Cameras##Cameras")) {
+
+		ImGui::Indent();
+
+		if (ImGui::Selectable("Camera 1##Camera1", m_components->selected.in_selected(scene->camera))) {
+			m_components->selected.select(scene->camera);
+		}
+
+		ImGui::Unindent();
+
 		/*ImGui::Indent();
 
 		ImGui::Text("Position");
@@ -127,6 +148,8 @@ void dv_comp_hierarchy::render() {
 			ImGui::PopID();
 		}*/
 	}
+
+	ImGui::PopID();
 
 	ImGui::End();
 
