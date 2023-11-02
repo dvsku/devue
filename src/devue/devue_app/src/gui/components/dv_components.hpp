@@ -1,5 +1,6 @@
 #pragma once
 
+#include "gui/base/dv_selected.hpp"
 #include "gui/components/dv_comp_assets.hpp"
 #include "gui/components/dv_comp_console.hpp"
 #include "gui/components/dv_comp_dockspace.hpp"
@@ -7,7 +8,6 @@
 #include "gui/components/dv_comp_properties.hpp"
 #include "gui/components/dv_comp_scene.hpp"
 #include "systems/dv_systems.hpp"
-#include "utilities/dv_util_uuid.hpp"
 
 namespace devue {
 	struct dv_components {
@@ -18,7 +18,7 @@ namespace devue {
 		dv_comp_properties	properties;
 		dv_comp_scene		scene;
 
-		devue::uuid current_model = 0U;
+		dv_selected selected{};
 
 		dv_components() = delete;
 		dv_components(dv_systems* systems);

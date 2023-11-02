@@ -17,8 +17,8 @@ void dv_comp_assets::render() {
 
 		ImGui::PushID(DV_FORMAT_C("{}", model.uuid));
 
-		if (ImGui::Selectable(DV_FORMAT_C("{}##Asset", model.name), m_components->current_model == model.uuid)) {
-			m_components->current_model = model.uuid;
+		if (ImGui::Selectable(DV_FORMAT_C("{}##Asset", model.name), m_components->selected.in_selected(model))) {
+            m_components->selected.select(model);
 		}
 
 		ImGui::PopID();
