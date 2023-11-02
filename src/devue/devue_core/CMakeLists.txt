@@ -16,6 +16,7 @@ ADD_LIBRARY(devue_core STATIC
 	"src/utilities/dv_util_uuid.cpp"
 	"src/systems/dv_systems_bundle.cpp"
 	"src/importers/dv_file_type.cpp"
+	"src/scene/dv_scene.cpp"
 )
 
 TARGET_INCLUDE_DIRECTORIES(devue_core PRIVATE "${CMAKE_SOURCE_DIR}/lib/glad/include")
