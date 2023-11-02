@@ -12,4 +12,7 @@ dv_selected::dv_selected() {
 	m_selection_types[typeid(core::dv_camera)]		= obj_type::camera;
 }
 
-void dv_selected::select(obj_type type, devue::uuid uuid) {}
+void dv_selected::select(obj_type type, devue::uuid uuid) {
+	this->type = type;
+	this->uuid = uuid;
+}

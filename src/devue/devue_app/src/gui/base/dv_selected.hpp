@@ -23,37 +23,19 @@ namespace devue {
 		dv_selected();
 
 		template<typename T>
-		void select(T obj) {
+		void select(T& obj) {
 			if (!m_selection_types.contains(typeid(obj)))
 				return;
 
-			obj_type type = m_selection_types[typeid(obj)];
-
-			switch (type) {
-				case obj_type::model:
-				case obj_type::scene_model:
-					return select(type, obj.uuid);
-				case obj_type::camera:
-					return select(type);
-				default: 
-					return select();
-			}
+			select(m_selection_types[typeid(obj)], obj.uuid);
 		}
 
 		template<typename T>
-		bool in_selected(T obj) {
+		bool in_selected(T& obj) {
 			if (type == obj_type::none)						return false;
 			if (!m_selection_types.contains(typeid(obj)))	return false;
 
-			obj_type type = m_selection_types[typeid(obj)];
-
-			switch (type) {
-				case obj_type::model:
-				case obj_type::scene_model:
-					return obj.uuid == uuid;
-				default:
-					return true;
-			}
+			return m_selection_types[typeid(obj)] == type && obj.uuid == uuid;
 		}
 
 	private:
