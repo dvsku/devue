@@ -4,6 +4,9 @@
 #include <exception>
 
 namespace devue::core {
+	#define DV_EXCEPTION(msg)		\
+		devue::core::dv_exception(msg);
+
 	class dv_exception : public std::exception {
 	public:
 		dv_exception() {}
