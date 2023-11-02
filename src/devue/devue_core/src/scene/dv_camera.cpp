@@ -5,6 +5,8 @@
 using namespace devue::core;
 
 dv_camera::dv_camera() {
+	uuid = dv_util_uuid::create();
+
 	// Call transformations to apply initial values
 	translate(0.0f, 0.0f);
 	rotate(0.0f, 0.0f);

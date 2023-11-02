@@ -2,10 +2,13 @@
 
 #include "glm/vec3.hpp"
 #include "glm/matrix.hpp"
+#include "utilities/dv_util_uuid.hpp"
 
 namespace devue::core {
 	class dv_camera {
 	public:
+		devue::uuid uuid = 0U;
+
 		float speed_translate	= 0.005f;
 		float speed_rotate		= 0.1f;
 
