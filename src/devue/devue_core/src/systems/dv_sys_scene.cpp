@@ -1,5 +1,6 @@
 #include "systems/dv_sys_scene.hpp"
 #include "systems/dv_systems_bundle.hpp"
+#include "utilities/dv_util_log.hpp"
 
 using namespace devue::core;
 
@@ -15,7 +16,12 @@ dv_scene* dv_sys_scene::create_scene() {
 
 		return current_scene;
 	}
+	catch (const std::exception& e) {
+		DV_LOG("Failed to create scene. | {}", e.what());
+		return nullptr;
+	}
 	catch (...) {
+		DV_LOG("Failed to create scene.",);
 		return nullptr;
 	}
 }
