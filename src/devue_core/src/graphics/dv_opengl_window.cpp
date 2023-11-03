@@ -11,6 +11,7 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
+#include "utilities/dv_util_mouse.hpp"
 #include "utilities/dv_util_log.hpp"
 
 using namespace devue::core;
@@ -169,13 +170,13 @@ void dv_opengl_window::mouse_button_callback(GLFWwindow* window, int button, int
 }
 
 void dv_opengl_window::mouse_move_callback(GLFWwindow* window, double x, double y) {
-	/*ds_util_mouse::delta.x = x - ds_util_mouse::position.x;
-	ds_util_mouse::delta.y = ds_util_mouse::position.y - y;
-	ds_util_mouse::position.x = x;
-	ds_util_mouse::position.y = y;*/
+	dv_util_mouse::delta.x	  = x - dv_util_mouse::position.x;
+	dv_util_mouse::delta.y	  = dv_util_mouse::position.y - y;
+	dv_util_mouse::position.x = x;
+	dv_util_mouse::position.y = y;
 
 	dv_opengl_window* instance = static_cast<dv_opengl_window*>(glfwGetWindowUserPointer(window));
-	//instance->on_mouse_move(ds_util_mouse::delta.x, ds_util_mouse::delta.y);
+	instance->on_mouse_move(dv_util_mouse::delta.x, dv_util_mouse::delta.y);
 }
 
 void dv_opengl_window::iconify_callback(GLFWwindow* window, int iconified) {
