@@ -13,6 +13,8 @@ namespace devue::core {
 		// MODEL PROPERTIES
 
 		std::string name = "";
+
+		devue::uuid uuid	   = 0U;
 		devue::uuid model_uuid = 0U;
 
 		///////////////////////////////////////////////////////////////////////
