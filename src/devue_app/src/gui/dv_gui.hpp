@@ -1,6 +1,9 @@
 #include "graphics/dv_opengl_window.hpp"
 #include "gui/components/dv_components.hpp"
 #include "systems/dv_systems.hpp"
+#include "rendering/dv_render_target.hpp"
+
+#include <memory>
 
 namespace devue {
 	class dv_gui : public devue::core::dv_opengl_window {
@@ -25,5 +28,7 @@ namespace devue {
 	private:
 		dv_systems m_sytems;
 		dv_components m_components;
+		
+		std::shared_ptr<core::dv_render_target> m_scene_render_target = nullptr;
 	};
 }

@@ -2,6 +2,7 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "imgui.h"
+#include "rendering/dv_multisample_frame_buffer.hpp"
 #include "utilities/dv_util_log.hpp"
 
 using namespace devue;
@@ -24,7 +25,10 @@ static std::string _get_imgui_ver() {
 // PUBLIC
 
 dv_gui::dv_gui(uint32_t width, uint32_t height, const std::string& title)
-	: dv_opengl_window(width, height, title), m_components(&m_sytems) {}
+	: dv_opengl_window(width, height, title), m_components(&m_sytems) 
+{
+	m_scene_render_target = std::make_shared<dv_multisample_frame_buffer>(width, height);
+}
 
 dv_gui::~dv_gui() {}
 
