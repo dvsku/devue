@@ -1,14 +1,15 @@
 #pragma once
 
-#include "models/pdo/dv_model.hpp"
+#include "model/dv_plugin_model.hpp"
 #include "importers/dv_file_type.hpp"
 
 #include <vector>
+#include <string>
 #include <functional>
 
 namespace devue::core {
 	struct dv_model_importer {
-		typedef std::function<dv_model(const std::filesystem::path&)> import_fn;
+		typedef std::function<devue::shared::dv_plugin_model(const std::string&)> import_fn;
 
 		std::vector<dv_file_type> types;
 		import_fn fn = nullptr;
