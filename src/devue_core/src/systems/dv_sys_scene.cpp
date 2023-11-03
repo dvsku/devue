@@ -52,3 +52,25 @@ void dv_sys_scene::render_current_scene(dv_render_target* render_target) {
 	if (render_target)
 		render_target->unbind();
 }
+
+void dv_sys_scene::add_to_scene(dv_model& model) {
+	if (!current_scene) return;
+
+	try {
+		devue::uuid uuid			= dv_util_uuid::create();
+		current_scene->models[uuid] = dv_scene_model();
+
+		dv_scene_model& smodel = current_scene->models[uuid];
+		smodel.name		  = model.name;
+		smodel.uuid		  = uuid;
+		smodel.model_uuid = model.uuid;
+
+		if (model.min_y < 0.0f)
+			smodel.transform.position.y = abs(model.min_y);
+
+		m_systems->rendering.prepare_model(smodel);
+	}
+	catch (...) {
+		return;
+	}
+}
