@@ -20,8 +20,9 @@ namespace devue::core {
 		///////////////////////////////////////////////////////////////////////
 		// RENDER PROPERTIES
 
-		bool visible	= true;
-		bool wireframe	= false;
+		bool visible			= true;
+		bool wireframe			= false;
+		bool marked_for_removal = false;
 
 		dv_transform transform{};
 		std::vector<dv_scene_mesh> meshes;
