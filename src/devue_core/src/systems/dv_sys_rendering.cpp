@@ -23,6 +23,16 @@ void dv_sys_rendering::prepare() {
     m_shaders[shader_type::solid]   = create_shader("resources/shaders/solid_color.vert", "resources/shaders/solid_color.frag");
     m_shaders[shader_type::texture] = create_shader("resources/shaders/texture.vert", "resources/shaders/texture.frag");
     m_shaders[shader_type::grid]    = create_shader("resources/shaders/grid.vert", "resources/shaders/grid.frag");
+
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
+    glEnable(GL_MULTISAMPLE);
+    glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 }
 
 void dv_sys_rendering::prepare_model(dv_scene_model& smodel) {
