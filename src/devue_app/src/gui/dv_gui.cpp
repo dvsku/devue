@@ -3,6 +3,7 @@
 #include "GLFW/glfw3.h"
 #include "imgui.h"
 #include "rendering/dv_multisample_frame_buffer.hpp"
+#include "utilities/dv_util_diag.hpp"
 #include "utilities/dv_util_log.hpp"
 
 using namespace devue;
@@ -60,12 +61,14 @@ bool dv_gui::prepare() {
 	if (!m_sytems.scene.create_scene())
 		return false;
 
+	dv_util_diag::init();
+
 	glfwMaximizeWindow(m_native);
 	return true;
 }
 
 void dv_gui::on_before_update() {
-
+	dv_util_diag::update();
 }
 
 void dv_gui::on_update() {

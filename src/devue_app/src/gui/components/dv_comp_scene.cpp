@@ -1,5 +1,6 @@
 #include "gui/components/dv_comp_scene.hpp"
 #include "gui/components/dv_components.hpp"
+#include "utilities/dv_util_diag.hpp"
 
 using namespace devue;
 
@@ -13,6 +14,8 @@ void dv_comp_scene::render(core::dv_render_target* render_target) {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 
 	ImGui::Begin("Scene##Window", 0, window_flags);
+
+	ImGui::PushID("Scene");
 
 	is_hovered = ImGui::IsWindowHovered();
 
@@ -47,16 +50,18 @@ void dv_comp_scene::render(core::dv_render_target* render_target) {
 
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 28);
 
-	/*ImGui::BeginChild("SceneInfo", ImVec2(-1, 23));
+	ImGui::BeginChild("Info", ImVec2(-1, 23));
 
 	ImGui::AlignTextToFramePadding();
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-	ImGui::Text("FPS: %d", ds_util_diag::fps);
+	ImGui::Text("FPS: %d", core::dv_util_diag::fps);
 
-	ImGui::EndChild();*/
+	ImGui::EndChild();
 
 	ImGui::PopStyleColor();
 	ImGui::PopStyleVar();
+
+	ImGui::PopID();
 
 	ImGui::End();
 
