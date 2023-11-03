@@ -15,5 +15,9 @@ namespace devue::core {
 		dv_light() {
 			uuid = dv_util_uuid::create();
 		}
+
+		virtual glm::vec3 get_light_color() {
+			return is_enabled ? color * intensity : glm::vec3(0.0f, 0.0f, 0.0f);
+		}
 	};
 }
