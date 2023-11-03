@@ -15,6 +15,8 @@ namespace devue::core {
 	public:
 		void prepare();
 
+		size_t count() const;
+
 		// Get a model
 		dv_model* get(const devue::uuid& uuid);
 

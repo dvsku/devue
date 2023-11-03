@@ -8,6 +8,11 @@ using namespace devue::core;
 dv_sys_scene::dv_sys_scene(dv_systems_bundle* systems) 
 	: m_systems(systems) {}
 
+size_t dv_sys_scene::count() const {
+	if (!current_scene) return 0;
+	return current_scene->models.size();
+}
+
 dv_scene* dv_sys_scene::create_scene() {
 	try {
 		devue::uuid uuid = dv_util_uuid::create();

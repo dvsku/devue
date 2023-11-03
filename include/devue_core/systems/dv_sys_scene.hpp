@@ -23,6 +23,8 @@ namespace devue::core {
 		dv_sys_scene& operator=(const dv_sys_scene&) = delete;
 		dv_sys_scene& operator=(dv_sys_scene&&)		 = delete;
 
+		size_t count() const;
+
 		dv_scene* create_scene();
 		void render_current_scene(dv_render_target* render_target = nullptr);
 

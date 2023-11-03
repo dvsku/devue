@@ -25,6 +25,10 @@ void dv_sys_model::prepare() {
 	create_filters();
 }
 
+size_t dv_sys_model::count() const {
+	return models.size();
+}
+
 dv_model* dv_sys_model::get(const devue::uuid& uuid) {
 	if (!models.contains(uuid)) return nullptr;
 	return &models[uuid];
