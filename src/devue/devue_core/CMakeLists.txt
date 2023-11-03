@@ -21,6 +21,17 @@ ADD_LIBRARY(devue_core STATIC
 	"src/scene/dv_camera.cpp"
 )
 
+# COPY RESOURCES TO OUTPUT DIR
+
+SET(RESOURCES_SRC_DIR "${CMAKE_SOURCE_DIR}/resources")
+SET(RESOURCES_DST_DIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources")
+
+ADD_CUSTOM_TARGET(copy_resources ALL
+    COMMAND robocopy ${RESOURCES_SRC_DIR} ${RESOURCES_DST_DIR} /MIR /NP > NUL 2>&1 || exit 0
+)
+
+ADD_DEPENDENCIES(copy_resources devue_core)
+
 TARGET_INCLUDE_DIRECTORIES(devue_core PRIVATE "${CMAKE_SOURCE_DIR}/lib/glad/include")
 TARGET_INCLUDE_DIRECTORIES(devue_core PRIVATE "${CMAKE_SOURCE_DIR}/lib/khr/include")
 TARGET_INCLUDE_DIRECTORIES(devue_core PRIVATE "${CMAKE_SOURCE_DIR}/lib/glfw/include")
