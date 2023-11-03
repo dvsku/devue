@@ -6,7 +6,7 @@ using namespace devue;
 dv_comp_scene::dv_comp_scene(dv_systems* systems, dv_components* components) 
 	: dv_comp(systems, components) {}
 
-void dv_comp_scene::render() {
+void dv_comp_scene::render(core::dv_render_target* render_target) {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoCollapse
 		| ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 
@@ -16,40 +16,31 @@ void dv_comp_scene::render() {
 
 	//m_hovered = ImGui::IsWindowHovered();
 
+	if (render_target) {
+		ImVec2 available_size = ImGui::GetContentRegionAvail();
 
-	ImVec2 available_size = ImGui::GetContentRegionAvail();
+		ImVec2 clipped_top_left		= { 0.0f, 1.0f };
+		ImVec2 clipped_bottom_right = { 1.0f, 0.0f };
 
-	ImVec2 clipped_top_left = { 0.0f, 1.0f };
-	ImVec2 clipped_bottom_right = { 1.0f, 0.0f };
+		if (available_size.x < render_target->width || available_size.y < render_target->height) {
+			clipped_top_left = {
+				(0.5f - (available_size.x / 2.0f) / render_target->width),
+				1.0f - (0.5f - (available_size.y / 2.0f) / render_target->height)
+			};
 
+			clipped_bottom_right = {
+				(0.5f + (available_size.x / 2.0f) / render_target->width),
+				1.0f - (0.5f + (available_size.y / 2.0f) / render_target->height)
+			};
+		}
 
-	/*if (available_size.x < m_frame_buffer.width || available_size.y < m_frame_buffer.height) {
-		clipped_top_left = {
-			(0.5f - (available_size.x / 2.0f) / m_frame_buffer.width),
-			1.0f - (0.5f - (available_size.y / 2.0f) / m_frame_buffer.height)
-		};
-
-		clipped_bottom_right = {
-			(0.5f + (available_size.x / 2.0f) / m_frame_buffer.width),
-			1.0f - (0.5f + (available_size.y / 2.0f) / m_frame_buffer.height)
-		};
+		ImGui::Image(
+			(ImTextureID)render_target->get_frame_texture(),
+			ImGui::GetContentRegionAvail(),
+			clipped_top_left,
+			clipped_bottom_right
+		);
 	}
-
-	ImGui::Image(
-		(ImTextureID)m_frame_buffer.get_frame_texture(),
-		ImGui::GetContentRegionAvail(),
-		clipped_top_left,
-		clipped_bottom_right
-	);*/
-
-
-
-	/*ImGui::Image(
-		(ImTextureID)m_frame_buffer.get_frame_texture(),
-		{ static_cast<float>(m_width), static_cast<float>(m_height) },
-		ImVec2(0, 1),
-		ImVec2(1, 0)
-	);*/
 
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 5));
 	ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
@@ -71,3 +62,5 @@ void dv_comp_scene::render() {
 
 	ImGui::PopStyleVar();
 }
+
+void dv_comp_scene::render() {}
