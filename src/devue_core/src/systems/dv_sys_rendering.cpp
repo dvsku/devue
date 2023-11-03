@@ -49,7 +49,7 @@ std::string dv_sys_rendering::get_shader_source(const std::string& path) {
     try {
         std::string line;
         while (std::getline(file, line)) {
-            source += line;
+            source += line + '\n';
         }
         file.close();
     }
