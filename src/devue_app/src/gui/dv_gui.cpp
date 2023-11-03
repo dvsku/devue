@@ -102,7 +102,7 @@ void dv_gui::on_resize(int width, int height) {
 
 void dv_gui::on_scroll(double dx, double dy) {
 	if (m_components.scene.is_hovered && m_sytems.scene.current_scene)
-		m_sytems.scene.current_scene->camera.zoom(dy);
+		m_sytems.scene.current_scene->camera.zoom(static_cast<float>(dy));
 }
 
 void dv_gui::on_mouse_button(int btn, int action, int modifier) {
