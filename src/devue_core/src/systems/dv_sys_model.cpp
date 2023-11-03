@@ -48,6 +48,8 @@ dv_model& dv_sys_model::import(const FILE_PATH& path) {
 		models[uuid] = std::move(model);
 		models[uuid].uuid = uuid;
 
+		set_min_y(models[uuid]);
+
 		return models[uuid];
 	}
 
