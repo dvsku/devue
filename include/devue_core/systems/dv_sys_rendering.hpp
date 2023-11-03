@@ -28,6 +28,8 @@ namespace devue::core {
 		void prepare_model(dv_scene_model& smodel);
 		void prepare_model(dv_scene_mesh& smesh, dv_mesh& mesh, bool is_static = true);
 
+		void release_model(dv_scene_model& smodel);
+
 		void render(dv_scene_model& smodel, dv_camera& camera, dv_lighting& lighting);
 		void render(dv_scene_grid& sgrid, dv_camera& camera, dv_lighting& lighting);
 		

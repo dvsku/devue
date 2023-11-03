@@ -101,6 +101,22 @@ void dv_sys_rendering::prepare_model(dv_scene_mesh& smesh, dv_mesh& mesh, bool i
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(dv_vertex), (void*)offsetof(dv_vertex, uv));
 }
 
+void dv_sys_rendering::release_model(dv_scene_model& smodel) {
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    for (auto& smesh : smodel.meshes) {
+        glDeleteVertexArrays(1, &smesh.vao);
+        glDeleteBuffers(1, &smesh.vbo);
+        glDeleteBuffers(1, &smesh.ibo);
+
+        smesh.vao = 0U;
+        smesh.vbo = 0U;
+        smesh.ibo = 0U;
+    }
+}
+
 void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_lighting& lighting) {
     dv_model* model = m_systems->model.get(smodel.model_uuid);
 
