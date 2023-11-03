@@ -1,6 +1,5 @@
 #pragma once
 
-#include <filesystem>
 #include <unordered_map>
 #include <functional>
 
@@ -11,8 +10,6 @@
 namespace devue::core {
 	class dv_sys_model {
 	public:
-		typedef std::filesystem::path FILE_PATH;
-
 		std::unordered_map<devue::uuid, dv_model> models;
 
 	public:
@@ -25,7 +22,7 @@ namespace devue::core {
 		const std::vector<dv_file_filter>& get_import_filters();
 
 		// Import a model
-		dv_model& import(const FILE_PATH& path);
+		dv_model& import(const std::string& path);
 
 	private:
 		std::vector<dv_model_importer> m_importers;

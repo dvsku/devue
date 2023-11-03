@@ -1,12 +1,15 @@
 #include "systems/dv_sys_model.hpp"
+#include "model/dv_plugin_model.hpp"
 #include "obj_loader/include/obj_loader.h"
 #include "utilities/dv_util_string.hpp"
 
 #include <algorithm>
+#include <filesystem>
 
 using namespace devue::core;
+using namespace devue::shared;
 
-static dv_model _import_obj(const std::filesystem::path& path);
+static dv_plugin_model _import_obj(const std::filesystem::path& path);
 
 static void set_min_y(dv_model& model);
 
@@ -31,8 +34,9 @@ const std::vector<dv_file_filter>& dv_sys_model::get_import_filters() {
 	return m_import_filters;
 }
 
-dv_model& dv_sys_model::import(const FILE_PATH& path) {
-	std::string ext = path.extension().string();
+dv_model& dv_sys_model::import(const std::string& path) {
+	std::filesystem::path filepath = path;
+	std::string ext				   = filepath.extension().string();
 	
 	auto cmp_fn = [&](const dv_file_type& type) {
 		return dv_util_string::contains(type.extensions, ext);
@@ -42,14 +46,48 @@ dv_model& dv_sys_model::import(const FILE_PATH& path) {
 		if (std::none_of(importer.types.begin(), importer.types.end(), cmp_fn))
 			continue;
 		
-		devue::uuid uuid = devue::core::dv_util_uuid::create();
+		dv_plugin_model pmodel = importer.fn(path);
+		dv_model model;
 
-		dv_model model = importer.fn(path);
+		// Create uuid from path
+		devue::uuid uuid = devue::core::dv_util_uuid::create(path);
+
+		model.uuid = uuid;
+		model.name = filepath.filename().replace_extension("").string();
+		
+		for (auto& pmesh : pmodel.meshes) {
+			devue::uuid mesh_uuid	  = dv_util_uuid::create(DV_FORMAT("{}_{}", path, pmesh.name));
+			devue::uuid material_uuid = dv_util_uuid::create(DV_FORMAT("{}_{}", mesh_uuid, pmesh.material.name));
+
+			model.materials[material_uuid] = dv_material();
+			dv_material& material	 = model.materials[material_uuid];
+			material.diffuse_texture = pmesh.material.diffuse_texture;
+
+			model.meshes[mesh_uuid] = dv_mesh();
+			dv_mesh& mesh		= model.meshes[mesh_uuid];
+			mesh.name			= pmesh.name;
+			mesh.material_uuid	= material_uuid;
+			
+			for (size_t i = 0; i < pmesh.indices.size(); i += 3) {
+				mesh.faces.push_back({
+					pmesh.indices[i],
+					pmesh.indices[i + 1],
+					pmesh.indices[i + 2],
+				});
+			}
+
+			for (auto& pvertex : pmesh.vertices) {
+				dv_vertex vertex;
+				vertex.position = pvertex.position;
+				vertex.normal = pvertex.normal;
+				vertex.uv = pvertex.uv;
+				mesh.vertices.push_back(vertex);
+			}
+		}
+
+		set_min_y(model);
+
 		models[uuid] = std::move(model);
-		models[uuid].uuid = uuid;
-
-		set_min_y(models[uuid]);
-
 		return models[uuid];
 	}
 
@@ -70,59 +108,36 @@ void dv_sys_model::create_filters() {
 	m_import_filters.push_back({ L"All files (*.*)\0", L"*.*\0" });
 }
 
-dv_model _import_obj(const std::filesystem::path& path) {
+dv_plugin_model _import_obj(const std::filesystem::path& path) {
 	objl::Loader parser;
 
 	if (!parser.LoadFile(path.string()))
 		throw std::runtime_error("Failed to load obj.");
 
-	dv_model model;
-	model.name = path.filename().string();
-
-	for (auto& material : parser.LoadedMaterials) {
-		dv_material m;
-		m.name = material.name;
-		m.diffuse_texture = material.map_Kd;
-
-		devue::uuid uuid = devue::core::dv_util_uuid::create();
-		model.materials[uuid] = m;
-	}
-
+	dv_plugin_model model;
+	
 	for (auto& lmesh : parser.LoadedMeshes) {
 		if ((lmesh.Indices.size() % 3) != 0)
 			throw std::runtime_error("Not a triangle mesh, unsupported");
 
-		dv_mesh mesh;
+		model.meshes.push_back({});
+		dv_plugin_mesh& mesh = model.meshes.back();
 		mesh.name = lmesh.MeshName;
 
-		// Link material
-		for (auto& kvp : model.materials) {
-			if (kvp.second.name == lmesh.MeshMaterial.name) {
-				mesh.material_uuid = kvp.first;
-				break;
-			}
+		mesh.material.name			  = lmesh.MeshMaterial.name;
+		mesh.material.diffuse_texture = lmesh.MeshMaterial.map_Kd;
+
+		for (auto& index : lmesh.Indices)
+			mesh.indices.push_back(index);
+
+		for (auto& vertex : lmesh.Vertices) {
+			mesh.vertices.push_back({});
+			dv_plugin_vertex& pv = mesh.vertices.back();
+
+			pv.position = { vertex.Position.X, vertex.Position.Y, vertex.Position.Z };
+			pv.normal	= { vertex.Normal.X, vertex.Normal.Y, vertex.Normal.Z };
+			pv.uv		= { vertex.TextureCoordinate.X, vertex.TextureCoordinate.Y };
 		}
-
-		for (size_t i = 0; i < lmesh.Indices.size(); i += 3) {
-			mesh.faces.push_back({
-				lmesh.Indices[i],
-				lmesh.Indices[i + 1],
-				lmesh.Indices[i + 2],
-			});
-		}
-
-		for (auto& v : lmesh.Vertices) {
-			dv_vertex vertex;
-
-			vertex.position = { v.Position.X, v.Position.Y, v.Position.Z };
-			vertex.normal = { v.Normal.X, v.Normal.Y, v.Normal.Z };
-			vertex.uv = { v.TextureCoordinate.X, v.TextureCoordinate.Y };
-
-			mesh.vertices.emplace_back(std::move(vertex));
-		}
-
-		devue::uuid uuid = devue::core::dv_util_uuid::create(mesh.name);
-		model.meshes[uuid] = std::move(mesh);
 	}
 
 	return model;
