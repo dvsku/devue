@@ -1,6 +1,7 @@
 #include "systems/dv_sys_scene.hpp"
 #include "systems/dv_systems_bundle.hpp"
 #include "utilities/dv_util_log.hpp"
+#include "glad/glad.h"
 
 using namespace devue::core;
 
@@ -27,4 +28,27 @@ dv_scene* dv_sys_scene::create_scene() {
 		DV_LOG("Failed to create scene.",);
 		return nullptr;
 	}
+}
+
+void dv_sys_scene::render_current_scene(dv_render_target* render_target) {
+	if (!current_scene) return;
+	
+	if (render_target)
+		render_target->bind();
+	else
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// Clear scene
+	glClearColor(0.185f, 0.185f, 0.185f, 1.00f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// Render the scene
+	for (auto& kvp : current_scene->models)
+		if (kvp.second.visible)				// TODO: Add remove flag
+			m_systems->rendering.render(kvp.second, current_scene->camera, current_scene->lighting);
+
+	m_systems->rendering.render(current_scene->grid, current_scene->camera, current_scene->lighting);
+
+	if (render_target)
+		render_target->unbind();
 }
