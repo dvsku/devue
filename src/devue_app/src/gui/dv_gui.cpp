@@ -93,7 +93,11 @@ void dv_gui::on_gui_update() {
 void dv_gui::on_gui_after_update() {}
 
 void dv_gui::on_resize(int width, int height) {
+	if (m_scene_render_target)
+		m_scene_render_target->resize(width, height);
 
+	if (m_sytems.scene.current_scene)
+		m_sytems.scene.current_scene->camera.set_aspect_ratio(static_cast<float>(width), static_cast<float>(height));
 }
 
 void dv_gui::on_scroll(double dx, double dy) {
