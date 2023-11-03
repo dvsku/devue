@@ -71,6 +71,15 @@ void dv_comp_hierarchy::render() {
 					m_components->selected.select(smodel);
 				}
 
+				if (ImGui::BeginPopupContextItem()) {
+					if (ImGui::Selectable("Remove##ContextMenu", false,
+						ImGuiSelectableFlags_SelectOnRelease | ImGuiSelectableFlags_NoSetKeyOwner)) {
+						m_systems->scene.remove_from_scene(smodel);
+					}
+
+					ImGui::EndPopup();
+				}
+
 				ImGui::PopID();
 			}
 		}
