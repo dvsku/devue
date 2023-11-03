@@ -14,7 +14,7 @@ void dv_comp_scene::render(core::dv_render_target* render_target) {
 
 	ImGui::Begin("Scene##Window", 0, window_flags);
 
-	//m_hovered = ImGui::IsWindowHovered();
+	is_hovered = ImGui::IsWindowHovered();
 
 	if (render_target) {
 		ImVec2 available_size = ImGui::GetContentRegionAvail();
