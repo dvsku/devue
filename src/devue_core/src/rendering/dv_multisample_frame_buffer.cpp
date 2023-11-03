@@ -1,4 +1,5 @@
 #include "rendering/dv_multisample_frame_buffer.hpp"
+#include "exceptions/dv_exception.hpp"
 #include "glad/glad.h"
 
 using namespace devue::core;
@@ -12,7 +13,33 @@ dv_multisample_frame_buffer::~dv_multisample_frame_buffer() {
 }
 
 dv_multisample_frame_buffer::dv_multisample_frame_buffer(int width, int height)
-	: dv_render_target(width, height) {}
+	: dv_render_target(width, height) 
+{
+	// Create multisample buffer
+
+	glGenFramebuffers(1, &m_ms_fbo);
+	glGenRenderbuffers(1, &m_ms_color_rbo);
+	glGenRenderbuffers(1, &m_ms_depth_rbo);
+
+	_update_read_buffer();
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		throw DV_EXCEPTION("Failed to create multisampled frame buffer. Frame buffer incomplete.");
+
+	// Create frame buffer
+
+	glGenFramebuffers(1, &m_fbo);
+	glGenTextures(1, &m_texture);
+
+	_update_draw_buffer();
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		throw DV_EXCEPTION("Failed to create blit frame buffer. Frame buffer incomplete.");
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+}
 
 void dv_multisample_frame_buffer::bind() {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_ms_fbo);
