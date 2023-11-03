@@ -11,6 +11,8 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
+#include "utilities/dv_util_log.hpp"
+
 using namespace devue::core;
 
 static std::string _get_imgui_ver() {
@@ -81,9 +83,9 @@ void dv_opengl_window::run() {
 	ImGui_ImplGlfw_InitForOpenGL(m_native, true);
 	ImGui_ImplOpenGL3_Init();
 
-	/*LOG_MESSAGE("OpenGL version: \t{}", (char*)glGetString(GL_VERSION));
-	LOG_MESSAGE("OpenGL renderer: \t{}", (char*)glGetString(GL_RENDERER));
-	LOG_MESSAGE("ImGUI version: \t\t{}", _get_imgui_ver());*/
+	DV_LOG("OpenGL version: \t{}", (char*)glGetString(GL_VERSION));
+	DV_LOG("OpenGL renderer: \t{}", (char*)glGetString(GL_RENDERER));
+	DV_LOG("ImGUI version: \t\t{}", _get_imgui_ver());
 
 	// Cancel running if prepare failed
 	if (!prepare()) return;
