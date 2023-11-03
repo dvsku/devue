@@ -32,6 +32,8 @@ dv_scene* dv_sys_scene::create_scene() {
 
 void dv_sys_scene::render_current_scene(dv_render_target* render_target) {
 	if (!current_scene) return;
+
+	remove_marked_models();
 	
 	if (render_target)
 		render_target->bind();
@@ -73,4 +75,31 @@ void dv_sys_scene::add_to_scene(dv_model& model) {
 	catch (...) {
 		return;
 	}
+}
+
+void dv_sys_scene::remove_from_scene(dv_scene_model& smodel) {
+	if (!current_scene) return;
+	if (!current_scene->models.contains(smodel.uuid)) return;
+
+	smodel.marked_for_removal = true;
+}
+
+void dv_sys_scene::remove_marked_models() {
+	if (!current_scene) return;
+
+	try {
+		auto it = current_scene->models.begin();
+		while (it != current_scene->models.end()) {
+			if (it->second.marked_for_removal) {
+				m_systems->material.release_materials(it->second);
+				m_systems->rendering.release_model(it->second);
+
+				it = current_scene->models.erase(it);
+			}
+			else {
+				++it;
+			}
+		}
+	}
+	catch(...) {}
 }
