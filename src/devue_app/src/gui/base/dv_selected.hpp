@@ -10,10 +10,12 @@ namespace devue {
 	class dv_selected {
 	public:
 		enum class obj_type : uint8_t {
-			none		= 0x0,
-			model		= 0x1,
-			scene_model = 0x2,
-			camera		= 0x3
+			none = 0x0,
+			model,
+			scene_model,
+			camera,
+			ambient_light,
+			directional_light
 		};
 
 		obj_type type	 = obj_type::none;

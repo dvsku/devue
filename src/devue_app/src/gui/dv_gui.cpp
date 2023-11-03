@@ -2,6 +2,7 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "imgui.h"
+#include "utilities/dv_util_log.hpp"
 
 using namespace devue;
 using namespace devue::core;
@@ -30,16 +31,33 @@ dv_gui::~dv_gui() {}
 ///////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 
-void dv_gui::prepare() {
+bool dv_gui::prepare() {
+	// Create shaders
+	try {
+		m_sytems.rendering.prepare();
+	}
+	catch (const std::exception& e) {
+		DV_LOG("Failed to prepare rendering system. | {}", e.what());
+		return false;
+	}
 
-	m_sytems.model.prepare();
+	// TODO: Load plugins here
 
-	dv_model model;
-	model.name = "test";
-
-	m_sytems.model.models[1U] = std::move(model);
+	// Load model importers
+	try {
+		m_sytems.model.prepare();
+	}
+	catch (const std::exception& e) {
+		DV_LOG("Failed to prepare model system. | {}", e.what());
+		return false;
+	}
+	
+	// Create a scene
+	if (!m_sytems.scene.create_scene())
+		return false;
 
 	glfwMaximizeWindow(m_native);
+	return true;
 }
 
 void dv_gui::on_before_update() {
@@ -65,7 +83,7 @@ void dv_gui::on_gui_update() {
 	m_components.properties.render();
 	m_components.console.render();
 
-	//ImGui::ShowDemoWindow();
+	ImGui::ShowDemoWindow();
 }
 
 void dv_gui::on_gui_after_update() {}

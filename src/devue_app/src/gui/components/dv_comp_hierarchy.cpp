@@ -48,7 +48,25 @@ void dv_comp_hierarchy::render() {
 	}
 
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-	if (ImGui::CollapsingHeader("Lighting##SceneExplorerLighting")) {
+	if (ImGui::CollapsingHeader("Lighting##Lighting")) {
+
+
+		ImGui::Indent();
+
+		if (ImGui::Selectable("Ambient Light##AmbientLight1", 
+			m_components->selected.in_selected(scene->lighting.ambient_light))) 
+		{
+			m_components->selected.select(scene->lighting.ambient_light);
+		}
+
+		if (ImGui::Selectable("Directional Light##DirectionalLight1",
+			m_components->selected.in_selected(scene->lighting.directional_light))) 
+		{
+			m_components->selected.select(scene->lighting.directional_light);
+		}
+
+		ImGui::Unindent();
+
 		/*ImGui::SetCursorPosX(ImGui::GetCursorPosX() - 3);
 		ImGui::Checkbox("##SceneExplorerAmbientVisible", &m_scene.lighting.ambient_light.is_active);
 

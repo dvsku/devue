@@ -9,7 +9,7 @@ namespace devue {
 		~dv_gui();
 
 	private:
-		void prepare()				override final;
+		bool prepare()				override final;
 		void on_before_update()		override final;
 		void on_update()			override final;
 		void on_after_update()		override final;

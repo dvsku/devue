@@ -7,5 +7,10 @@ namespace devue {
 		dv_comp_properties(dv_systems* systems, dv_components* components);
 
 		void render() final override;
+
+	private:
+		void render_camera();
+		void render_ambient_light();
+		void render_directional_light();
 	};
 }
