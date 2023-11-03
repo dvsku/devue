@@ -1,8 +1,9 @@
-#include "glad/glad.h"
 #include "systems/dv_sys_rendering.hpp"
 #include "systems/dv_systems_bundle.hpp"
 #include "exceptions/dv_exception.hpp"
 #include "utilities/dv_util_string.hpp"
+
+#include "glad/glad.h"
 
 #include <filesystem>
 #include <fstream>
@@ -19,9 +20,9 @@ dv_sys_rendering::dv_sys_rendering(dv_systems_bundle* systems)
 	: m_systems(systems) {}
 
 void dv_sys_rendering::prepare() {
-    m_shaders[shader_type::solid]   = create_shader("", "");
-    m_shaders[shader_type::texture] = create_shader("", "");
-    m_shaders[shader_type::grid]    = create_shader("", "");
+    m_shaders[shader_type::solid]   = create_shader("resources/shaders/solid_color.vert", "resources/shaders/solid_color.frag");
+    m_shaders[shader_type::texture] = create_shader("resources/shaders/texture.vert", "resources/shaders/texture.frag");
+    m_shaders[shader_type::grid]    = create_shader("resources/shaders/grid.vert", "resources/shaders/grid.frag");
 }
 
 void dv_sys_rendering::prepare_model(dv_scene_model& smodel) {}
