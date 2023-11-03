@@ -20,6 +20,7 @@ ADD_LIBRARY(devue_core STATIC
 	"src/importers/dv_file_type.cpp"
 	"src/scene/dv_scene.cpp"
 	"src/scene/dv_camera.cpp"
+	"src/scene/dv_scene_grid.cpp"
 )
 
 # COPY RESOURCES TO OUTPUT DIR
