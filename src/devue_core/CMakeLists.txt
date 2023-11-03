@@ -16,6 +16,7 @@ ADD_LIBRARY(devue_core STATIC
 	"src/systems/dv_sys_texture.cpp"
 	"src/systems/dv_sys_scene.cpp"
 	"src/utilities/dv_util_uuid.cpp"
+	"src/utilities/dv_util_diag.cpp"
 	"src/rendering/dv_shader.cpp"
 	"src/rendering/dv_render_target.cpp"
 	"src/rendering/dv_multisample_frame_buffer.cpp"
