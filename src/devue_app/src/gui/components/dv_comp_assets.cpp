@@ -21,6 +21,16 @@ void dv_comp_assets::render() {
             m_components->selected.select(model);
 		}
 
+        if (ImGui::BeginPopupContextItem()) {
+            if (ImGui::Selectable("Add to scene##ContextMenu", false,
+                ImGuiSelectableFlags_SelectOnRelease | ImGuiSelectableFlags_NoSetKeyOwner)) 
+            {
+                m_systems->scene.add_to_scene(model);
+            }
+
+            ImGui::EndPopup();
+        }
+
 		ImGui::PopID();
 	}
 
