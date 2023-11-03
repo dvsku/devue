@@ -33,6 +33,21 @@ void dv_sys_material::prepare_model_materials(dv_model& model) {
 	}
 }
 
+void dv_sys_material::release_materials(dv_scene_model& smodel) {
+	for (auto& smesh : smodel.meshes) {
+		if (!m_materials.contains(smesh.material_uuid)) continue;
+		auto& [ref, material] = m_materials[smesh.material_uuid];
+
+		if (ref > 1) {
+			ref--;
+			continue;
+		}
+
+		// TODO: Remove textures
+		m_materials.erase(smesh.material_uuid);
+	}
+}
+
 dv_scene_material create_scene_material(dv_model& model, dv_material& material) {
 	dv_scene_material scene_material;
 
