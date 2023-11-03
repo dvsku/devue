@@ -1,8 +1,9 @@
 #pragma once
 
 #include "scene/model/dv_scene_model.hpp"
-#include "scene/dv_camera.hpp"
 #include "scene/lighting/dv_lighting.hpp"
+#include "scene/dv_camera.hpp"
+#include "scene/dv_scene_grid.hpp"
 #include "utilities/dv_util_uuid.hpp"
 
 #include <unordered_map>
@@ -14,6 +15,7 @@ namespace devue::core {
 
 		dv_camera camera;
 		dv_lighting lighting;
+		dv_scene_grid grid;
 		std::unordered_map<devue::uuid, dv_scene_model> models;
 
 		dv_scene()					= default;
