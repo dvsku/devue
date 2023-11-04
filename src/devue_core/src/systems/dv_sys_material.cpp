@@ -1,5 +1,6 @@
 #include "systems/dv_sys_material.hpp"
 #include "systems/dv_systems_bundle.hpp"
+#include "exceptions/dv_exception.hpp"
 
 using namespace devue::core;
 
@@ -54,6 +55,10 @@ void dv_sys_material::release_materials(dv_scene_model& smodel) {
 // PRIVATE
 
 dv_scene_material dv_sys_material::create_scene_material(dv_model& model, dv_material& material) {
+    // If material has no textures, don't create it
+    if (material.diffuse_texture.empty())
+        throw DV_EXCEPTION("");
+
     dv_scene_material smaterial;
     m_systems->texture.prepare_material_textures(model, material, smaterial);
     return smaterial;
