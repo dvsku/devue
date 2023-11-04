@@ -43,10 +43,10 @@ size_t dv_sys_texture::count() const {
 void dv_sys_texture::prepare_material_textures(dv_model& model, 
                                                dv_material& material, dv_scene_material& smaterial) 
 {
-    {
+    if (!material.diffuse_texture.empty()) {
         std::filesystem::path texture = std::filesystem::path(model.texture_dir).append(material.diffuse_texture);
         devue::uuid uuid = dv_util_uuid::create(texture.string());
-
+    
         try {
             if (m_textures.contains(uuid)) {
                 m_textures[uuid].first++;
@@ -57,10 +57,10 @@ void dv_sys_texture::prepare_material_textures(dv_model& model,
                     create_scene_texture(texture, m_importers)
                 };
             }
-
+    
             smaterial.diffuse_texture_uuid = uuid;
         }
-        catch(const dv_exception& e) {
+        catch (const dv_exception& e) {
             DV_LOG("Failed to create `{}` diffuse texture `{}`. | {}", model.name, material.diffuse_texture, e.what());
         }
         catch (const std::exception& e) {
