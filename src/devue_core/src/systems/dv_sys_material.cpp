@@ -1,8 +1,10 @@
 #include "systems/dv_sys_material.hpp"
+#include "systems/dv_systems_bundle.hpp"
 
 using namespace devue::core;
 
-dv_scene_material create_scene_material(dv_model& model, dv_material& material);
+dv_sys_material::dv_sys_material(dv_systems_bundle* systems) 
+    : m_systems(systems) {}
 
 const dv_scene_material* dv_sys_material::get_material(devue::uuid uuid) {
     if (!m_materials.contains(uuid)) return nullptr;
@@ -48,10 +50,11 @@ void dv_sys_material::release_materials(dv_scene_model& smodel) {
     }
 }
 
-dv_scene_material create_scene_material(dv_model& model, dv_material& material) {
-    dv_scene_material scene_material;
+///////////////////////////////////////////////////////////////////////////////
+// PRIVATE
 
-    // TODO: Create textures
-
-    return scene_material;
+dv_scene_material dv_sys_material::create_scene_material(dv_model& model, dv_material& material) {
+    dv_scene_material smaterial;
+    m_systems->texture.prepare_material_textures(model, material, smaterial);
+    return smaterial;
 }
