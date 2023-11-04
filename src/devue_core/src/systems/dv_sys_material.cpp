@@ -46,7 +46,7 @@ void dv_sys_material::release_materials(dv_scene_model& smodel) {
     		continue;
     	}
 
-    	// TODO: Remove textures
+        m_systems->texture.release_textures(material);
     	m_materials.erase(smesh.material_uuid);
     }
 }
