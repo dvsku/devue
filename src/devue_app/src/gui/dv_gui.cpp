@@ -58,8 +58,12 @@ bool dv_gui::prepare() {
 	}
 	
 	// Create a scene
-	if (!m_sytems.scene.create_scene())
+	auto scene = m_sytems.scene.create_scene();
+	if (!scene)
 		return false;
+
+	scene->lighting.ambient_light.intensity		= 0.2f;
+	scene->lighting.directional_light.intensity = 0.55f;
 
 	dv_util_diag::init();
 
