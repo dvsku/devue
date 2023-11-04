@@ -69,6 +69,25 @@ void dv_sys_texture::prepare_material_textures(dv_model& model,
     }
 }
 
+void dv_sys_texture::release_textures(dv_scene_material& smaterial) {
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    if (m_textures.contains(smaterial.diffuse_texture_uuid)) {
+        auto& [ref, texture] = m_textures[smaterial.diffuse_texture_uuid];
+
+        if (ref > 1) {
+            ref--;
+        }
+        else {
+            glDeleteTextures(1, &texture.texture_id);
+            m_textures.erase(smaterial.diffuse_texture_uuid);
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// PRIVATE
+
 dv_scene_texture create_scene_texture(std::filesystem::path& filepath, std::vector<dv_texture_importer>& importers) {
     if (!std::filesystem::exists(filepath))
         throw;
