@@ -3,4 +3,4 @@
 using namespace devue::core;
 
 dv_systems_bundle::dv_systems_bundle() 
-    : scene(this), rendering(this) {}
+    : scene(this), rendering(this), material(this) {}
