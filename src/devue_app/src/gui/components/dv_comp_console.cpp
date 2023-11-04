@@ -13,7 +13,7 @@ dv_comp_console::dv_comp_console(dv_systems* systems, dv_components* components)
 void dv_comp_console::render() {
     if (!visible) return;
 
-    if (!ImGui::Begin("Console##Window", &visible)) 
+    if (!ImGui::Begin("Console##Window", &visible, ImGuiWindowFlags_HorizontalScrollbar))
     	return ImGui::End();
     
     auto view = m_text.view();
