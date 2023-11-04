@@ -9,7 +9,7 @@ uniform mat3 normal_mat;
 out vec3 f_normal;
 
 void main() {
-	gl_Position = mvp * vec4(v_pos, 1.0);
+    gl_Position = mvp * vec4(v_pos, 1.0);
 
-	f_normal	= normalize(normal_mat * v_normal);
+    f_normal	= normalize(normal_mat * v_normal);
 }

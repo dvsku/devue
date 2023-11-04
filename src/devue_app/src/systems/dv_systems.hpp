@@ -3,7 +3,7 @@
 #include "systems/dv_systems_bundle.hpp"
 
 namespace devue {
-	struct dv_systems : core::dv_systems_bundle {
-		dv_systems();
-	};
+    struct dv_systems : core::dv_systems_bundle {
+    	dv_systems();
+    };
 }

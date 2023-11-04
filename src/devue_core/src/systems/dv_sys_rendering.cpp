@@ -17,7 +17,7 @@ enum shader_type : uint8_t {
 };
 
 dv_sys_rendering::dv_sys_rendering(dv_systems_bundle* systems)
-	: m_systems(systems) {}
+    : m_systems(systems) {}
 
 void dv_sys_rendering::prepare() {
     m_shaders[shader_type::solid]   = create_shader("resources/shaders/solid_color.vert", "resources/shaders/solid_color.frag");
@@ -240,11 +240,11 @@ dv_shader dv_sys_rendering::create_shader(const std::string& vertex, const std::
     glDeleteShader(vertex_id);
     glDeleteShader(fragment_id);
 
-	return shader;
+    return shader;
 }
 
 void dv_sys_rendering::render_solid(dv_scene_model& smodel, dv_scene_mesh& smesh, 
-									dv_camera& camera, dv_lighting& lighting, glm::mat4& mvp, glm::mat3& nm) 
+    								dv_camera& camera, dv_lighting& lighting, glm::mat4& mvp, glm::mat3& nm) 
 {
     auto& shader = m_shaders[shader_type::solid];
 
@@ -286,7 +286,7 @@ void dv_sys_rendering::render_solid(dv_scene_model& smodel, dv_scene_mesh& smesh
 }
 
 void dv_sys_rendering::render_textured(const dv_scene_material* smaterial, dv_scene_mesh& smesh, 
-									   dv_camera& camera, dv_lighting& lighting, glm::mat4& mvp, glm::mat3& nm) 
+    								   dv_camera& camera, dv_lighting& lighting, glm::mat4& mvp, glm::mat3& nm) 
 {
     auto& shader = m_shaders[shader_type::texture];
 

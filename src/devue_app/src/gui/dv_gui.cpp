@@ -10,25 +10,25 @@ using namespace devue;
 using namespace devue::core;
 
 static std::string _get_imgui_ver() {
-	std::string str = std::string(ImGui::GetVersion());
+    std::string str = std::string(ImGui::GetVersion());
 
 #ifdef IMGUI_HAS_DOCK
-	str += " docking";
+    str += " docking";
 #endif
 #ifdef IMGUI_HAS_VIEWPORT
-	str += " multi-viewport";
+    str += " multi-viewport";
 #endif
 
-	return str;
+    return str;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC
 
 dv_gui::dv_gui(uint32_t width, uint32_t height, const std::string& title)
-	: dv_opengl_window(width, height, title), m_components(&m_sytems) 
+    : dv_opengl_window(width, height, title), m_components(&m_sytems) 
 {
-	m_scene_render_target = std::make_shared<dv_multisample_frame_buffer>(width, height);
+    m_scene_render_target = std::make_shared<dv_multisample_frame_buffer>(width, height);
 }
 
 dv_gui::~dv_gui() {}
@@ -37,79 +37,79 @@ dv_gui::~dv_gui() {}
 // PRIVATE
 
 bool dv_gui::prepare() {
-	// Create shaders
-	try {
-		m_sytems.rendering.prepare();
-	}
-	catch (const std::exception& e) {
-		DV_LOG("Failed to prepare rendering system. | {}", e.what());
-		return false;
-	}
+    // Create shaders
+    try {
+    	m_sytems.rendering.prepare();
+    }
+    catch (const std::exception& e) {
+    	DV_LOG("Failed to prepare rendering system. | {}", e.what());
+    	return false;
+    }
 
-	// TODO: Load plugins here
+    // TODO: Load plugins here
 
-	// Load model importers
-	try {
-		m_sytems.model.prepare();
-	}
-	catch (const std::exception& e) {
-		DV_LOG("Failed to prepare model system. | {}", e.what());
-		return false;
-	}
-	
-	// Create a scene
-	auto scene = m_sytems.scene.create_scene();
-	if (!scene)
-		return false;
+    // Load model importers
+    try {
+    	m_sytems.model.prepare();
+    }
+    catch (const std::exception& e) {
+    	DV_LOG("Failed to prepare model system. | {}", e.what());
+    	return false;
+    }
+    
+    // Create a scene
+    auto scene = m_sytems.scene.create_scene();
+    if (!scene)
+    	return false;
 
-	scene->lighting.ambient_light.intensity		= 0.2f;
-	scene->lighting.directional_light.intensity = 0.55f;
+    scene->lighting.ambient_light.intensity		= 0.2f;
+    scene->lighting.directional_light.intensity = 0.55f;
 
-	dv_util_diag::init();
+    dv_util_diag::init();
 
-	glfwMaximizeWindow(m_native);
-	return true;
+    glfwMaximizeWindow(m_native);
+    return true;
 }
 
 void dv_gui::on_before_update() {
-	dv_util_diag::update();
+    dv_util_diag::update();
 }
 
 void dv_gui::on_update() {
-	m_sytems.scene.render_current_scene(m_scene_render_target.get());
+    m_sytems.scene.render_current_scene(m_scene_render_target.get());
 }
 
 void dv_gui::on_after_update() {}
 
 void dv_gui::on_gui_before_update() {
-	glClearColor(0.185f, 0.185f, 0.185f, 1.00f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(0.185f, 0.185f, 0.185f, 1.00f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void dv_gui::on_gui_update() {
-	m_components.dockspace.render();
-	m_components.hierarchy.render();
-	m_components.assets.render();
-	m_components.scene.render(m_scene_render_target.get());
-	m_components.properties.render();
-	m_components.console.render();
+    m_components.dockspace.render();
+    m_components.hierarchy.render();
+    m_components.assets.render();
+    m_components.scene.render(m_scene_render_target.get());
+    m_components.properties.render();
+    m_components.console.render();
 
-	ImGui::ShowDemoWindow();
+    ImGui::ShowDemoWindow();
 }
 
 void dv_gui::on_gui_after_update() {}
 
 void dv_gui::on_resize(int width, int height) {
-	if (m_scene_render_target)
-		m_scene_render_target->resize(width, height);
+    if (m_scene_render_target)
+    	m_scene_render_target->resize(width, height);
 
-	if (m_sytems.scene.current_scene)
-		m_sytems.scene.current_scene->camera.set_aspect_ratio(static_cast<float>(width), static_cast<float>(height));
+    if (m_sytems.scene.current_scene)
+    	m_sytems.scene.current_scene->camera.set_aspect_ratio(static_cast<float>(width), static_cast<float>(height));
 }
 
 void dv_gui::on_scroll(double dx, double dy) {
-	if (m_components.scene.is_hovered && m_sytems.scene.current_scene)
-		m_sytems.scene.current_scene->camera.zoom(static_cast<float>(dy));
+    if (m_components.scene.is_hovered && m_sytems.scene.current_scene)
+    	m_sytems.scene.current_scene->camera.zoom(static_cast<float>(dy));
 }
 
 void dv_gui::on_mouse_button(int btn, int action, int modifier) {
@@ -117,13 +117,13 @@ void dv_gui::on_mouse_button(int btn, int action, int modifier) {
 }
 
 void dv_gui::on_mouse_move(double dx, double dy) {
-	if (m_components.scene.is_hovered && m_sytems.scene.current_scene) {
-		if (glfwGetMouseButton(glfwGetCurrentContext(), GLFW_MOUSE_BUTTON_RIGHT)) {
-			m_sytems.scene.current_scene->camera.rotate(static_cast<float>(dx), static_cast<float>(dy));
-		}
+    if (m_components.scene.is_hovered && m_sytems.scene.current_scene) {
+    	if (glfwGetMouseButton(glfwGetCurrentContext(), GLFW_MOUSE_BUTTON_RIGHT)) {
+    		m_sytems.scene.current_scene->camera.rotate(static_cast<float>(dx), static_cast<float>(dy));
+    	}
 
-		if (glfwGetMouseButton(glfwGetCurrentContext(), GLFW_MOUSE_BUTTON_LEFT)) {
-			m_sytems.scene.current_scene->camera.translate(static_cast<float>(dx), static_cast<float>(dy));
-		}
-	}
+    	if (glfwGetMouseButton(glfwGetCurrentContext(), GLFW_MOUSE_BUTTON_LEFT)) {
+    		m_sytems.scene.current_scene->camera.translate(static_cast<float>(dx), static_cast<float>(dy));
+    	}
+    }
 }

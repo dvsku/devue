@@ -7,18 +7,18 @@
 #include "systems/dv_systems.hpp"
 
 namespace devue {
-	struct dv_components;
+    struct dv_components;
 
-	struct dv_comp {
-		bool visible = true;
+    struct dv_comp {
+    	bool visible = true;
 
-		dv_comp() = delete;
-		dv_comp(dv_systems* systems, dv_components* components);
-		
-		virtual void render() = 0;
+    	dv_comp() = delete;
+    	dv_comp(dv_systems* systems, dv_components* components);
+    	
+    	virtual void render() = 0;
 
-	protected:
-		dv_systems* m_systems = nullptr;
-		dv_components* m_components = nullptr;
-	};
+    protected:
+    	dv_systems* m_systems = nullptr;
+    	dv_components* m_components = nullptr;
+    };
 }

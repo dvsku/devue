@@ -7,19 +7,19 @@ using namespace devue;
 using namespace devue::core;
 
 dv_comp_assets::dv_comp_assets(dv_systems* systems, dv_components* components)
-	: dv_comp(systems, components) {}
+    : dv_comp(systems, components) {}
 
 void dv_comp_assets::render() {
-	ImGui::Begin("Assets##Window");
+    ImGui::Begin("Assets##Window");
 
-	for (auto& kvp : m_systems->model.models) {
-		dv_model& model = kvp.second;
+    for (auto& kvp : m_systems->model.models) {
+    	dv_model& model = kvp.second;
 
-		ImGui::PushID(DV_FORMAT_C("{}", model.uuid));
+    	ImGui::PushID(DV_FORMAT_C("{}", model.uuid));
 
-		if (ImGui::Selectable(DV_FORMAT_C("{}##Asset", model.name), m_components->selected.in_selected(model))) {
+    	if (ImGui::Selectable(DV_FORMAT_C("{}##Asset", model.name), m_components->selected.in_selected(model))) {
             m_components->selected.select(model);
-		}
+    	}
 
         if (ImGui::BeginPopupContextItem()) {
             if (ImGui::Selectable("Add to scene##ContextMenu", false,
@@ -31,10 +31,10 @@ void dv_comp_assets::render() {
             ImGui::EndPopup();
         }
 
-		ImGui::PopID();
-	}
+    	ImGui::PopID();
+    }
 
-	ImGui::End();
+    ImGui::End();
 
     import_modal();
 }

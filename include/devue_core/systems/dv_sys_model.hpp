@@ -8,29 +8,29 @@
 #include "utilities/dv_util_uuid.hpp"
 
 namespace devue::core {
-	class dv_sys_model {
-	public:
-		std::unordered_map<devue::uuid, dv_model> models;
+    class dv_sys_model {
+    public:
+    	std::unordered_map<devue::uuid, dv_model> models;
 
-	public:
-		void prepare();
+    public:
+    	void prepare();
 
-		size_t count() const;
+    	size_t count() const;
 
-		// Get a model
-		dv_model* get(const devue::uuid& uuid);
+    	// Get a model
+    	dv_model* get(const devue::uuid& uuid);
 
-		// Get import filters
-		const std::vector<dv_file_filter>& get_import_filters();
+    	// Get import filters
+    	const std::vector<dv_file_filter>& get_import_filters();
 
-		// Import a model
-		dv_model& import(const std::string& path);
+    	// Import a model
+    	dv_model& import(const std::string& path);
 
-	private:
-		std::vector<dv_model_importer> m_importers;
-		std::vector<dv_file_filter> m_import_filters;
+    private:
+    	std::vector<dv_model_importer> m_importers;
+    	std::vector<dv_file_filter> m_import_filters;
 
-	private:
-		void create_filters();
-	};
+    private:
+    	void create_filters();
+    };
 }

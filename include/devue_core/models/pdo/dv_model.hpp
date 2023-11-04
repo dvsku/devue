@@ -14,23 +14,23 @@
 #include <unordered_map>
 
 namespace devue::core {
-	struct dv_model {
-		devue::uuid uuid = 0U;
+    struct dv_model {
+    	devue::uuid uuid = 0U;
 
-		std::string name				  = "";
-		std::filesystem::path texture_dir = "";
-		
-		dv_skeleton skeleton;
-		std::unordered_map<devue::uuid, dv_mesh>	 meshes;
-		std::unordered_map<devue::uuid, dv_material> materials;
+    	std::string name				  = "";
+    	std::filesystem::path texture_dir = "";
+    	
+    	dv_skeleton skeleton;
+    	std::unordered_map<devue::uuid, dv_mesh>	 meshes;
+    	std::unordered_map<devue::uuid, dv_material> materials;
 
-		float min_y = 0.0f;
+    	float min_y = 0.0f;
 
-		dv_model()				  = default;
-		dv_model(const dv_model&) = default;
-		dv_model(dv_model&&)	  = default;
+    	dv_model()				  = default;
+    	dv_model(const dv_model&) = default;
+    	dv_model(dv_model&&)	  = default;
 
-		dv_model& operator=(const dv_model&) = default;
-		dv_model& operator=(dv_model&&)		 = default;
-	};
+    	dv_model& operator=(const dv_model&) = default;
+    	dv_model& operator=(dv_model&&)		 = default;
+    };
 }

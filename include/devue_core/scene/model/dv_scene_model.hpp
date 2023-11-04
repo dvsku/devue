@@ -8,23 +8,23 @@
 #include <vector>
 
 namespace devue::core {
-	struct dv_scene_model {
-		///////////////////////////////////////////////////////////////////////
-		// MODEL PROPERTIES
+    struct dv_scene_model {
+    	///////////////////////////////////////////////////////////////////////
+    	// MODEL PROPERTIES
 
-		std::string name = "";
+    	std::string name = "";
 
-		devue::uuid uuid	   = 0U;
-		devue::uuid model_uuid = 0U;
+    	devue::uuid uuid	   = 0U;
+    	devue::uuid model_uuid = 0U;
 
-		///////////////////////////////////////////////////////////////////////
-		// RENDER PROPERTIES
+    	///////////////////////////////////////////////////////////////////////
+    	// RENDER PROPERTIES
 
-		bool visible			= true;
-		bool wireframe			= false;
-		bool marked_for_removal = false;
+    	bool visible			= true;
+    	bool wireframe			= false;
+    	bool marked_for_removal = false;
 
-		dv_transform transform{};
-		std::vector<dv_scene_mesh> meshes;
-	};
+    	dv_transform transform{};
+    	std::vector<dv_scene_mesh> meshes;
+    };
 }

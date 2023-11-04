@@ -624,9 +624,9 @@ void SpookyHash::Final(uint64* hash1, uint64* hash2) {
 
 devue::uuid dv_util_uuid::create() {   
     auto uuid = uuids::uuid_system_generator{}().as_bytes();
-	return SpookyHash::Hash64(uuid.data(), uuid.size(), 0xdeadbeef);
+    return SpookyHash::Hash64(uuid.data(), uuid.size(), 0xdeadbeef);
 }
 
 devue::uuid dv_util_uuid::create(const std::string& str) {
-	return SpookyHash::Hash64(str.data(), str.size(), 0xdeadbeef);
+    return SpookyHash::Hash64(str.data(), str.size(), 0xdeadbeef);
 }

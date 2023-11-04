@@ -4,7 +4,7 @@
 using namespace devue::core;
 
 void dv_util_diag::init() {
-	m_previous_time = glfwGetTime();
+    m_previous_time = glfwGetTime();
 }
 
 void dv_util_diag::update() {

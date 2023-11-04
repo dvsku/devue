@@ -6,27 +6,27 @@
 #include <vector>
 
 namespace devue::shared {
-	struct dv_plugin_material {
-		std::string name			= "";
-		std::string diffuse_texture = "";
-	};
+    struct dv_plugin_material {
+    	std::string name			= "";
+    	std::string diffuse_texture = "";
+    };
 
-	struct dv_plugin_vertex {
-		glm::vec3 position;
-		glm::vec3 normal;
-		glm::vec2 uv;
-	};
+    struct dv_plugin_vertex {
+    	glm::vec3 position;
+    	glm::vec3 normal;
+    	glm::vec2 uv;
+    };
 
-	struct dv_plugin_mesh {
-		std::string name = "";
+    struct dv_plugin_mesh {
+    	std::string name = "";
 
-		dv_plugin_material material;
+    	dv_plugin_material material;
 
-		std::vector<dv_plugin_vertex> vertices;
-		std::vector<uint16_t> indices;
-	};
+    	std::vector<dv_plugin_vertex> vertices;
+    	std::vector<uint16_t> indices;
+    };
 
-	struct dv_plugin_model {
-		std::vector<dv_plugin_mesh> meshes;
-	};
+    struct dv_plugin_model {
+    	std::vector<dv_plugin_mesh> meshes;
+    };
 }
