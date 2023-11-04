@@ -106,10 +106,11 @@ void dv_comp_dockspace::render() {
     ImGui::AlignTextToFramePadding();
     ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 2);
     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 8);
-    ImGui::Text("M: %d SM: %d MAT: %d",
+    ImGui::Text("M: %d SM: %d MAT: %d TEX: %d",
     			m_systems->model.count(),
     			m_systems->scene.count(),
-    			m_systems->material.count());
+    			m_systems->material.count(),
+                m_systems->texture.count());
 
     ImGui::EndChild();
 
