@@ -56,6 +56,15 @@ bool dv_gui::prepare() {
     	DV_LOG("Failed to prepare model system. | {}", e.what());
     	return false;
     }
+
+    // Load texture importers
+    try {
+        m_sytems.texture.prepare();
+    }
+    catch (const std::exception& e) {
+        DV_LOG("Failed to prepare model system. | {}", e.what());
+        return false;
+    }
     
     // Create a scene
     auto scene = m_sytems.scene.create_scene();
