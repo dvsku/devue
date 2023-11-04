@@ -297,8 +297,9 @@ void dv_sys_rendering::render_textured(const dv_scene_material* smaterial, dv_sc
     shader.set("dir_light_dir",     lighting.directional_light.direction);
     shader.set("dir_light_color",   lighting.directional_light.get_light_color());
 
-    // TODO: Fix
-    //glBindTexture(GL_TEXTURE_2D, smaterial->diffuse_texture_uuid);
+    auto diffuse_texture = m_systems->texture.get_texture(smaterial->diffuse_texture_uuid);
+    if (diffuse_texture && diffuse_texture->texture_id)
+        glBindTexture(GL_TEXTURE_2D, diffuse_texture->texture_id);
 
     glBindVertexArray(smesh.vao);
     glBindBuffer(GL_ARRAY_BUFFER, smesh.vbo);
