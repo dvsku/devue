@@ -5,11 +5,15 @@
 
 namespace devue::core {
     class dv_plugin {
-    public:     
-        std::string name     = "";
+    public:
         std::string filename = "";
+        std::string name     = "";
+        std::string author   = "";
+        std::string link     = "";
 
-        uint32_t plugin_version = 0x0001;
+        uint8_t  plugin_version_major    = 0U;
+        float    plugin_version_minor    = 0.0f;
+        uint32_t plugin_version_internal = 0U;
 
         friend class dv_sys_plugin;
 
