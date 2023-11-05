@@ -58,7 +58,7 @@ void dv_sys_plugin::create_texture_plugins() {
         }
         catch (...) {}
 
-        DV_LOG("Loaded texture plugin `{}`", m_texture_plugins[uuid].filename);
+        DV_LOG("Loaded texture plugin `{}` from `{}`", m_texture_plugins[uuid].name, m_texture_plugins[uuid].filename);
     }
 }
 
