@@ -9,8 +9,6 @@
 namespace devue::core {
     class dv_texture_plugin : public dv_plugin {
     public:
-        uint32_t texture_version = 0x0001;
-
         friend class dv_sys_plugin;
 
     public:
@@ -20,6 +18,8 @@ namespace devue::core {
 
         dv_texture_plugin& operator=(const dv_texture_plugin&) = delete;
         dv_texture_plugin& operator=(dv_texture_plugin&&)      = default;
+
+        void prepare();
 
     private:
         plugins::dv_plugin_texture_importer* m_importer = nullptr;
