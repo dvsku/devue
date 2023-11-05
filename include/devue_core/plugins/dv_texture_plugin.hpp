@@ -7,7 +7,7 @@
 #include <string>
 
 namespace devue::core {
-    class dv_texture_plugin : private dv_plugin {
+    class dv_texture_plugin : public dv_plugin {
     public:
         uint32_t texture_version = 0x0001;
 
