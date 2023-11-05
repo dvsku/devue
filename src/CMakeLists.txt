@@ -3,4 +3,4 @@
 ADD_SUBDIRECTORY("lib")
 ADD_SUBDIRECTORY("devue_core")
 ADD_SUBDIRECTORY("devue_app")
-#ADD_SUBDIRECTORY("devue_plugins")
+ADD_SUBDIRECTORY("devue_plugins")
