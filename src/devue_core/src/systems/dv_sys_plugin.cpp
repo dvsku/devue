@@ -1,5 +1,6 @@
 #include "systems/dv_sys_plugin.hpp"
 #include "exceptions/dv_exception.hpp"
+#include "utilities/dv_util_log.hpp"
 
 #include <windows.h>
 #include <filesystem>
@@ -27,6 +28,8 @@ void dv_sys_plugin::release_plugin(dv_texture_plugin& plugin) {
 
     plugin.m_handle   = nullptr;
     plugin.m_importer = nullptr;
+
+    DV_LOG("Unloaded texture plugin `{}`", plugin.filename);
 }
 
 void dv_sys_plugin::create_texture_plugins() {
@@ -54,6 +57,8 @@ void dv_sys_plugin::create_texture_plugins() {
             m_texture_plugins[uuid] = std::move(load_texture_plugin(filepath));
         }
         catch (...) {}
+
+        DV_LOG("Loaded texture plugin `{}`", m_texture_plugins[uuid].filename);
     }
 }
 
@@ -79,6 +84,7 @@ dv_texture_plugin dv_sys_plugin::load_texture_plugin(const std::filesystem::path
     plugin.m_handle   = handle;
     plugin.m_importer = importer;
 
+    plugin.filename        = path.filename().string();
     plugin.name            = path.filename().replace_extension("").string();
     plugin.plugin_version  = importer->plugin_version();
     plugin.texture_version = importer->texture_version();
