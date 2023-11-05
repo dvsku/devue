@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace devue::shared {
+namespace devue::plugins {
     struct dv_plugin_material {
     	std::string name			= "";
     	std::string diffuse_texture = "";
