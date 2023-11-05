@@ -84,10 +84,8 @@ dv_texture_plugin dv_sys_plugin::load_texture_plugin(const std::filesystem::path
     plugin.m_handle   = handle;
     plugin.m_importer = importer;
 
-    plugin.filename        = path.filename().string();
-    plugin.name            = path.filename().replace_extension("").string();
-    plugin.plugin_version  = importer->plugin_version();
-    plugin.texture_version = importer->texture_version();
+    plugin.filename = path.filename().string();
+    plugin.prepare();
 
     return plugin;
 }
