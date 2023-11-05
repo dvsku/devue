@@ -65,6 +65,14 @@ bool dv_gui::prepare() {
         DV_LOG("Failed to prepare model system. | {}", e.what());
         return false;
     }
+
+    try {
+        m_sytems.plugin.prepare();
+    }
+    catch (const std::exception& e) {
+        DV_LOG("Failed to prepare plugin system. | {}", e.what());
+        return false;
+    }
     
     // Create a scene
     auto scene = m_sytems.scene.create_scene();

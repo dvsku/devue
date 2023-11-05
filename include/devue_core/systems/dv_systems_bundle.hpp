@@ -5,6 +5,7 @@
 #include "systems/dv_sys_texture.hpp"
 #include "systems/dv_sys_rendering.hpp"
 #include "systems/dv_sys_scene.hpp"
+#include "systems/dv_sys_plugin.hpp"
 
 namespace devue::core {
     struct dv_systems_bundle {
@@ -13,6 +14,7 @@ namespace devue::core {
     	dv_sys_texture		texture;
     	dv_sys_rendering	rendering;
     	dv_sys_scene		scene;
+        dv_sys_plugin       plugin;
 
     	dv_systems_bundle();
     };

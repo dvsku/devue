@@ -3,7 +3,7 @@
 # INCLUDE ALL HEADER FILES SO VS
 # CAN STOP FREAKING OUT
 FILE(GLOB_RECURSE DEVUE_CORE_HEADERS CONFIGURE_DEPENDS 
-    "${CMAKE_SOURCE_DIR}/include/devue_core/*.hpp"
+	"${CMAKE_SOURCE_DIR}/include/devue_core/*.hpp"
 )
 
 ADD_LIBRARY(devue_core STATIC
@@ -15,6 +15,7 @@ ADD_LIBRARY(devue_core STATIC
     "src/systems/dv_sys_rendering.cpp"
     "src/systems/dv_sys_texture.cpp"
     "src/systems/dv_sys_scene.cpp"
+    "src/systems/dv_sys_plugin.cpp"
     "src/utilities/dv_util_uuid.cpp"
     "src/utilities/dv_util_diag.cpp"
     "src/rendering/dv_shader.cpp"
