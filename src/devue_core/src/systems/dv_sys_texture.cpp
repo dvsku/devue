@@ -10,7 +10,7 @@
 #include <filesystem>
 
 using namespace devue::core;
-using namespace devue::shared;
+using namespace devue::plugins;
 
 static dv_scene_texture create_scene_texture(std::filesystem::path& filepath, std::vector<dv_texture_importer>& importers);
 

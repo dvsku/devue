@@ -1,5 +1,5 @@
 #include "systems/dv_sys_model.hpp"
-#include "model/dv_plugin_model.hpp"
+#include "dv_plugin_model.hpp"
 #include "obj_loader/include/obj_loader.h"
 #include "utilities/dv_util_string.hpp"
 
@@ -7,7 +7,7 @@
 #include <filesystem>
 
 using namespace devue::core;
-using namespace devue::shared;
+using namespace devue::plugins;
 
 static dv_plugin_model _import_obj(const std::filesystem::path& path);
 
