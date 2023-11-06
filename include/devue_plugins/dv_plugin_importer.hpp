@@ -3,7 +3,7 @@
 #include <cstdint>
 
 namespace devue::plugins {
-    class dv_plugin_texture_importer {
+    class dv_plugin_importer {
     public:
         struct serialized {
             uint64_t size = 0U;

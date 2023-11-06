@@ -8,7 +8,7 @@ void dv_texture_plugin::prepare() {
     m_importer->init();
 
     dv_bin_reader br;
-    dv_plugin_texture_importer::serialized serialized;
+    dv_plugin_importer::serialized serialized;
 
     serialized = m_importer->get_name();
     if (serialized.size && serialized.data) {
@@ -49,7 +49,7 @@ void dv_texture_plugin::prepare() {
 
 devue::plugins::dv_plugin_texture devue::core::dv_texture_plugin::import(const std::string& filepath) {
     devue::plugins::dv_plugin_texture texture;
-    dv_plugin_texture_importer::serialized serialized;
+    dv_plugin_importer::serialized serialized;
 
     serialized = m_importer->import(filepath.c_str());
 

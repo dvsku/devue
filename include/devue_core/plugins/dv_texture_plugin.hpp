@@ -2,7 +2,7 @@
 
 #include "plugins/dv_plugin.hpp"
 #include "dv_plugin_texture.hpp"
-#include "dv_plugin_texture_importer.hpp"
+#include "dv_plugin_importer.hpp"
 
 #include <windows.h>
 #include <string>
@@ -24,6 +24,6 @@ namespace devue::core {
         devue::plugins::dv_plugin_texture import(const std::string& filepath);
 
     private:
-        plugins::dv_plugin_texture_importer* m_importer = nullptr;
+        plugins::dv_plugin_importer* m_importer = nullptr;
     };
 }

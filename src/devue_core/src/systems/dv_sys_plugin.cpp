@@ -87,12 +87,12 @@ dv_texture_plugin dv_sys_plugin::load_texture_plugin(const std::filesystem::path
     if (!create_fn_addr)
         throw DV_EXCEPTION("");
 
-    typedef devue::plugins::dv_plugin_texture_importer* create_fn();
+    typedef devue::plugins::dv_plugin_importer* create_fn();
     create_fn* create = (create_fn*)create_fn_addr;
     if (!create)
         throw DV_EXCEPTION("");
 
-    devue::plugins::dv_plugin_texture_importer* importer = create();
+    devue::plugins::dv_plugin_importer* importer = create();
     if (!importer)
         throw DV_EXCEPTION("");
 
