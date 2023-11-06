@@ -64,7 +64,7 @@ void dv_comp_assets::import_modal() {
 
         ImGui::SameLine();
         if (ImGui::Button("Select##File", ImVec2(120, 0))) {
-            dv_util_dialog::open_file_dialog(m_import_file_path, m_systems->model.get_import_filters());
+            dv_util_dialog::open_file_dialog(m_import_file_path, m_systems->model.get_supported_file_types());
 
             // By default set texture folder to be the same
             // as the file
