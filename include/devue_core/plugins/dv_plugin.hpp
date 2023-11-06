@@ -1,6 +1,7 @@
 #pragma once
 
 #include "dv_file_type.hpp"
+#include "dv_plugin_importer.hpp"
 
 #include <windows.h>
 #include <string>
@@ -20,8 +21,6 @@ namespace devue::core {
 
         std::vector<plugins::dv_file_type> supported_file_types;
 
-        friend class dv_sys_plugin;
-
     public:
         dv_plugin()                 = default;
         dv_plugin(const dv_plugin&) = delete;
@@ -32,7 +31,12 @@ namespace devue::core {
         dv_plugin& operator=(const dv_plugin&)  = delete;
         dv_plugin& operator=(dv_plugin&&)       = default;
 
+        virtual void prepare();
+
     protected:
         HMODULE m_handle = nullptr;
+        plugins::dv_plugin_importer* m_importer = nullptr;
+
+        friend class dv_sys_plugin;
     };
 }

@@ -30,6 +30,7 @@ ADD_LIBRARY(devue_core STATIC
 	"src/scene/dv_scene.cpp"
 	"src/scene/dv_camera.cpp"
 	"src/scene/dv_scene_grid.cpp"
+	"src/plugins/dv_plugin.cpp"
 	"src/plugins/dv_texture_plugin.cpp"
 )
 
