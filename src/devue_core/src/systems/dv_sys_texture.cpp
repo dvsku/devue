@@ -4,17 +4,12 @@
 #include "utilities/dv_util_log.hpp"
 #include "glad/glad.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb/include/stb_image.h"
-
 #include <filesystem>
 
 using namespace devue::core;
 using namespace devue::plugins;
 
 static dv_scene_texture create_scene_texture(std::filesystem::path& filepath, std::vector<dv_texture_importer>& importers);
-
-static dv_plugin_texture _import_stb_supported(const std::filesystem::path& path);
 
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC
@@ -121,26 +116,4 @@ dv_scene_texture create_scene_texture(std::filesystem::path& filepath, std::vect
     }
 
     throw DV_EXCEPTION("No suitable importer found.");
-}
-
-dv_plugin_texture _import_stb_supported(const std::filesystem::path& path) {
-    dv_plugin_texture ptexture;
-    
-    stbi_set_flip_vertically_on_load(true);
-
-    int channels = 0;
-    unsigned char* data = stbi_load(path.string().c_str(), &ptexture.width, &ptexture.height, &channels, 0);
-
-    if (!data) {
-        stbi_image_free(data);
-        throw;
-    }
-
-    size_t size = (size_t)ptexture.width * (size_t)ptexture.height * (size_t)channels;
-    ptexture.data.resize(size);
-    ptexture.data.insert(ptexture.data.begin(), data, data + size);
-
-    stbi_image_free(data);
-
-    return ptexture;
 }
