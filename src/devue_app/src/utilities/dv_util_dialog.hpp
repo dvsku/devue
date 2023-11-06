@@ -1,6 +1,6 @@
 #pragma once
 
-#include "importers/dv_file_type.hpp"
+#include "importers/dv_file_filter.hpp"
 
 #define STRICT_TYPED_ITEMIDS
 #include <shlobj.h>

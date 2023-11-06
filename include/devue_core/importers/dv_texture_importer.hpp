@@ -1,6 +1,6 @@
 #pragma once
 
-#include "importers/dv_file_type.hpp"
+#include "dv_file_type.hpp"
 #include "dv_plugin_texture.hpp"
 
 #include <string>
@@ -11,7 +11,7 @@ namespace devue::core {
     struct dv_texture_importer {
         typedef std::function<devue::plugins::dv_plugin_texture(const std::string&)> import_fn;
 
-        std::vector<dv_file_type> types;
+        std::vector<devue::plugins::dv_file_type> types;
         import_fn fn = nullptr;
     };
 }

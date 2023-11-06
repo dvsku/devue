@@ -5,6 +5,7 @@
 
 #include "models/pdo/dv_model.hpp"
 #include "importers/dv_model_importer.hpp"
+#include "importers/dv_file_filter.hpp"
 #include "utilities/dv_util_uuid.hpp"
 
 namespace devue::core {
