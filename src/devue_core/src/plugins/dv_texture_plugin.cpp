@@ -1,5 +1,5 @@
 #include "plugins/dv_texture_plugin.hpp"
-#include "serialization/dv_serialization.hpp"
+#include "dv_serialization.hpp"
 
 using namespace devue::core;
 using namespace devue::plugins;
