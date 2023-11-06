@@ -9,9 +9,6 @@
 namespace devue::core {
     class dv_texture_plugin : public dv_plugin {
     public:
-        friend class dv_sys_plugin;
-
-    public:
         dv_texture_plugin()                         = default;
         dv_texture_plugin(const dv_texture_plugin&) = delete;
         dv_texture_plugin(dv_texture_plugin&&)      = default;
