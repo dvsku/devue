@@ -31,4 +31,18 @@ void dv_texture_plugin::prepare() {
     plugin_version_major    = m_importer->get_plugin_version_major();
     plugin_version_minor    = m_importer->get_plugin_version_minor();
     plugin_version_internal = m_importer->get_internal_version();
+
+    serialized = m_importer->get_suported_types();
+    if (serialized.size && serialized.data) {
+        br.set(serialized.data, serialized.size);
+
+        size_t size = 0U;
+        br >> size;
+
+        for (size_t i = 0; i < size; i++) {
+            dv_file_type file_type;
+            br >> file_type.name >> file_type.extensions;
+            supported_file_types.push_back(file_type);
+        }
+    }
 }
