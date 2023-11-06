@@ -19,13 +19,14 @@ namespace devue::core {
         dv_sys_texture& operator=(const dv_sys_texture&) = delete;
         dv_sys_texture& operator=(dv_sys_texture&&)      = default;
 
-        bool prepare();
-
         const dv_scene_texture* get_texture(devue::uuid uuid);
     	size_t count() const;
 
         void prepare_material_textures(dv_model& model, dv_material& material, dv_scene_material& smaterial);
         void release_textures(dv_scene_material& smaterial);
+
+        void create_importer(dv_texture_importer&& importer);
+        void release_importers();
 
     private:
         std::vector<dv_texture_importer> m_importers;

@@ -46,3 +46,7 @@ void dv_texture_plugin::prepare() {
         }
     }
 }
+
+devue::plugins::dv_plugin_texture devue::core::dv_texture_plugin::import(const std::string& filepath) {
+    return devue::plugins::dv_plugin_texture();
+}

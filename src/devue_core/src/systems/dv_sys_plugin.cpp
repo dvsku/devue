@@ -1,4 +1,5 @@
 #include "systems/dv_sys_plugin.hpp"
+#include "systems/dv_systems_bundle.hpp"
 #include "exceptions/dv_exception.hpp"
 #include "utilities/dv_util_log.hpp"
 
@@ -13,12 +14,25 @@ dv_sys_plugin::dv_sys_plugin(dv_systems_bundle* systems)
     : m_systems(systems) {}
 
 dv_sys_plugin::~dv_sys_plugin() {
+    m_systems->texture.release_importers();
+
     for (auto& [uuid, plugin] : m_texture_plugins)
         release_plugin(plugin);
 }
 
 void dv_sys_plugin::prepare() {
     create_texture_plugins();
+
+    for (auto& [uuid, plugin] : m_texture_plugins) {
+        m_systems->texture.create_importer(
+            {
+                plugin.supported_file_types,
+                [&](const std::string& filepath) {
+                    return plugin.import(filepath);
+                }
+            }
+        );
+    }
 }
 
 void dv_sys_plugin::release_plugin(dv_texture_plugin& plugin) {

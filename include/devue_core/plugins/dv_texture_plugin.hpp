@@ -1,6 +1,7 @@
 #pragma once
 
 #include "plugins/dv_plugin.hpp"
+#include "dv_plugin_texture.hpp"
 #include "dv_plugin_texture_importer.hpp"
 
 #include <windows.h>
@@ -20,6 +21,7 @@ namespace devue::core {
         dv_texture_plugin& operator=(dv_texture_plugin&&)      = default;
 
         void prepare();
+        devue::plugins::dv_plugin_texture import(const std::string& filepath);
 
     private:
         plugins::dv_plugin_texture_importer* m_importer = nullptr;

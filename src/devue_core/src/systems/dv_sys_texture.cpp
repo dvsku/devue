@@ -19,18 +19,6 @@ static dv_plugin_texture _import_stb_supported(const std::filesystem::path& path
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC
 
-bool dv_sys_texture::prepare() {
-    m_importers.push_back({
-        {
-            {"Jpeg", ".jpg"},
-            {"PNG",  ".png"},
-        },
-        _import_stb_supported
-    });
-    
-    return true;
-}
-
 const dv_scene_texture* dv_sys_texture::get_texture(devue::uuid uuid) {
     if (!m_textures.contains(uuid)) return nullptr;
     return &m_textures[uuid].second;
@@ -83,6 +71,14 @@ void dv_sys_texture::release_textures(dv_scene_material& smaterial) {
             m_textures.erase(smaterial.diffuse_texture_uuid);
         }
     }
+}
+
+void dv_sys_texture::create_importer(dv_texture_importer&& importer) {
+    m_importers.emplace_back(importer);
+}
+
+void devue::core::dv_sys_texture::release_importers() {
+    m_importers.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
