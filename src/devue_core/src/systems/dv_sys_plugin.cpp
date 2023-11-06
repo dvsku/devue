@@ -8,7 +8,19 @@
 
 using namespace devue::core;
 
-void release_handle(HMODULE handle);
+///////////////////////////////////////////////////////////////////////////////
+// INTERNAL FORWARD
+
+struct plugin_handle {
+    HMODULE handle                               = nullptr;
+    devue::plugins::dv_plugin_importer* importer = nullptr;
+};
+
+static plugin_handle create_handle(const char* path);
+static void release_handle(HMODULE handle);
+
+///////////////////////////////////////////////////////////////////////////////
+// PUBLIC
 
 dv_sys_plugin::dv_sys_plugin(dv_systems_bundle* systems) 
     : m_systems(systems) {}
@@ -21,7 +33,19 @@ dv_sys_plugin::~dv_sys_plugin() {
 }
 
 void dv_sys_plugin::prepare() {
+    create_model_plugins();
     create_texture_plugins();
+
+    for (auto& [uuid, plugin] : m_model_plugins) {
+        m_systems->model.create_importer(
+            {
+                plugin.supported_file_types,
+                [&](const std::string& filepath) {
+                    return plugin.import(filepath);
+                }
+            }
+        );
+    }
 
     for (auto& [uuid, plugin] : m_texture_plugins) {
         m_systems->texture.create_importer(
@@ -35,7 +59,7 @@ void dv_sys_plugin::prepare() {
     }
 }
 
-void dv_sys_plugin::release_plugin(dv_texture_plugin& plugin) {
+void dv_sys_plugin::release_plugin(dv_plugin& plugin) {
     if (plugin.m_importer)
         plugin.m_importer->cleanup();
 
@@ -45,8 +69,11 @@ void dv_sys_plugin::release_plugin(dv_texture_plugin& plugin) {
     plugin.m_handle   = nullptr;
     plugin.m_importer = nullptr;
 
-    DV_LOG("Unloaded texture plugin `{}`", plugin.filename);
+    DV_LOG("Released plugin `{}`", plugin.filename);
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// PRIVATE
 
 void dv_sys_plugin::create_texture_plugins() {
     for (const auto& entry : std::filesystem::directory_iterator("./")) {
@@ -72,14 +99,77 @@ void dv_sys_plugin::create_texture_plugins() {
         try {
             m_texture_plugins[uuid] = std::move(load_texture_plugin(filepath));
         }
-        catch (...) {}
+        catch (...) {
+            DV_LOG("Failed to load `{}` texture plugin.", filepath.filename().string());
+            continue;
+        }
 
-        DV_LOG("Loaded texture plugin `{}` from `{}`", m_texture_plugins[uuid].name, m_texture_plugins[uuid].filename);
+        DV_LOG("Loaded texture plugin `{}` from `{}`.", m_texture_plugins[uuid].name, m_texture_plugins[uuid].filename);
+    }
+}
+
+void dv_sys_plugin::create_model_plugins() {
+    for (const auto& entry : std::filesystem::directory_iterator("./")) {
+        // Make sure it's a file
+        if (!std::filesystem::is_regular_file(entry))
+            continue;
+
+        std::filesystem::path filepath = entry.path();
+
+        // Make sure it's a dll
+        if (filepath.extension() != ".dll")
+            continue;
+
+        // Make sure it's a texture plugin
+        if (!filepath.filename().string().starts_with("dv_plg_mod"))
+            continue;
+
+        devue::uuid uuid = dv_util_uuid::create(filepath.string());
+
+        if (m_model_plugins.contains(uuid))
+            continue;
+
+        try {
+            m_model_plugins[uuid] = std::move(load_model_plugin(filepath));
+        }
+        catch (...) {
+            DV_LOG("Failed to load `{}` model plugin.", filepath.filename().string());
+            continue;
+        }
+
+        DV_LOG("Loaded model plugin `{}` from `{}`.", m_model_plugins[uuid].name, m_model_plugins[uuid].filename);
     }
 }
 
 dv_texture_plugin dv_sys_plugin::load_texture_plugin(const std::filesystem::path& path) {
-    HMODULE handle = LoadLibrary(path.string().c_str());
+    auto phandle = create_handle(path.string().c_str());
+
+    dv_texture_plugin plugin;
+    plugin.m_handle   = phandle.handle;
+    plugin.m_importer = phandle.importer;
+    plugin.filename   = path.filename().string();
+
+    plugin.prepare();
+    return plugin;
+}
+
+dv_model_plugin dv_sys_plugin::load_model_plugin(const std::filesystem::path& path) {
+    auto phandle = create_handle(path.string().c_str());
+
+    dv_model_plugin plugin;
+    plugin.m_handle   = phandle.handle;
+    plugin.m_importer = phandle.importer;
+    plugin.filename   = path.filename().string();
+
+    plugin.prepare();
+    return plugin;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// INTERNAL
+
+plugin_handle create_handle(const char* path) {
+    HMODULE handle = LoadLibrary(path);
     if (!handle)
         throw DV_EXCEPTION("");
 
@@ -96,14 +186,7 @@ dv_texture_plugin dv_sys_plugin::load_texture_plugin(const std::filesystem::path
     if (!importer)
         throw DV_EXCEPTION("");
 
-    dv_texture_plugin plugin;
-    plugin.m_handle   = handle;
-    plugin.m_importer = importer;
-
-    plugin.filename = path.filename().string();
-    plugin.prepare();
-
-    return plugin;
+    return { handle, importer };
 }
 
 void release_handle(HMODULE handle) {
