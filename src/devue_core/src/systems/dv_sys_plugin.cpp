@@ -9,6 +9,8 @@ using namespace devue::core;
 
 void release_handle(HMODULE handle);
 
+dv_sys_plugin::dv_sys_plugin(dv_systems_bundle* systems) 
+    : m_systems(systems) {}
 
 dv_sys_plugin::~dv_sys_plugin() {
     for (auto& [uuid, plugin] : m_texture_plugins)

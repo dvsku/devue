@@ -7,14 +7,25 @@
 #include <filesystem>
 
 namespace devue::core {
+    struct dv_systems_bundle;
+
     class dv_sys_plugin {
     public:
+        dv_sys_plugin() = delete;
+        dv_sys_plugin(dv_systems_bundle* systems);
         ~dv_sys_plugin();
+
+        dv_sys_plugin(const dv_sys_plugin&) = delete;
+        dv_sys_plugin(dv_sys_plugin&&) = delete;
+
+        dv_sys_plugin& operator=(const dv_sys_plugin&) = delete;
+        dv_sys_plugin& operator=(dv_sys_plugin&&) = delete;
 
         void prepare();
         void release_plugin(dv_texture_plugin& plugin);
 
     private:
+        dv_systems_bundle* m_systems;
         std::unordered_map<devue::uuid, devue::core::dv_texture_plugin> m_texture_plugins;
 
     private:
