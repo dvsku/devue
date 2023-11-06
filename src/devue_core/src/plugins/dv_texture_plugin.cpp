@@ -48,5 +48,18 @@ void dv_texture_plugin::prepare() {
 }
 
 devue::plugins::dv_plugin_texture devue::core::dv_texture_plugin::import(const std::string& filepath) {
-    return devue::plugins::dv_plugin_texture();
+    devue::plugins::dv_plugin_texture texture;
+    dv_plugin_texture_importer::serialized serialized;
+
+    serialized = m_importer->import(filepath.c_str());
+
+    if (!serialized.size || !serialized.data)
+        throw;
+
+    dv_bin_reader br(serialized.data, serialized.size);
+    br >> texture.width >> texture.height >> texture.data;
+
+    m_importer->cleanup();
+
+    return texture;
 }
