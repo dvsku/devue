@@ -1,12 +1,11 @@
 #pragma once
 
-#include <unordered_map>
-#include <functional>
-
 #include "models/pdo/dv_model.hpp"
 #include "importers/dv_model_importer.hpp"
 #include "importers/dv_file_filter.hpp"
 #include "utilities/dv_util_uuid.hpp"
+
+#include <unordered_map>
 
 namespace devue::core {
     class dv_sys_model {
@@ -14,24 +13,19 @@ namespace devue::core {
     	std::unordered_map<devue::uuid, dv_model> models;
 
     public:
-    	void prepare();
-
+        dv_model* get(const devue::uuid& uuid);
     	size_t count() const;
 
-    	// Get a model
-    	dv_model* get(const devue::uuid& uuid);
+        const std::vector<dv_file_filter>& get_supported_file_types() const;
+        void update_supported_file_types();
 
-    	// Get import filters
-    	const std::vector<dv_file_filter>& get_import_filters();
+        void create_importer(dv_model_importer&& importer);
+        void release_importers();
 
-    	// Import a model
     	dv_model& import(const std::string& path);
 
     private:
     	std::vector<dv_model_importer> m_importers;
-    	std::vector<dv_file_filter> m_import_filters;
-
-    private:
-    	void create_filters();
+    	std::vector<dv_file_filter>    m_supported_file_types;
     };
 }

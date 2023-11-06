@@ -9,33 +9,49 @@
 using namespace devue::core;
 using namespace devue::plugins;
 
+///////////////////////////////////////////////////////////////////////////////
+// INTERNAL
+
 static dv_plugin_model _import_obj(const std::filesystem::path& path);
 
 static void set_min_y(dv_model& model);
 
-void dv_sys_model::prepare() {
-    // TEMP
-    m_importers.push_back({
-    	{ 
-    		{"Wavefront object", ".obj"}
-    	},
-    	_import_obj
-    });
-
-    create_filters();
+static bool compare_file_filters(const dv_file_filter& a, const dv_file_filter& b) {
+    return a.name < b.name;
 }
 
-size_t dv_sys_model::count() const {
-    return models.size();
-}
+///////////////////////////////////////////////////////////////////////////////
+// PUBLIC
 
 dv_model* dv_sys_model::get(const devue::uuid& uuid) {
     if (!models.contains(uuid)) return nullptr;
     return &models[uuid];
 }
 
-const std::vector<dv_file_filter>& dv_sys_model::get_import_filters() {
-    return m_import_filters;
+size_t dv_sys_model::count() const {
+    return models.size();
+}
+
+const std::vector<dv_file_filter>& dv_sys_model::get_supported_file_types() const {
+    return m_supported_file_types;
+}
+
+void dv_sys_model::update_supported_file_types() {
+    for (auto& importer : m_importers)
+        for (auto& file_type : importer.types)
+            m_supported_file_types.emplace_back(dv_file_filter(file_type));
+
+    std::sort(m_supported_file_types.begin(), m_supported_file_types.end(), compare_file_filters);
+
+    m_supported_file_types.push_back({ L"All files (*.*)\0", L"*.*\0" });
+}
+
+void dv_sys_model::create_importer(dv_model_importer&& importer) {
+    m_importers.emplace_back(importer);
+}
+
+void dv_sys_model::release_importers() {
+    m_importers.clear();
 }
 
 dv_model& dv_sys_model::import(const std::string& path) {
@@ -98,19 +114,8 @@ dv_model& dv_sys_model::import(const std::string& path) {
     throw std::runtime_error("Unsupported model type");
 }
 
-bool compare_file_filters(const dv_file_filter& a, const dv_file_filter& b) {
-    return a.name < b.name;
-}
-
-void dv_sys_model::create_filters() {
-    for (auto& importer : m_importers)
-    	for (auto& file_type : importer.types)
-    		m_import_filters.emplace_back(dv_file_filter(file_type));
-
-    std::sort(m_import_filters.begin(), m_import_filters.end(), compare_file_filters);
-
-    m_import_filters.push_back({ L"All files (*.*)\0", L"*.*\0" });
-}
+///////////////////////////////////////////////////////////////////////////////
+// INTERNAL
 
 dv_plugin_model _import_obj(const std::filesystem::path& path) {
     objl::Loader parser;
