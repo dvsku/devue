@@ -22,3 +22,11 @@ void dv_util_diag::update() {
         m_elapsed_time = 0.0;
     }
 }
+
+void dv_util_diag::sw_start() {
+    m_sw_start = glfwGetTime();
+}
+
+double dv_util_diag::sw_stop() {
+    return glfwGetTime() - m_sw_start;
+}
