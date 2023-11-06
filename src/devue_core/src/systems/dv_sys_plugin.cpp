@@ -47,6 +47,8 @@ void dv_sys_plugin::prepare() {
         );
     }
 
+    m_systems->model.update_supported_file_types();
+
     for (auto& [uuid, plugin] : m_texture_plugins) {
         m_systems->texture.create_importer(
             {
