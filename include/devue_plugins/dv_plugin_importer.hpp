@@ -8,6 +8,10 @@ namespace devue::plugins {
         struct serialized {
             uint64_t size = 0U;
             uint8_t* data = nullptr;
+
+            explicit operator bool() const {
+                return size && data;
+            }
         };
 
         ///////////////////////////////////////////////////////////////////////
