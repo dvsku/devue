@@ -29,15 +29,13 @@ namespace devue::plugins {
 
         void push(const std::string& str) {
             push(str.size());
-            for (const char& element : str)
-                push(element);
+            m_ref.insert(m_ref.end(), str.data(), str.data() + (sizeof(std::string::value_type) * str.size()));
         }
 
-        template<typename TValue> 
-        void push(const std::vector<TValue>& container) {
+        template<typename T> 
+        void push(const std::vector<T>& container) {
             push(container.size());
-            for (const TValue& element : container)
-                push(element);
+            m_ref.insert(m_ref.end(), container.data(), container.data() + (sizeof(T) * container.size()));
         }
 
     private:
@@ -85,11 +83,14 @@ namespace devue::plugins {
             str.resize(size);
             str.clear();
 
-            for (size_t i = 0; i < size; i++) {
-                char element = 0;
-                pop(element);
-                str.push_back(element);
-            }
+            size_t len = sizeof(std::string::value_type) * size;
+            if (m_size - len < 0)
+                throw std::out_of_range("out of bounds, buffer doesn't have more data");
+
+            str.insert(str.begin(), m_src, m_src + len);
+
+            m_size -= len;
+            m_src  += len;
         }
 
         template<typename T> 
@@ -100,11 +101,14 @@ namespace devue::plugins {
             container.resize(size);
             container.clear();
 
-            for (size_t i = 0; i < size; i++) {
-                T element{};
-                pop(element);
-                container.push_back(element);
-            }
+            size_t len = sizeof(T) * size;
+            if (m_size - len < 0)
+                throw std::out_of_range("out of bounds, buffer doesn't have more data");
+
+            container.insert(container.begin(), m_src, m_src + len);
+
+            m_size -= len;
+            m_src  += len;
         }
     };
 }
