@@ -78,7 +78,7 @@ void dv_sys_plugin::release_plugin(dv_plugin& plugin) {
 // PRIVATE
 
 void dv_sys_plugin::create_texture_plugins() {
-    for (const auto& entry : std::filesystem::directory_iterator("./")) {
+    for (const auto& entry : std::filesystem::directory_iterator("./plugins/")) {
         // Make sure it's a file
         if (!std::filesystem::is_regular_file(entry))
             continue;
@@ -111,7 +111,7 @@ void dv_sys_plugin::create_texture_plugins() {
 }
 
 void dv_sys_plugin::create_model_plugins() {
-    for (const auto& entry : std::filesystem::directory_iterator("./")) {
+    for (const auto& entry : std::filesystem::directory_iterator("./plugins/")) {
         // Make sure it's a file
         if (!std::filesystem::is_regular_file(entry))
             continue;
