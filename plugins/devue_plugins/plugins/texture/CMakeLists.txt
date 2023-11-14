@@ -1,0 +1,7 @@
+﻿CMAKE_MINIMUM_REQUIRED (VERSION 3.8)
+
+ADD_LIBRARY(dv_plg_tex_devue SHARED
+	"dv_texture_plugin.cpp"
+)
+
+TARGET_INCLUDE_DIRECTORIES(dv_plg_tex_devue PRIVATE "${PLUGINS_LIB_DIR}")
