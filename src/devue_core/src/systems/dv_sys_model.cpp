@@ -1,6 +1,5 @@
 #include "systems/dv_sys_model.hpp"
 #include "dv_plugin_model.hpp"
-#include "obj_loader/include/obj_loader.h"
 #include "utilities/dv_util_string.hpp"
 
 #include <algorithm>
@@ -11,8 +10,6 @@ using namespace devue::plugins;
 
 ///////////////////////////////////////////////////////////////////////////////
 // INTERNAL
-
-static dv_plugin_model _import_obj(const std::filesystem::path& path);
 
 static void set_min_y(dv_model& model);
 
@@ -116,41 +113,6 @@ dv_model& dv_sys_model::import(const std::string& path) {
 
 ///////////////////////////////////////////////////////////////////////////////
 // INTERNAL
-
-dv_plugin_model _import_obj(const std::filesystem::path& path) {
-    objl::Loader parser;
-
-    if (!parser.LoadFile(path.string()))
-    	throw std::runtime_error("Failed to load obj.");
-
-    dv_plugin_model model;
-    
-    for (auto& lmesh : parser.LoadedMeshes) {
-    	if ((lmesh.Indices.size() % 3) != 0)
-    		throw std::runtime_error("Not a triangle mesh, unsupported");
-
-    	model.meshes.push_back({});
-    	dv_plugin_mesh& mesh = model.meshes.back();
-    	mesh.name = lmesh.MeshName;
-
-    	mesh.material.name			  = lmesh.MeshMaterial.name;
-    	mesh.material.diffuse_texture = lmesh.MeshMaterial.map_Kd;
-
-    	for (auto& index : lmesh.Indices)
-    		mesh.indices.push_back(index);
-
-    	for (auto& vertex : lmesh.Vertices) {
-    		mesh.vertices.push_back({});
-    		dv_plugin_vertex& pv = mesh.vertices.back();
-
-    		pv.position = { vertex.Position.X, vertex.Position.Y, vertex.Position.Z };
-    		pv.normal	= { vertex.Normal.X, vertex.Normal.Y, vertex.Normal.Z };
-    		pv.uv		= { vertex.TextureCoordinate.X, vertex.TextureCoordinate.Y };
-    	}
-    }
-
-    return model;
-}
 
 void set_min_y(dv_model& model) {
     float min_y = 0.0f;
