@@ -6,7 +6,7 @@ using namespace devue;
 dv_comp_dockspace::dv_comp_dockspace(dv_systems* systems, dv_components* components) 
     : dv_comp(systems, components) {}
 
-void dv_comp_dockspace::render() {
+bool dv_comp_dockspace::render() {
     ImGuiViewport* viewport = ImGui::GetMainViewport();
     ImGuiID dockspace_id	= ImGui::GetID("DockSpace");
 
@@ -116,4 +116,6 @@ void dv_comp_dockspace::render() {
     ImGui::EndChild();
 
     ImGui::End();
+
+    return true;
 }

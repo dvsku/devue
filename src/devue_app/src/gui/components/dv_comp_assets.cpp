@@ -9,7 +9,7 @@ using namespace devue::core;
 dv_comp_assets::dv_comp_assets(dv_systems* systems, dv_components* components)
     : dv_comp(systems, components) {}
 
-void dv_comp_assets::render() {
+bool dv_comp_assets::render() {
     ImGui::Begin("Assets##Window");
 
     for (auto& kvp : m_systems->model.models) {
@@ -37,6 +37,7 @@ void dv_comp_assets::render() {
     ImGui::End();
 
     import_modal();
+    return true;
 }
 
 void devue::dv_comp_assets::show_import_modal() {

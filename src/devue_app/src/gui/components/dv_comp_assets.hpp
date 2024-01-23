@@ -7,7 +7,7 @@ namespace devue {
     struct dv_comp_assets : public dv_comp {
     	dv_comp_assets(dv_systems* systems, dv_components* components);
 
-    	void render() final override;
+    	bool render() final override;
 
     	void show_import_modal();
 

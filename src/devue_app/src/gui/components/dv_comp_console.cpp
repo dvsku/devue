@@ -10,17 +10,22 @@ dv_comp_console::dv_comp_console(dv_systems* systems, dv_components* components)
     core::dv_util_log::add_source(&m_text);
 }
 
-void dv_comp_console::render() {
+bool dv_comp_console::render() {
     bool& is_executable = m_systems->command.is_executable(dv_commands::flag_show_console);
     
     if (!is_executable)
-        return;
+        return true;
 
-    if (!ImGui::Begin("Console##Window", &is_executable, ImGuiWindowFlags_HorizontalScrollbar)) 
-        return ImGui::End();
+    if (!ImGui::Begin("Console##Window", &is_executable, ImGuiWindowFlags_HorizontalScrollbar)) {
+        ImGui::End();
+        return true;
+    }
+        
     
     auto view = m_text.view();
     ImGui::TextUnformatted(view.data(), view.data() + view.length());
 
     ImGui::End();
+
+    return true;
 }

@@ -9,9 +9,9 @@ namespace devue {
 
     	dv_comp_scene(dv_systems* systems, dv_components* components);
 
-    	void render(core::dv_render_target* render_target = nullptr);
+        bool render(core::dv_render_target* render_target = nullptr);
 
     private:
-    	void render() final override;
+        bool render() final override;
     };
 }

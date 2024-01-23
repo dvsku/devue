@@ -6,7 +6,7 @@ using namespace devue;
 dv_comp_properties::dv_comp_properties(dv_systems* systems, dv_components* components) 
     : dv_comp(systems, components) {}
 
-void dv_comp_properties::render() {
+bool dv_comp_properties::render() {
     ImGui::Begin("Properties##Window");
 
     switch (m_components->selected.type) {
@@ -18,6 +18,8 @@ void dv_comp_properties::render() {
     }
 
     ImGui::End();
+
+    return true;
 }
 
 void dv_comp_properties::render_scene_model() {
