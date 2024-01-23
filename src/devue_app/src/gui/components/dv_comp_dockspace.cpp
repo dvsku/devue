@@ -89,7 +89,8 @@ void dv_comp_dockspace::render() {
     	ImGui::PushID("ViewMenu");
 
     	if (ImGui::BeginMenu("View")) {
-    		if (ImGui::MenuItem("Console##MenuItem", "", &m_components->console.visible)) {
+            bool& is_executable = m_systems->command.is_executable(dv_commands::flag_show_console);
+    		if (ImGui::MenuItem("Console##MenuItem", "", &is_executable)) {
 
     		}
 
