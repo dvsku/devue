@@ -12,20 +12,13 @@ dv_comp_console::dv_comp_console(dv_systems* systems, dv_components* components)
 
 bool dv_comp_console::render() {
     bool& is_executable = m_systems->command.is_executable(dv_commands::flag_show_console);
-    
-    if (!is_executable)
-        return true;
 
-    if (!ImGui::Begin("Console##Window", &is_executable, ImGuiWindowFlags_HorizontalScrollbar)) {
-        ImGui::End();
-        return true;
-    }
-        
-    
-    auto view = m_text.view();
-    ImGui::TextUnformatted(view.data(), view.data() + view.length());
-
+    ImGui::Begin("Console##Window", &is_executable, ImGuiWindowFlags_HorizontalScrollbar);
+    {
+        auto view = m_text.view();
+        ImGui::TextUnformatted(view.data(), view.data() + view.length());
+    }    
     ImGui::End();
 
-    return true;
+    return DV_COMMAND_REPEAT;
 }

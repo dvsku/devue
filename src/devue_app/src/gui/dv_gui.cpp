@@ -112,9 +112,10 @@ void dv_gui::on_gui_update() {
     m_components.assets.render();
     m_components.scene.render(m_scene_render_target.get());
     m_components.properties.render();
-    m_components.console.render();
 
-    ImGui::ShowDemoWindow();
+    m_sytems.command.execute();
+
+    //ImGui::ShowDemoWindow();
 }
 
 void dv_gui::on_gui_after_update() {}
