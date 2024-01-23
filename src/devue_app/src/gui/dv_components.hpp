@@ -7,6 +7,7 @@
 #include "gui/components/dv_comp_hierarchy.hpp"
 #include "gui/components/dv_comp_properties.hpp"
 #include "gui/components/dv_comp_scene.hpp"
+#include "gui/modals/dv_modal_import.hpp"
 #include "systems/dv_systems.hpp"
 
 namespace devue {
@@ -17,6 +18,8 @@ namespace devue {
     	dv_comp_hierarchy	hierarchy;
     	dv_comp_properties	properties;
     	dv_comp_scene		scene;
+
+        dv_modal_import modal_import;
 
     	dv_selected selected{};
 

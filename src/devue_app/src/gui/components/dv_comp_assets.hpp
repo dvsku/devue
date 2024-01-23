@@ -8,16 +8,5 @@ namespace devue {
     	dv_comp_assets(dv_systems* systems, dv_components* components);
 
     	bool render() final override;
-
-    	void show_import_modal();
-
-    private:
-    	bool m_show_import_modal = false;
-
-    	std::string m_import_file_path		= "";
-    	std::string m_import_textures_path	= "";
-
-    private:
-    	void import_modal();
     };
 }
