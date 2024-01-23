@@ -1,5 +1,5 @@
 #include "gui/components/dv_comp_scene.hpp"
-#include "gui/components/dv_components.hpp"
+#include "gui/dv_components.hpp"
 #include "utilities/dv_util_diag.hpp"
 
 using namespace devue;

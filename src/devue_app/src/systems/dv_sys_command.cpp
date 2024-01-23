@@ -1,6 +1,6 @@
 #include "systems/dv_sys_command.hpp"
 #include "systems/dv_systems.hpp"
-#include "gui/components/dv_components.hpp"
+#include "gui/dv_components.hpp"
 #include "exceptions/dv_exception.hpp"
 
 using namespace devue;

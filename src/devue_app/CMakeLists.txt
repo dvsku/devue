@@ -11,7 +11,7 @@ ADD_EXECUTABLE(devue
     "src/gui/components/dv_comp_properties.cpp"
     "src/gui/components/dv_comp_console.cpp"
     "src/gui/components/dv_comp_dockspace.cpp"
-    "src/gui/components/dv_components.cpp"
+    "src/gui/dv_components.cpp"
     "src/systems/dv_sys_command.cpp"
 	"src/systems/dv_systems.cpp"
     "src/utilities/dv_util_dialog.cpp"

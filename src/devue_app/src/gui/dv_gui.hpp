@@ -1,5 +1,5 @@
 #include "graphics/dv_opengl_window.hpp"
-#include "gui/components/dv_components.hpp"
+#include "gui/dv_components.hpp"
 #include "systems/dv_systems.hpp"
 #include "rendering/dv_render_target.hpp"
 
