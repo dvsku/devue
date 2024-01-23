@@ -74,7 +74,7 @@ bool dv_gui::prepare() {
         return false;
     }
     
-    m_sytems.command.prepare();
+    m_sytems.command.prepare(&m_components);
     m_sytems.command.set_execute(dv_commands::flag_show_console);
 
     // Create a scene
