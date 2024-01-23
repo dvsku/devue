@@ -12,8 +12,10 @@ ADD_EXECUTABLE(devue
     "src/gui/components/dv_comp_console.cpp"
     "src/gui/components/dv_comp_dockspace.cpp"
     "src/gui/components/dv_components.cpp"
-    "src/systems/dv_systems.cpp"
+    "src/systems/dv_sys_command.cpp"
+	"src/systems/dv_systems.cpp"
     "src/utilities/dv_util_dialog.cpp"
+	"src/utilities/dv_util_command.cpp"
 )
 
 TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${DEVUE_LIB_DIR}/glad/include")
