@@ -51,7 +51,7 @@ void dv_sys_model::release_importers() {
     m_importers.clear();
 }
 
-dv_model& dv_sys_model::import(const std::string& path) {
+dv_model& dv_sys_model::import(const std::string& path, const std::string& texture_path) {
     std::filesystem::path filepath = path;
     std::string ext				   = filepath.extension().string();
     
@@ -69,8 +69,9 @@ dv_model& dv_sys_model::import(const std::string& path) {
     	// Create uuid from path
     	devue::uuid uuid = devue::core::dv_util_uuid::create(path);
 
-    	model.uuid = uuid;
-    	model.name = filepath.filename().replace_extension("").string();
+    	model.uuid        = uuid;
+    	model.name        = filepath.filename().replace_extension("").string();
+        model.texture_dir = texture_path;
     	
     	for (auto& pmesh : pmodel.meshes) {
     		devue::uuid mesh_uuid	  = dv_util_uuid::create(DV_FORMAT("{}_{}", path, pmesh.name));

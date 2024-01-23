@@ -91,7 +91,7 @@ void dv_comp_assets::import_modal() {
             ImGui::BeginDisabled();
 
         if (ImGui::Button("OK", ImVec2(120, 0))) {
-            m_systems->model.import(m_import_file_path);
+            m_systems->model.import(m_import_file_path, m_import_textures_path);
 
             m_show_import_modal = false;
             ImGui::CloseCurrentPopup();

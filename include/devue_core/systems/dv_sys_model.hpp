@@ -22,7 +22,7 @@ namespace devue::core {
         void create_importer(dv_model_importer&& importer);
         void release_importers();
 
-    	dv_model& import(const std::string& path);
+    	dv_model& import(const std::string& path, const std::string& texture_path = "");
 
     private:
     	std::vector<dv_model_importer> m_importers;
