@@ -173,20 +173,20 @@ dv_model_plugin dv_sys_plugin::load_model_plugin(const std::filesystem::path& pa
 plugin_handle create_handle(const char* path) {
     HMODULE handle = LoadLibrary(path);
     if (!handle)
-        throw DV_EXCEPTION("");
+        throw dv_exception("");
 
     auto create_fn_addr = GetProcAddress(handle, "create");
     if (!create_fn_addr)
-        throw DV_EXCEPTION("");
+        throw dv_exception("");
 
     typedef devue::plugins::dv_plugin_importer* create_fn();
     create_fn* create = (create_fn*)create_fn_addr;
     if (!create)
-        throw DV_EXCEPTION("");
+        throw dv_exception("");
 
     devue::plugins::dv_plugin_importer* importer = create();
     if (!importer)
-        throw DV_EXCEPTION("");
+        throw dv_exception("");
 
     return { handle, importer };
 }
@@ -194,12 +194,12 @@ plugin_handle create_handle(const char* path) {
 void release_handle(HMODULE handle) {
     auto release_fn_addr = GetProcAddress(handle, "release");
     if (!release_fn_addr)
-        throw DV_EXCEPTION("");
+        throw dv_exception("");
 
     typedef void release_fn();
     release_fn* release = (release_fn*)release_fn_addr;
     if (!release)
-        throw DV_EXCEPTION("");
+        throw dv_exception("");
 
     release();
 

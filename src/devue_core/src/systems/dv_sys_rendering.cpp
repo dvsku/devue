@@ -150,16 +150,16 @@ std::string dv_sys_rendering::get_shader_source(const std::string& path) {
     std::filesystem::path filepath(path);
 
     if (path.empty())
-        throw DV_EXCEPTION("Failed to load shader source. File path empty.");
+        throw dv_exception("Failed to load shader source. File path empty.");
 
     if (!std::filesystem::exists(filepath))
-        throw DV_EXCEPTION(DV_FORMAT("Failed to load shader source. File `{}` not found.", path));
+        throw dv_exception(DV_FORMAT("Failed to load shader source. File `{}` not found.", path));
     
     std::string source = "";
     std::ifstream file(filepath);
 
     if (!file.is_open())
-        throw DV_EXCEPTION(DV_FORMAT("Failed to load shader source. Couldn't open `{}` file.", path));
+        throw dv_exception(DV_FORMAT("Failed to load shader source. Couldn't open `{}` file.", path));
 
     try {
         std::string line;
@@ -169,10 +169,10 @@ std::string dv_sys_rendering::get_shader_source(const std::string& path) {
         file.close();
     }
     catch (const std::exception& e) {
-        throw DV_EXCEPTION(DV_FORMAT("Failed to load shader source. | {}", e.what()));
+        throw dv_exception(DV_FORMAT("Failed to load shader source. | {}", e.what()));
     }
     catch (...) {
-        throw DV_EXCEPTION("Failed to load shader source.");
+        throw dv_exception("Failed to load shader source.");
     }
 
     return source;
@@ -205,7 +205,7 @@ dv_shader dv_sys_rendering::create_shader(const std::string& vertex, const std::
         error_msg.resize(error_msg_len);
         glGetShaderInfoLog(vertex_id, error_msg_len, NULL, error_msg.data());
 
-        throw DV_EXCEPTION(DV_FORMAT("Failed to compile vertex shader : {}", error_msg));
+        throw dv_exception(DV_FORMAT("Failed to compile vertex shader : {}", error_msg));
     }
 
     fragment_id = glCreateShader(GL_FRAGMENT_SHADER);
@@ -219,7 +219,7 @@ dv_shader dv_sys_rendering::create_shader(const std::string& vertex, const std::
         error_msg.resize(error_msg_len);
         glGetShaderInfoLog(fragment_id, error_msg_len, NULL, error_msg.data());
 
-        throw DV_EXCEPTION(DV_FORMAT("Failed to compile fragment shader : {}", error_msg));
+        throw dv_exception(DV_FORMAT("Failed to compile fragment shader : {}", error_msg));
     }
 
     shader.shader_id = glCreateProgram();
@@ -234,7 +234,7 @@ dv_shader dv_sys_rendering::create_shader(const std::string& vertex, const std::
         error_msg.resize(error_msg_len);
         glGetShaderInfoLog(shader.shader_id, error_msg_len, NULL, error_msg.data());
 
-        throw DV_EXCEPTION(DV_FORMAT("Failed to link shader : {}", error_msg));
+        throw dv_exception(DV_FORMAT("Failed to link shader : {}", error_msg));
     }
 
     glDeleteShader(vertex_id);

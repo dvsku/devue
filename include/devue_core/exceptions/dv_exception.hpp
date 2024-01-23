@@ -1,22 +1,14 @@
 #pragma once
 
-#include <string>
-#include <exception>
+#include <stdexcept>
 
 namespace devue::core {
-    #define DV_EXCEPTION(msg)		\
-    	devue::core::dv_exception(msg);
-
-    class dv_exception : public std::exception {
+    class dv_exception : public std::runtime_error {
     public:
-    	dv_exception() {}
-    	dv_exception(const std::string& msg) : m_msg(msg) {}
+    	dv_exception() 
+            : std::runtime_error("undefined") {}
 
-    	const char* what() const override {
-    		return m_msg.c_str();
-    	}
-
-    private:
-    	std::string m_msg = "";
+    	dv_exception(const std::string& msg) 
+            : std::runtime_error(msg) {}
     };
 }

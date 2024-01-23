@@ -43,11 +43,11 @@ void dv_sys_texture::prepare_material_textures(dv_model& model,
     
             smaterial.diffuse_texture_uuid = uuid;
         }
-        catch (const dv_exception& e) {
-            DV_LOG("Failed to create `{}` diffuse texture `{}`. | {}", model.name, material.diffuse_texture, e.what());
-        }
         catch (const std::exception& e) {
             DV_LOG("Failed to create `{}` diffuse texture `{}`. | {}", model.name, material.diffuse_texture, e.what());
+        }
+        catch (...) {
+            DV_LOG("Failed to create `{}` diffuse texture `{}`.", model.name, material.diffuse_texture);
         }
     }
 }
@@ -81,7 +81,7 @@ void devue::core::dv_sys_texture::release_importers() {
 
 dv_scene_texture create_scene_texture(std::filesystem::path& filepath, std::vector<dv_texture_importer>& importers) {
     if (!std::filesystem::exists(filepath))
-        throw;
+        throw dv_exception(DV_FORMAT("`{}` file not found.", filepath.string()));
 
     std::string ext = filepath.extension().string();
 
@@ -115,5 +115,5 @@ dv_scene_texture create_scene_texture(std::filesystem::path& filepath, std::vect
         return stexture;
     }
 
-    throw DV_EXCEPTION("No suitable importer found.");
+    throw dv_exception("No suitable importer found.");
 }

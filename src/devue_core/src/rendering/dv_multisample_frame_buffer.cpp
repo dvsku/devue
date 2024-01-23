@@ -24,7 +24,7 @@ dv_multisample_frame_buffer::dv_multisample_frame_buffer(int width, int height)
     _update_read_buffer();
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    	throw DV_EXCEPTION("Failed to create multisampled frame buffer. Frame buffer incomplete.");
+    	throw dv_exception("Failed to create multisampled frame buffer. Frame buffer incomplete.");
 
     // Create frame buffer
 
@@ -34,7 +34,7 @@ dv_multisample_frame_buffer::dv_multisample_frame_buffer(int width, int height)
     _update_draw_buffer();
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    	throw DV_EXCEPTION("Failed to create blit frame buffer. Frame buffer incomplete.");
+    	throw dv_exception("Failed to create blit frame buffer. Frame buffer incomplete.");
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, 0);

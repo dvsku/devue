@@ -57,7 +57,7 @@ void dv_sys_material::release_materials(dv_scene_model& smodel) {
 dv_scene_material dv_sys_material::create_scene_material(dv_model& model, dv_material& material) {
     // If material has no textures, don't create it
     if (material.diffuse_texture.empty())
-        throw DV_EXCEPTION("");
+        throw dv_exception("");
 
     dv_scene_material smaterial;
     m_systems->texture.prepare_material_textures(model, material, smaterial);
