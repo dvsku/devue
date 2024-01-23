@@ -74,7 +74,11 @@ bool dv_gui::prepare() {
         return false;
     }
     
-    m_sytems.command.prepare(&m_components);
+    if (!m_sytems.command.prepare(&m_components)) {
+        DV_LOG("Failed to prepare command system.");
+        return false;
+    }
+    
     m_sytems.command.set_execute(dv_commands::flag_show_console);
 
     // Create a scene
