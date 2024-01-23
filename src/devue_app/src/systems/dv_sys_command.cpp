@@ -9,11 +9,14 @@ dv_sys_command::dv_sys_command(dv_systems* systems)
     : m_systems(systems) {}
 
 bool dv_sys_command::prepare(dv_components* components) {
-    if (!m_systems) return false;
+    if (!m_systems || !components) return false;
 
     commands.emplace(dv_commands::flag_show_console, dv_util_command([components] {
-        if (!components) return false;
         return components->console.render();
+    }));
+
+    commands.emplace(dv_commands::flag_show_modal_import, dv_util_command([components] {
+        return components->modal_import.render();
     }));
 
     return true;

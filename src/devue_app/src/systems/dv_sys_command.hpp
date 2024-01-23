@@ -9,7 +9,8 @@ namespace devue {
     struct dv_components;
 
     enum class dv_commands : uint16_t {
-        flag_show_console
+        flag_show_console,
+        flag_show_modal_import
     };
 
     class dv_sys_command {

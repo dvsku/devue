@@ -78,7 +78,7 @@ bool dv_comp_dockspace::render() {
 
     	if (ImGui::BeginMenu("File")) {
     		if (ImGui::MenuItem("Import##MenuItem")) {
-    			m_components->assets.show_import_modal();
+                m_systems->command.set_execute(dv_commands::flag_show_modal_import);
     		}
 
     		ImGui::EndMenu();
