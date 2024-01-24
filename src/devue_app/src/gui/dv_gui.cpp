@@ -44,8 +44,9 @@ bool dv_gui::prepare() {
 
     ImFontConfig config;
     config.FontDataOwnedByAtlas = false;
-    config.GlyphExtraSpacing.x  = 1.5f;
-    config.OversampleH          = 2;
+    config.GlyphExtraSpacing.x  = 1.0f;
+    config.RasterizerMultiply   = 1.2f;
+    config.SizePixels           = 14.0f;
 
     // Add default font
     io.Fonts->AddFontFromMemoryTTF(ROBOTO_REGULAR, (int)ROBOTO_REGULAR_LEN, 14.0f, &config);
