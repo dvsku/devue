@@ -14,6 +14,7 @@ ADD_EXECUTABLE(devue
 	"src/gui/modals/dv_modal_import.cpp"
     "src/gui/dv_components.cpp"
     "src/systems/dv_sys_command.cpp"
+	"src/systems/dv_sys_properties.cpp"
 	"src/systems/dv_systems.cpp"
     "src/utilities/dv_util_dialog.cpp"
 	"src/utilities/dv_util_command.cpp"
