@@ -1,5 +1,7 @@
 #pragma once
 
+#include "utilities/dv_util_uuid.hpp"
+
 #include <unordered_map>
 #include <typeindex>
 
@@ -17,7 +19,7 @@ namespace devue {
         };
 
         inspectable::type inspected_type = inspectable::type::none;
-        uint64_t          inspected_id   = 0U;
+        devue::uuid       inspected_id   = 0U;
     };
 
     class dv_sys_properties {
@@ -35,7 +37,7 @@ namespace devue {
         template<typename T>
         void set_inspected(T& obj) {
             if (!m_supported_types.contains(typeid(obj))) return;
-            inspect(m_supported_types[typeid(obj)], obj.id);
+            inspect(m_supported_types[typeid(obj)], obj.uuid);
         }
 
         template<typename T>
@@ -44,7 +46,7 @@ namespace devue {
             if (!m_supported_types.contains(typeid(obj)))                        return false;
 
             return m_supported_types[typeid(obj)] == m_current_inspectable.inspected_type
-                && obj.id == m_current_inspectable.inspected_id;
+                && obj.uuid == m_current_inspectable.inspected_id;
         }
 
         void unset_inspected();
@@ -57,6 +59,6 @@ namespace devue {
         std::unordered_map<std::type_index, inspectable::type> m_supported_types;
 
     private:
-        void inspect(inspectable::type type = inspectable::type::none, uint64_t id = 0U);
+        void inspect(inspectable::type type = inspectable::type::none, devue::uuid id = 0U);
     };
 }

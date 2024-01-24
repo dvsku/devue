@@ -25,7 +25,7 @@ const inspectable& devue::dv_sys_properties::get_inspected() {
     return m_current_inspectable;
 }
 
-void dv_sys_properties::inspect(inspectable::type type, uint64_t id) {
+void dv_sys_properties::inspect(inspectable::type type, devue::uuid id) {
     m_current_inspectable.inspected_type = type;
     m_current_inspectable.inspected_id   = id;
 }
