@@ -7,6 +7,9 @@ struct GLFWwindow;
 namespace devue::core {
     class dv_opengl_window {
     public:
+        intptr_t default_wndproc = 0;
+
+    public:
     	dv_opengl_window(uint32_t width, uint32_t height, const std::string& title);
     	virtual ~dv_opengl_window();
 
@@ -31,6 +34,9 @@ namespace devue::core {
     	virtual void on_scroll(double dx, double dy);
     	virtual void on_mouse_button(int btn, int action, int modifier);
     	virtual void on_mouse_move(double dx, double dy);
+
+    protected:
+        void remove_titlebar();
 
     private:
     	void loop();

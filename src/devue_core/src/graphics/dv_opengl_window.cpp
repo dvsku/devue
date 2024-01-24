@@ -7,6 +7,7 @@
 
 #include "glad/glad.h"
 #include "glfw/glfw3.h"
+#include "glfw/glfw3native.h"
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
@@ -15,6 +16,41 @@
 #include "utilities/dv_util_log.hpp"
 
 using namespace devue::core;
+
+///////////////////////////////////////////////////////////////////////////////
+// INTERNAL
+
+static LRESULT CALLBACK wndproc_callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+    dv_opengl_window* open_gl_wnd = (dv_opengl_window*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+    if (!open_gl_wnd) 
+        throw std::runtime_error("");
+
+    switch (uMsg) {
+        case WM_NCCALCSIZE: {
+            if (wParam == TRUE && lParam != NULL) {
+                NCCALCSIZE_PARAMS* pParams = reinterpret_cast<NCCALCSIZE_PARAMS*>(lParam);
+                pParams->rgrc[0].top    += 1;
+                pParams->rgrc[0].right  -= 6;
+                pParams->rgrc[0].bottom -= 6;
+                pParams->rgrc[0].left   += 6;
+            }
+            
+            return 0;
+        }
+        case WM_NCPAINT: {
+            return 0;
+        }
+        case WM_NCHITTEST: {
+            return CallWindowProc((WNDPROC)open_gl_wnd->default_wndproc, hWnd, uMsg, wParam, lParam);
+        }
+        case WM_NCACTIVATE: {
+            return TRUE;
+        }
+        default: break;
+    }
+
+    return CallWindowProc((WNDPROC)open_gl_wnd->default_wndproc, hWnd, uMsg, wParam, lParam);
+}
 
 static std::string _get_imgui_ver() {
     std::string str = std::string(ImGui::GetVersion());
@@ -39,9 +75,16 @@ dv_opengl_window::dv_opengl_window(uint32_t width, uint32_t height, const std::s
     	throw std::runtime_error("Failed to init glfw.");
 
     m_native = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
-
     if (!m_native)
     	throw std::runtime_error("Failed to create window.");
+
+    // Get glfw native handle
+    auto win32_handle = glfwGetWin32Window(m_native);
+    if (!win32_handle)
+        throw std::runtime_error("Failed to create window.");
+
+    // Set this as native handle userdata
+    SetWindowLongPtr(win32_handle, GWLP_USERDATA, (intptr_t)this);
 
     //ds_util_theme::update_title_bar_theme(native);
 
@@ -116,6 +159,36 @@ void dv_opengl_window::on_scroll(double dx, double dy) {}
 void dv_opengl_window::on_mouse_button(int btn, int action, int modifier) {}
 
 void dv_opengl_window::on_mouse_move(double dx, double dy) {}
+
+void dv_opengl_window::remove_titlebar() {
+    auto win32_wnd = glfwGetWin32Window(m_native);
+    if (!win32_wnd)
+        return;
+
+    dv_opengl_window* open_gl_wnd = (dv_opengl_window*)GetWindowLongPtr(win32_wnd, GWLP_USERDATA);
+    if (!open_gl_wnd)
+        return;
+
+    // Save default callback
+    open_gl_wnd->default_wndproc = GetWindowLongPtr(win32_wnd, GWLP_WNDPROC);
+    if (!open_gl_wnd->default_wndproc)
+        return;
+
+    // Get win32 window style
+    auto wnd_style = GetWindowLongPtr(win32_wnd, GWL_STYLE);
+
+    // Remove titlebar
+    wnd_style &= ~WS_CAPTION;
+
+    // Set win32 window style
+    SetWindowLongPtr(win32_wnd, GWL_STYLE, wnd_style);
+
+    // Set new callback
+    SetWindowLongPtr(win32_wnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndproc_callback));
+
+    // Force window redraw
+    SetWindowPos(win32_wnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // PRIVATE
