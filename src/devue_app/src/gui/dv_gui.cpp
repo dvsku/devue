@@ -6,6 +6,9 @@
 #include "utilities/dv_util_diag.hpp"
 #include "utilities/dv_util_log.hpp"
 
+#include "gui/fonts/font_roboto.hpp"
+#include "gui/fonts/font_fontawesome_solid.hpp"
+
 using namespace devue;
 using namespace devue::core;
 
@@ -37,6 +40,24 @@ dv_gui::~dv_gui() {}
 // PRIVATE
 
 bool dv_gui::prepare() {
+    ImGuiIO& io = ImGui::GetIO();
+
+    ImFontConfig config;
+    config.FontDataOwnedByAtlas = false;
+    config.GlyphExtraSpacing.x  = 1.5f;
+    config.OversampleH          = 2;
+
+    // Add default font
+    io.Fonts->AddFontFromMemoryTTF(ROBOTO_REGULAR, (int)ROBOTO_REGULAR_LEN, 14.0f, &config);
+
+    // Add font awesome
+    config.MergeMode                   = true;
+    static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+    io.Fonts->AddFontFromMemoryTTF(FONTAWESOME_SOLID, (int)FONTAWESOME_SOLID_LEN, 14.0f, &config, icon_ranges);
+
+    // Build fonts
+    io.Fonts->Build();
+
     // Create shaders
     try {
     	m_sytems.rendering.prepare();
