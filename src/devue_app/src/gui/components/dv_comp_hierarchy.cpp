@@ -17,7 +17,8 @@ bool dv_comp_hierarchy::render() {
     	return true;
     }
 
-    core::dv_scene* scene = m_systems->scene.current_scene;
+    bool            is_selected = false;
+    core::dv_scene* scene       = m_systems->scene.current_scene;
 
     ImGui::PushStyleVar(ImGuiStyleVar_DisabledAlpha, 0.8f);
 
@@ -29,8 +30,9 @@ bool dv_comp_hierarchy::render() {
     if (ImGui::CollapsingHeader("Cameras##Cameras")) {
     	ImGui::Indent();
 
-    	if (ImGui::Selectable("Camera 1##Camera1", m_components->selected.in_selected(scene->camera))) {
-    		m_components->selected.select(scene->camera);
+        is_selected = m_systems->properties.is_inspected(scene->camera);
+    	if (ImGui::Selectable("Camera 1##Camera1", is_selected)) {
+            m_systems->properties.set_inspected(scene->camera);
     	}
 
     	ImGui::Unindent();
@@ -40,16 +42,14 @@ bool dv_comp_hierarchy::render() {
     if (ImGui::CollapsingHeader("Lighting##Lighting")) {
     	ImGui::Indent();
 
-    	if (ImGui::Selectable("Ambient Light##AmbientLight1", 
-    		m_components->selected.in_selected(scene->lighting.ambient_light))) 
-    	{
-    		m_components->selected.select(scene->lighting.ambient_light);
+        is_selected = m_systems->properties.is_inspected(scene->lighting.ambient_light);
+    	if (ImGui::Selectable("Ambient Light##AmbientLight1", is_selected)) {
+            m_systems->properties.set_inspected(scene->lighting.ambient_light);
     	}
 
-    	if (ImGui::Selectable("Directional Light##DirectionalLight1",
-    		m_components->selected.in_selected(scene->lighting.directional_light))) 
-    	{
-    		m_components->selected.select(scene->lighting.directional_light);
+        is_selected = m_systems->properties.is_inspected(scene->lighting.directional_light);
+    	if (ImGui::Selectable("Directional Light##DirectionalLight1", is_selected)) {
+            m_systems->properties.set_inspected(scene->lighting.directional_light);
     	}
 
     	ImGui::Unindent();
@@ -65,10 +65,9 @@ bool dv_comp_hierarchy::render() {
 
     			ImGui::PushID(DV_FORMAT_C("{}", smodel.uuid));
 
-    			if (ImGui::Selectable(DV_FORMAT_C("{}##Object", smodel.name),
-    				m_components->selected.in_selected(smodel)))
-    			{
-    				m_components->selected.select(smodel);
+                is_selected = m_systems->properties.is_inspected(smodel);
+    			if (ImGui::Selectable(DV_FORMAT_C("{}##Object", smodel.name), is_selected)) {
+                    m_systems->properties.set_inspected(smodel);
     			}
 
     			if (ImGui::BeginPopupContextItem()) {

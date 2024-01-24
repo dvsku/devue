@@ -9,11 +9,11 @@ dv_comp_properties::dv_comp_properties(dv_systems* systems, dv_components* compo
 bool dv_comp_properties::render() {
     ImGui::Begin("Properties##Window");
 
-    switch (m_components->selected.type) {
-    	case dv_selected::obj_type::scene_model:		render_scene_model();		break;
-    	case dv_selected::obj_type::camera:				render_camera();			break;
-    	case dv_selected::obj_type::ambient_light:		render_ambient_light();		break;
-    	case dv_selected::obj_type::directional_light:	render_directional_light(); break;
+    switch (m_systems->properties.get_inspected().inspected_type) {
+    	case inspectable::type::scene_model:	   render_scene_model();       break;
+    	case inspectable::type::camera:			   render_camera();            break;
+        case inspectable::type::ambient_light:	   render_ambient_light();     break;
+    	case inspectable::type::directional_light: render_directional_light(); break;
     	default: break;
     }
 
@@ -23,10 +23,12 @@ bool dv_comp_properties::render() {
 }
 
 void dv_comp_properties::render_scene_model() {
-    if (!m_systems->scene.current_scene) return;
-    if (!m_systems->scene.current_scene->models.contains(m_components->selected.uuid)) return;
+    uuid uuid = m_systems->properties.get_inspected().inspected_id;
+    
+    if (!m_systems->scene.current_scene)                        return;
+    if (!m_systems->scene.current_scene->models.contains(uuid)) return;
 
-    core::dv_scene_model& smodel = m_systems->scene.current_scene->models[m_components->selected.uuid];
+    core::dv_scene_model& smodel = m_systems->scene.current_scene->models[uuid];
 
     ImGui::PushID("PropertiesSceneModel");
 
