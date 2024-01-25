@@ -118,36 +118,42 @@ intptr_t dv_opengl_window::wndproc_callback(dv_opengl_window* wnd, handle_t hand
 
     switch (msg) {
         case WM_NCCALCSIZE: {
-            NCCALCSIZE_PARAMS* pParams = reinterpret_cast<NCCALCSIZE_PARAMS*>(lparam);
+            NCCALCSIZE_PARAMS* params = reinterpret_cast<NCCALCSIZE_PARAMS*>(lparam);
 
             WINDOWPLACEMENT wp{};
             wp.length = sizeof(WINDOWPLACEMENT);
             GetWindowPlacement(hwnd, &wp);
 
-            if (wparam == TRUE && pParams) {
-                if (wp.showCmd == SW_SHOWMAXIMIZED)
+            if (wparam == TRUE && params) {
+                if (wp.showCmd == SW_SHOWMAXIMIZED) {
+                    params->rgrc[0].top    += 8;
+                    params->rgrc[0].right  -= 8;
+                    params->rgrc[0].bottom -= 8;
+                    params->rgrc[0].left   += 8;
                     return 0;
+                }
 
-                pParams->rgrc[0].top += 1;
-                pParams->rgrc[0].right -= 6;
-                pParams->rgrc[0].bottom -= 6;
-                pParams->rgrc[0].left += 6;
+                params->rgrc[0].top    += 1;
+                params->rgrc[0].right  -= 1;
+                params->rgrc[0].bottom -= 1;
+                params->rgrc[0].left   += 1;
             }
 
             return 0;
         }
         case WM_NCPAINT: {
-            return 0;
+            break;
         }
         case WM_NCHITTEST: {
-            POINTS mousePos = MAKEPOINTS(lparam);
-            POINT clientMousePos = { mousePos.x, mousePos.y };
-            ScreenToClient(hwnd, &clientMousePos);
+            POINTS mouse_pos        = MAKEPOINTS(lparam);
+            POINT  client_mouse_pos = { mouse_pos.x, mouse_pos.y };
+            
+            ScreenToClient(hwnd, &client_mouse_pos);
 
-            RECT windowRect;
-            GetClientRect(hwnd, &windowRect);
+            if (wnd->m_hover_maximize)
+                return HTMAXBUTTON;
 
-            if (!wnd->m_skip_titlebar_hit && clientMousePos.y > 0 && clientMousePos.y <= wnd->m_custom_titlebar_height)
+            if (!wnd->m_skip_titlebar_hit && client_mouse_pos.y > 0 && client_mouse_pos.y <= wnd->m_custom_titlebar_height)
                 return HTCAPTION;
 
             break;
@@ -156,23 +162,47 @@ intptr_t dv_opengl_window::wndproc_callback(dv_opengl_window* wnd, handle_t hand
             return TRUE;
         }
         case WM_GETMINMAXINFO: {
-            MINMAXINFO* lpMinMax = (MINMAXINFO*)lparam;
+            MINMAXINFO* min_max = (MINMAXINFO*)lparam;
 
             // Get information about the monitor
-            HMONITOR hMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
-            MONITORINFO monitorInfo;
-            monitorInfo.cbSize = sizeof(MONITORINFO);
-            GetMonitorInfo(hMonitor, &monitorInfo);
+            HMONITOR monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+
+            MONITORINFO monitor_info{};
+            monitor_info.cbSize = sizeof(MONITORINFO);
+            GetMonitorInfo(monitor, &monitor_info);
 
             // Set the maximum size based on monitor information
-            lpMinMax->ptMaxTrackSize.x = monitorInfo.rcWork.right - monitorInfo.rcWork.left;
-            lpMinMax->ptMaxTrackSize.y = monitorInfo.rcWork.bottom - monitorInfo.rcWork.top;
-            lpMinMax->ptMaxPosition.x = 0;
-            lpMinMax->ptMaxPosition.y = 0;
+            min_max->ptMaxTrackSize.x = monitor_info.rcWork.right - monitor_info.rcWork.left;
+            min_max->ptMaxTrackSize.y = monitor_info.rcWork.bottom - monitor_info.rcWork.top;
+            min_max->ptMaxPosition.x  = 0;
+            min_max->ptMaxPosition.y  = 0;
 
             break;
         }
+        case WM_NCLBUTTONDOWN: {
+            if (wparam == HTMAXBUTTON)
+                return 0;
 
+            break;
+        }
+        case WM_NCLBUTTONUP: {
+            switch (wparam) {
+                case HTMAXBUTTON: {
+                    if (glfwGetWindowAttrib(wnd->m_native, GLFW_MAXIMIZED)) {
+                        glfwRestoreWindow(wnd->m_native);
+                    }
+                    else {
+                        glfwMaximizeWindow(wnd->m_native);
+                    }
+
+                    return 0;
+                }
+                default: break;
+            }
+
+            break;
+        }
+            
         default: break;
     }
 
@@ -219,8 +249,13 @@ void dv_opengl_window::remove_titlebar() {
     // Get win32 window style
     auto wnd_style = GetWindowLongPtr(win32_wnd, GWL_STYLE);
 
-    // Remove titlebar
-    wnd_style &= ~WS_CAPTION;
+    // Set window style
+    wnd_style |= WS_OVERLAPPEDWINDOW;
+    wnd_style |= WS_CAPTION;
+    wnd_style |= WS_MAXIMIZEBOX;
+    wnd_style |= WS_THICKFRAME;
+    wnd_style |= CS_VREDRAW;
+    wnd_style |= CS_HREDRAW;
 
     // Set win32 window style
     SetWindowLongPtr(win32_wnd, GWL_STYLE, wnd_style);

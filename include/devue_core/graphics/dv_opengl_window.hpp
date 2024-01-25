@@ -27,6 +27,7 @@ namespace devue::core {
 
         int32_t m_custom_titlebar_height = 0;
         bool    m_skip_titlebar_hit      = false;
+        bool    m_hover_maximize         = false;
 
     protected:
     	virtual bool prepare();
