@@ -20,36 +20,12 @@ using namespace devue::core;
 ///////////////////////////////////////////////////////////////////////////////
 // INTERNAL
 
-static LRESULT CALLBACK wndproc_callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+static LRESULT CALLBACK redirect_callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     dv_opengl_window* open_gl_wnd = (dv_opengl_window*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
     if (!open_gl_wnd) 
         throw std::runtime_error("");
 
-    switch (uMsg) {
-        case WM_NCCALCSIZE: {
-            if (wParam == TRUE && lParam != NULL) {
-                NCCALCSIZE_PARAMS* pParams = reinterpret_cast<NCCALCSIZE_PARAMS*>(lParam);
-                pParams->rgrc[0].top    += 1;
-                pParams->rgrc[0].right  -= 6;
-                pParams->rgrc[0].bottom -= 6;
-                pParams->rgrc[0].left   += 6;
-            }
-            
-            return 0;
-        }
-        case WM_NCPAINT: {
-            return 0;
-        }
-        case WM_NCHITTEST: {
-            return CallWindowProc((WNDPROC)open_gl_wnd->default_wndproc, hWnd, uMsg, wParam, lParam);
-        }
-        case WM_NCACTIVATE: {
-            return TRUE;
-        }
-        default: break;
-    }
-
-    return CallWindowProc((WNDPROC)open_gl_wnd->default_wndproc, hWnd, uMsg, wParam, lParam);
+    return dv_opengl_window::wndproc_callback(open_gl_wnd, hWnd, uMsg, wParam, lParam);
 }
 
 static std::string _get_imgui_ver() {
@@ -137,6 +113,72 @@ void dv_opengl_window::run() {
     loop();
 }
 
+intptr_t dv_opengl_window::wndproc_callback(dv_opengl_window* wnd, handle_t handle, uint32_t msg, ulongptr_t wparam, longptr_t lparam) {
+    HWND hwnd = (HWND)handle;
+
+    switch (msg) {
+        case WM_NCCALCSIZE: {
+            NCCALCSIZE_PARAMS* pParams = reinterpret_cast<NCCALCSIZE_PARAMS*>(lparam);
+
+            WINDOWPLACEMENT wp{};
+            wp.length = sizeof(WINDOWPLACEMENT);
+            GetWindowPlacement(hwnd, &wp);
+
+            if (wparam == TRUE && pParams) {
+                if (wp.showCmd == SW_SHOWMAXIMIZED)
+                    return 0;
+
+                pParams->rgrc[0].top += 1;
+                pParams->rgrc[0].right -= 6;
+                pParams->rgrc[0].bottom -= 6;
+                pParams->rgrc[0].left += 6;
+            }
+
+            return 0;
+        }
+        case WM_NCPAINT: {
+            return 0;
+        }
+        case WM_NCHITTEST: {
+            POINTS mousePos = MAKEPOINTS(lparam);
+            POINT clientMousePos = { mousePos.x, mousePos.y };
+            ScreenToClient(hwnd, &clientMousePos);
+
+            RECT windowRect;
+            GetClientRect(hwnd, &windowRect);
+
+            if (!wnd->m_skip_titlebar_hit && clientMousePos.y > 0 && clientMousePos.y <= wnd->m_custom_titlebar_height)
+                return HTCAPTION;
+
+            break;
+        }
+        case WM_NCACTIVATE: {
+            return TRUE;
+        }
+        case WM_GETMINMAXINFO: {
+            MINMAXINFO* lpMinMax = (MINMAXINFO*)lparam;
+
+            // Get information about the monitor
+            HMONITOR hMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+            MONITORINFO monitorInfo;
+            monitorInfo.cbSize = sizeof(MONITORINFO);
+            GetMonitorInfo(hMonitor, &monitorInfo);
+
+            // Set the maximum size based on monitor information
+            lpMinMax->ptMaxTrackSize.x = monitorInfo.rcWork.right - monitorInfo.rcWork.left;
+            lpMinMax->ptMaxTrackSize.y = monitorInfo.rcWork.bottom - monitorInfo.rcWork.top;
+            lpMinMax->ptMaxPosition.x = 0;
+            lpMinMax->ptMaxPosition.y = 0;
+
+            break;
+        }
+
+        default: break;
+    }
+
+    return CallWindowProc((WNDPROC)wnd->m_default_wndproc, hwnd, msg, wparam, lparam);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // PROTECTED
 
@@ -170,8 +212,8 @@ void dv_opengl_window::remove_titlebar() {
         return;
 
     // Save default callback
-    open_gl_wnd->default_wndproc = GetWindowLongPtr(win32_wnd, GWLP_WNDPROC);
-    if (!open_gl_wnd->default_wndproc)
+    open_gl_wnd->m_default_wndproc = GetWindowLongPtr(win32_wnd, GWLP_WNDPROC);
+    if (!open_gl_wnd->m_default_wndproc)
         return;
 
     // Get win32 window style
@@ -184,7 +226,7 @@ void dv_opengl_window::remove_titlebar() {
     SetWindowLongPtr(win32_wnd, GWL_STYLE, wnd_style);
 
     // Set new callback
-    SetWindowLongPtr(win32_wnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(wndproc_callback));
+    SetWindowLongPtr(win32_wnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(redirect_callback));
 
     // Force window redraw
     SetWindowPos(win32_wnd, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);

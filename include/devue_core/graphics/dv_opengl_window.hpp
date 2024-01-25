@@ -6,8 +6,10 @@ struct GLFWwindow;
 
 namespace devue::core {
     class dv_opengl_window {
-    public:
-        intptr_t default_wndproc = 0;
+    private:
+        using handle_t   = void*;
+        using longptr_t  = intptr_t;
+        using ulongptr_t = size_t;
 
     public:
     	dv_opengl_window(uint32_t width, uint32_t height, const std::string& title);
@@ -15,9 +17,16 @@ namespace devue::core {
 
     	void run();
 
+        static intptr_t wndproc_callback(dv_opengl_window* wnd, handle_t handle, uint32_t msg, ulongptr_t wparam, longptr_t lparam);
+
     protected:
     	GLFWwindow* m_native	= nullptr;
     	bool m_minimized		= false;
+
+        // Move these to a separate struct
+
+        int32_t m_custom_titlebar_height = 0;
+        bool    m_skip_titlebar_hit      = false;
 
     protected:
     	virtual bool prepare();
@@ -37,6 +46,9 @@ namespace devue::core {
 
     protected:
         void remove_titlebar();
+
+    private:
+        intptr_t m_default_wndproc = 0;
 
     private:
     	void loop();
