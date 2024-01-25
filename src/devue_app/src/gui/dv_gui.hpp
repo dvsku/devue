@@ -25,6 +25,8 @@ namespace devue {
     	void on_mouse_button(int btn, int action, int modifier) override final;
     	void on_mouse_move(double dx, double dy)				override final;
 
+        void set_theme();
+
     private:
     	dv_systems m_sytems;
     	dv_components m_components;
