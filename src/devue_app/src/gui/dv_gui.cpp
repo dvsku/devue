@@ -132,11 +132,10 @@ void dv_gui::on_gui_update() {
     ImGui::SetNextWindowViewport(viewport->ID);
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0.0f, 0.0f});
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
     ImGui::Begin("Root##Window", NULL, flags);
     {
-        ImGui::PopStyleVar(2);
+        ImGui::PopStyleVar(1);
 
         ImVec2 titlebar_size    = { 0.0f, 25.0f };
         ImVec2 titlebar_padding = { 0.0f, 0.0f };
@@ -244,12 +243,16 @@ void dv_gui::on_gui_update() {
     }
     ImGui::End();
 
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 8.0f, 4.0f });
+
     m_components.hierarchy.render();
     m_components.assets.render();
     m_components.scene.render(m_scene_render_target.get());
     m_components.properties.render();
 
     m_sytems.command.execute();
+
+    ImGui::PopStyleVar();
 
     //ImGui::ShowDemoWindow();
 }

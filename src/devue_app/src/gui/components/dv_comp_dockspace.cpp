@@ -55,14 +55,18 @@ bool dv_comp_dockspace::render() {
     }
 
     auto dockspace_size = ImGui::GetContentRegionAvail();
-    dockspace_size.y -= 27;
+    dockspace_size.y -= 23;
 
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 4);
     ImGui::DockSpace(dockspace_id, dockspace_size);
 
-    ImGui::BeginChild("Footer", ImVec2(-1, 23));
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, 0xFF1F1F1F);
+
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 4);
+    ImGui::BeginChild("Footer", ImVec2(-1, 27));
 
     ImGui::AlignTextToFramePadding();
-    ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 2);
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 3);
     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 8);
     ImGui::Text("M: %d SM: %d MAT: %d TEX: %d",
     			m_systems->model.count(),
@@ -71,6 +75,8 @@ bool dv_comp_dockspace::render() {
                 m_systems->texture.count());
 
     ImGui::EndChild();
+
+    ImGui::PopStyleColor();
 
     return true;
 }
