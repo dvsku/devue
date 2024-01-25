@@ -51,7 +51,9 @@ bool dv_modal_import::render() {
         ImGui::SetCursorPosX(size.x - (120 * 2) - 2.0f);
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 25.0f);
 
-        if (m_file_path.empty())
+        bool is_path_empty = m_file_path.empty();
+
+        if (is_path_empty)
             ImGui::BeginDisabled();
 
         if (ImGui::Button("OK", ImVec2(120, 0))) {
@@ -61,7 +63,7 @@ bool dv_modal_import::render() {
             status = DV_COMMAND_FINISHED;
         }
 
-        if (m_file_path.empty())
+        if (is_path_empty)
             ImGui::EndDisabled();
 
         ImGui::SetItemDefaultFocus();
