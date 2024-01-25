@@ -40,6 +40,8 @@ dv_gui::~dv_gui() {}
 
 bool dv_gui::prepare() {
     set_borderless();
+    m_custom_titlebar_height = 25;
+
     ImGuiIO& io = ImGui::GetIO();
 
     ImFontConfig config;
@@ -65,26 +67,6 @@ bool dv_gui::prepare() {
     catch (const std::exception& e) {
     	DV_LOG("Failed to prepare rendering system. | {}", e.what());
     	return false;
-    }
-
-    // TODO: Load plugins here
-
-    // Load model importers
-    try {
-    	m_sytems.model.prepare();
-    }
-    catch (const std::exception& e) {
-    	DV_LOG("Failed to prepare model system. | {}", e.what());
-    	return false;
-    }
-
-    // Load texture importers
-    try {
-        m_sytems.texture.prepare();
-    }
-    catch (const std::exception& e) {
-        DV_LOG("Failed to prepare model system. | {}", e.what());
-        return false;
     }
 
     try {
@@ -132,7 +114,134 @@ void dv_gui::on_gui_before_update() {
 }
 
 void dv_gui::on_gui_update() {
-    m_components.dockspace.render();
+    m_skip_titlebar_hit     = ImGui::IsAnyItemHovered();
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+    ImGuiWindowFlags flags = 0;
+    flags |= ImGuiWindowFlags_NoNav;
+    flags |= ImGuiWindowFlags_NoDecoration;
+    flags |= ImGuiWindowFlags_NoSavedSettings;
+    flags |= ImGuiWindowFlags_NoMove;
+    flags |= ImGuiWindowFlags_NoDocking;
+    flags |= ImGuiWindowFlags_NoCollapse;
+
+    ImGui::SetNextWindowPos(viewport->WorkPos);
+    ImGui::SetNextWindowSize(viewport->WorkSize);
+    ImGui::SetNextWindowViewport(viewport->ID);
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0.0f, 0.0f});
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+    ImGui::Begin("Root##Window", NULL, flags);
+    {
+        ImGui::PopStyleVar(2);
+
+        ImVec2 titlebar_size    = { 0.0f, 25.0f };
+        ImVec2 titlebar_padding = { 0.0f, 0.0f };
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, titlebar_padding);
+        ImGui::PushStyleColor(ImGuiCol_ChildBg,   0xFF1F1F1F);
+        ImGui::PushStyleColor(ImGuiCol_MenuBarBg, 0xFF1F1F1F);
+
+        flags |= ImGuiWindowFlags_AlwaysUseWindowPadding;
+
+        ImGui::BeginChild("TitleBar##Window", titlebar_size, false, flags);
+        {
+            ImGui::PopStyleVar(1);
+
+            auto max = ImGui::GetWindowContentRegionMax();
+            auto min = ImGui::GetWindowContentRegionMin();
+
+            ImGui::Dummy({ 0.0f, 2.0f });
+
+            ImGui::Indent(10.0f);
+            ImGui::Text("devue");
+
+            ImGui::SameLine();
+
+            flags = 0;
+            flags |= ImGuiWindowFlags_NoNav;
+            flags |= ImGuiWindowFlags_NoDecoration;
+            flags |= ImGuiWindowFlags_NoSavedSettings;
+            flags |= ImGuiWindowFlags_NoMove;
+            flags |= ImGuiWindowFlags_NoDocking;
+            flags |= ImGuiWindowFlags_NoCollapse;
+            flags |= ImGuiWindowFlags_MenuBar;
+
+            ImGui::SetCursorPosY(3.0f);
+
+            auto avail = ImGui::GetContentRegionAvail();
+            ImGui::BeginChild("TitleBarMenu##Window", { avail.x - 90.0f, 0.0f}, false, flags);
+            {
+                if (ImGui::BeginMenuBar()) {
+                    ImGui::PushID("FileMenu");
+
+                    if (ImGui::BeginMenu("File")) {
+                        if (ImGui::MenuItem("Import##MenuItem")) {
+                            m_sytems.command.set_execute(dv_commands::flag_show_modal_import);
+                        }
+
+                        ImGui::EndMenu();
+                    }
+
+                    ImGui::PopID();
+
+                    ImGui::PushID("ViewMenu");
+
+                    if (ImGui::BeginMenu("View")) {
+                        bool& is_executable = m_sytems.command.is_executable(dv_commands::flag_show_console);
+                        ImGui::MenuItem("Console##MenuItem", "", &is_executable);
+
+                        ImGui::EndMenu();
+                    }
+
+                    ImGui::PopID();
+
+                    ImGui::EndMenuBar();
+                }
+            }
+            ImGui::EndChild();
+
+            ImGui::Unindent(10.0f);
+
+            
+            ImGui::PushStyleColor(ImGuiCol_Button, 0x00FFFFFF);
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, 0xFF3D3D3D);
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, 0xFF3D3D3D);
+            ImGui::PushStyleColor(ImGuiCol_Text, 0xFFC5C5C5);
+
+            ImGui::SameLine(0.0f, 0.0f);
+            ImGui::SetCursorPosY(min.y - titlebar_padding.y);
+            if (ImGui::Button(ICON_FA_MINUS"##MinimizeButton", { 30.0f, titlebar_size.y})) {
+                glfwIconifyWindow(m_native);
+            }
+
+            ImGui::SameLine(0.0f, 0.0f);
+            ImGui::SetCursorPosY(min.y - titlebar_padding.y);
+            if (!glfwGetWindowAttrib(m_native, GLFW_MAXIMIZED)) {
+                ImGui::Button(ICON_FA_WINDOW_MAXIMIZE"##MaximizeButton", { 30.0f, titlebar_size.y });
+            }
+            else {
+                ImGui::Button(ICON_FA_WINDOW_RESTORE"##RestoreButton", { 30.0f, titlebar_size.y });
+            }
+
+            m_hover_maximize = ImGui::IsItemHovered();
+
+            ImGui::SameLine(0.0f, 0.0f);
+            ImGui::SetCursorPosY(min.y - titlebar_padding.y);
+            if (ImGui::Button(ICON_FA_XMARK"##ExitButton", { 30.0f, titlebar_size.y })) {
+                glfwSetWindowShouldClose(m_native, 1);
+            }
+
+            ImGui::PopStyleColor(4);
+        }
+        ImGui::EndChild();
+
+        ImGui::PopStyleColor(2);
+
+        m_components.dockspace.render();
+    }
+    ImGui::End();
+
     m_components.hierarchy.render();
     m_components.assets.render();
     m_components.scene.render(m_scene_render_target.get());

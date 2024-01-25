@@ -54,53 +54,10 @@ bool dv_comp_dockspace::render() {
     	ImGui::DockBuilderFinish(dockspace_id);
     }
 
-    ImGuiWindowFlags flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoTitleBar | 
-    	ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | 
-    	ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-
-    ImGui::SetNextWindowPos(viewport->WorkPos);
-    ImGui::SetNextWindowSize(viewport->WorkSize);
-    ImGui::SetNextWindowViewport(viewport->ID);
-
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-
-    ImGui::Begin("Root##Window", NULL, flags);
-    ImGui::PopStyleVar();
-
     auto dockspace_size = ImGui::GetContentRegionAvail();
     dockspace_size.y -= 27;
 
     ImGui::DockSpace(dockspace_id, dockspace_size);
-
-    if (ImGui::BeginMenuBar()) {
-    	ImGui::PushID("FileMenu");
-
-    	if (ImGui::BeginMenu("File")) {
-    		if (ImGui::MenuItem("Import##MenuItem")) {
-                m_systems->command.set_execute(dv_commands::flag_show_modal_import);
-    		}
-
-    		ImGui::EndMenu();
-    	}
-
-    	ImGui::PopID();
-
-    	ImGui::PushID("ViewMenu");
-
-    	if (ImGui::BeginMenu("View")) {
-            bool& is_executable = m_systems->command.is_executable(dv_commands::flag_show_console);
-    		if (ImGui::MenuItem("Console##MenuItem", "", &is_executable)) {
-
-    		}
-
-    		ImGui::EndMenu();
-    	}
-
-    	ImGui::PopID();
-
-    	ImGui::EndMenuBar();
-    }
 
     ImGui::BeginChild("Footer", ImVec2(-1, 23));
 
@@ -114,8 +71,6 @@ bool dv_comp_dockspace::render() {
                 m_systems->texture.count());
 
     ImGui::EndChild();
-
-    ImGui::End();
 
     return true;
 }
