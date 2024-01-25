@@ -46,7 +46,7 @@ namespace devue::core {
     	virtual void on_mouse_move(double dx, double dy);
 
     protected:
-        void remove_titlebar();
+        void set_borderless();
 
     private:
         intptr_t m_default_wndproc = 0;

@@ -232,7 +232,7 @@ void dv_opengl_window::on_mouse_button(int btn, int action, int modifier) {}
 
 void dv_opengl_window::on_mouse_move(double dx, double dy) {}
 
-void dv_opengl_window::remove_titlebar() {
+void dv_opengl_window::set_borderless() {
     auto win32_wnd = glfwGetWin32Window(m_native);
     if (!win32_wnd)
         return;

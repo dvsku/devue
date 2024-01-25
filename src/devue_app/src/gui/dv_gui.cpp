@@ -40,6 +40,7 @@ dv_gui::~dv_gui() {}
 // PRIVATE
 
 bool dv_gui::prepare() {
+    set_borderless();
     ImGuiIO& io = ImGui::GetIO();
 
     ImFontConfig config;
