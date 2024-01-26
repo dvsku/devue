@@ -25,9 +25,6 @@ void dv_plugin::prepare() {
     if (json.contains("version") && json["version"].is_string())
         version = json["version"];
 
-    if (json.contains("type") && json["type"].is_number())
-        type = (dv_plugin_importer::plugin_type)json["type"];
-
     if (json.contains("supported_types") && json["supported_types"].is_array()) {
         for (auto& json_type : json["supported_types"]) {
             if (!json_type.contains("name")       || !json_type["name"].is_string())       continue;
@@ -42,8 +39,5 @@ void dv_plugin::prepare() {
     }
 
     if (name.empty())
-        throw dv_exception("");
-
-    if (type == dv_plugin_importer::plugin_type::undefined)
         throw dv_exception("");
 }
