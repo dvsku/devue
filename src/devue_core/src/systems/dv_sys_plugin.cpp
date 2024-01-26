@@ -27,6 +27,64 @@ dv_sys_plugin::dv_sys_plugin(dv_systems_bundle* systems)
     : m_systems(systems) {}
 
 dv_sys_plugin::~dv_sys_plugin() {
+    release();
+}
+
+void dv_sys_plugin::prepare() {
+    prepare_plugins();
+    m_systems->model.update_supported_file_types();
+}
+
+void dv_sys_plugin::release() {
+    release_plugins();
+    m_systems->model.update_supported_file_types();
+}
+
+void dv_sys_plugin::reload_plugins() {
+    release_plugins();
+    prepare_plugins();
+    m_systems->model.update_supported_file_types();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// PRIVATE
+
+void dv_sys_plugin::prepare_plugins() {
+    for (const auto& entry : std::filesystem::directory_iterator("./plugins/")) {
+        // Make sure it's a file
+        if (!std::filesystem::is_regular_file(entry))
+            continue;
+
+        std::filesystem::path filepath = entry.path();
+
+        // Make sure it's a dll
+        if (filepath.extension() != ".dll")
+            continue;
+
+        // Make sure it's a texture plugin
+        if (!filepath.filename().string().starts_with("dv_plg_"))
+            continue;
+
+        devue::uuid uuid = dv_util_uuid::create(filepath.string());
+
+        if (model_plugins.contains(uuid) || texture_plugins.contains(uuid))
+            continue;
+
+        try {
+            load_plugin(filepath, uuid);
+        }
+        catch (const std::exception& e) {
+            DV_LOG("Failed to load `{}` plugin. | {}", filepath.filename().string(), e.what());
+            continue;
+        }
+        catch (...) {
+            DV_LOG("Failed to load `{}` plugin.", filepath.filename().string());
+            continue;
+        }
+    }
+}
+
+void dv_sys_plugin::release_plugins() {
     for (auto& [uuid, plugin] : model_plugins)
         release_plugin(plugin);
 
@@ -34,18 +92,11 @@ dv_sys_plugin::~dv_sys_plugin() {
         release_plugin(plugin);
 }
 
-void dv_sys_plugin::prepare() {
-    create_model_plugins();
-    create_texture_plugins();
-
-    m_systems->model.update_supported_file_types();
-}
-
 void dv_sys_plugin::release_plugin(dv_plugin& plugin) {
     if (plugin.m_importer)
         plugin.m_importer->cleanup();
 
-    if (plugin.m_handle) 
+    if (plugin.m_handle)
         release_handle(plugin.m_handle);
 
     plugin.m_handle   = nullptr;
@@ -54,146 +105,79 @@ void dv_sys_plugin::release_plugin(dv_plugin& plugin) {
     DV_LOG("Released plugin `{}`", plugin.filename);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// PRIVATE
+void dv_sys_plugin::load_plugin(const std::filesystem::path& path, devue::uuid uuid) {
+    auto phandle = create_handle(path.string().c_str());
 
-void dv_sys_plugin::create_texture_plugins() {
-    for (const auto& entry : std::filesystem::directory_iterator("./plugins/")) {
-        // Make sure it's a file
-        if (!std::filesystem::is_regular_file(entry))
-            continue;
+    if (phandle.type == plugins::dv_plugin_importer::plugin_type::undefined)
+        throw dv_exception("Failed to determine plugin type.");
 
-        std::filesystem::path filepath = entry.path();
+    if (phandle.type == plugins::dv_plugin_importer::plugin_type::model) {
+        dv_model_plugin plugin;
+        plugin.m_handle   = phandle.handle;
+        plugin.m_importer = phandle.importer;
+        plugin.filename   = path.filename().string();
 
-        // Make sure it's a dll
-        if (filepath.extension() != ".dll")
-            continue;
+        plugin.prepare();
 
-        // Make sure it's a texture plugin
-        if (!filepath.filename().string().starts_with("dv_plg_tex"))
-            continue;
+        model_plugins[uuid] = std::move(plugin);
 
-        devue::uuid uuid = dv_util_uuid::create(filepath.string());
+        DV_LOG("Loaded texture plugin `{}` from `{}`.", model_plugins[uuid].name, model_plugins[uuid].filename);
+    }
+    else if (phandle.type == plugins::dv_plugin_importer::plugin_type::texture) {
+        dv_texture_plugin plugin;
+        plugin.m_handle   = phandle.handle;
+        plugin.m_importer = phandle.importer;
+        plugin.filename   = path.filename().string();
 
-        if (texture_plugins.contains(uuid))
-            continue;
+        plugin.prepare();
 
-        try {
-            texture_plugins[uuid] = std::move(load_texture_plugin(filepath));
-        }
-        catch (...) {
-            DV_LOG("Failed to load `{}` texture plugin.", filepath.filename().string());
-            continue;
-        }
+        texture_plugins[uuid] = std::move(plugin);
 
         DV_LOG("Loaded texture plugin `{}` from `{}`.", texture_plugins[uuid].name, texture_plugins[uuid].filename);
     }
-}
-
-void dv_sys_plugin::create_model_plugins() {
-    for (const auto& entry : std::filesystem::directory_iterator("./plugins/")) {
-        // Make sure it's a file
-        if (!std::filesystem::is_regular_file(entry))
-            continue;
-
-        std::filesystem::path filepath = entry.path();
-
-        // Make sure it's a dll
-        if (filepath.extension() != ".dll")
-            continue;
-
-        // Make sure it's a texture plugin
-        if (!filepath.filename().string().starts_with("dv_plg_mod"))
-            continue;
-
-        devue::uuid uuid = dv_util_uuid::create(filepath.string());
-
-        if (model_plugins.contains(uuid))
-            continue;
-
-        try {
-            model_plugins[uuid] = std::move(load_model_plugin(filepath));
-        }
-        catch (...) {
-            DV_LOG("Failed to load `{}` model plugin.", filepath.filename().string());
-            continue;
-        }
-
-        DV_LOG("Loaded model plugin `{}` from `{}`.", model_plugins[uuid].name, model_plugins[uuid].filename);
-    }
-}
-
-dv_texture_plugin dv_sys_plugin::load_texture_plugin(const std::filesystem::path& path) {
-    auto phandle = create_handle(path.string().c_str());
-
-    dv_texture_plugin plugin;
-    plugin.m_handle   = phandle.handle;
-    plugin.m_importer = phandle.importer;
-    plugin.filename   = path.filename().string();
-
-    plugin.prepare();
-    return plugin;
-}
-
-dv_model_plugin dv_sys_plugin::load_model_plugin(const std::filesystem::path& path) {
-    auto phandle = create_handle(path.string().c_str());
-
-    dv_model_plugin plugin;
-    plugin.m_handle   = phandle.handle;
-    plugin.m_importer = phandle.importer;
-    plugin.filename   = path.filename().string();
-
-    plugin.prepare();
-    return plugin;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // INTERNAL
 
 plugin_handle create_handle(const char* path) {
+    typedef devue::plugins::dv_plugin_importer* fn_create();
+    typedef uint8_t                             fn_plugin_type();
+
     HMODULE handle = LoadLibrary(path);
     if (!handle)
         throw dv_exception("");
 
-    auto create_fn_addr = GetProcAddress(handle, "create");
-    if (!create_fn_addr)
+    auto       create_fn_addr = GetProcAddress(handle, "create");
+    fn_create* create_fn      = (fn_create*)create_fn_addr;
+
+    if (!create_fn_addr || !create_fn)
         throw dv_exception("");
 
-    auto plugin_type_fn_addr = GetProcAddress(handle, "plugin_type");
-    if (!plugin_type_fn_addr)
+    auto            plugin_type_fn_addr = GetProcAddress(handle, "plugin_type");
+    fn_plugin_type* plugin_type_fn      = (fn_plugin_type*)plugin_type_fn_addr;
+
+    if (!plugin_type_fn_addr || !plugin_type_fn)
         throw dv_exception("");
 
-    typedef devue::plugins::dv_plugin_importer* create_fn();
-    create_fn* create = (create_fn*)create_fn_addr;
-    if (!create)
-        throw dv_exception("");
-
-    devue::plugins::dv_plugin_importer* importer = create();
+    devue::plugins::dv_plugin_importer* importer = create_fn();
     if (!importer)
         throw dv_exception("");
 
-    typedef uint8_t plugin_type_fn();
-    plugin_type_fn* plugin_type = (plugin_type_fn*)plugin_type_fn_addr;
-    if (!plugin_type)
-        throw dv_exception("");
+    auto plugin_type = (devue::plugins::dv_plugin_importer::plugin_type)plugin_type_fn();
 
-    devue::plugins::dv_plugin_importer::plugin_type type =
-        (devue::plugins::dv_plugin_importer::plugin_type)plugin_type();
-
-    return { handle, importer, type };
+    return { handle, importer, plugin_type };
 }
 
 void release_handle(HMODULE handle) {
-    auto release_fn_addr = GetProcAddress(handle, "release");
-    if (!release_fn_addr)
+    typedef void fn_release();
+
+    auto        release_fn_addr = GetProcAddress(handle, "release");
+    fn_release* release_fn      = (fn_release*)release_fn_addr;
+
+    if (!release_fn_addr || !release_fn)
         throw dv_exception("");
 
-    typedef void release_fn();
-    release_fn* release = (release_fn*)release_fn_addr;
-    if (!release)
-        throw dv_exception("");
-
-    release();
-
+    release_fn();
     FreeLibrary(handle);
 }

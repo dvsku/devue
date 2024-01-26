@@ -27,16 +27,19 @@ namespace devue::core {
         dv_sys_plugin& operator=(dv_sys_plugin&&) = delete;
 
         void prepare();
-        void release_plugin(dv_plugin& plugin);
+        void release();
+
+        void reload_plugins();
 
     private:
         dv_systems_bundle* m_systems;
 
     private:
-        void create_texture_plugins();
-        void create_model_plugins();
+        void prepare_plugins();
+        void release_plugins();
 
-        dv_texture_plugin load_texture_plugin(const std::filesystem::path& path);
-        dv_model_plugin load_model_plugin(const std::filesystem::path& path);
+        void release_plugin(dv_plugin& plugin);
+
+        void load_plugin(const std::filesystem::path& path, devue::uuid uuid);
     };
 }
