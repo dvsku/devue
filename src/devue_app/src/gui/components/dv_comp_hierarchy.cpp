@@ -61,14 +61,7 @@ bool dv_comp_hierarchy::render() {
                     m_systems->properties.set_inspected(smodel);
     			}
 
-    			if (ImGui::BeginPopupContextItem()) {
-    				if (ImGui::Selectable("Remove##ContextMenu", false,
-    					ImGuiSelectableFlags_SelectOnRelease | ImGuiSelectableFlags_NoSetKeyOwner)) {
-    					m_systems->scene.remove_from_scene(smodel);
-    				}
-
-    				ImGui::EndPopup();
-    			}
+                render_scene_model_context_menu(smodel);
 
     			ImGui::PopID();
     		}
@@ -82,4 +75,27 @@ bool dv_comp_hierarchy::render() {
     ImGui::PopStyleVar();
 
     return true;
+}
+
+void dv_comp_hierarchy::render_scene_model_context_menu(dv_scene_model& smodel) {
+    if (dv_util_imgui::begin_item_context_menu()) {
+        ImGui::PushID("ContextMenu");
+
+        if (ImGui::Selectable("Remove from scene", false, 
+            ImGuiSelectableFlags_SelectOnRelease | ImGuiSelectableFlags_NoSetKeyOwner)) 
+        {
+            m_systems->scene.remove_from_scene(smodel);
+        }
+
+        ImGui::Separator();
+
+        if (ImGui::Selectable("Properties", false,
+            ImGuiSelectableFlags_SelectOnRelease | ImGuiSelectableFlags_NoSetKeyOwner)) 
+        {
+            m_systems->properties.set_inspected(smodel);
+        }
+
+        ImGui::PopID();
+        ImGui::EndPopup();
+    }
 }

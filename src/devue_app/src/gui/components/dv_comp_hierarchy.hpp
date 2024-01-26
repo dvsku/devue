@@ -7,5 +7,8 @@ namespace devue {
     	dv_comp_hierarchy(dv_systems* systems, dv_components* components);
 
         bool render() final override;
+
+    private:
+        void render_scene_model_context_menu(core::dv_scene_model& smodel);
     };
 }
