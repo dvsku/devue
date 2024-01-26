@@ -159,6 +159,10 @@ plugin_handle create_handle(const char* path) {
     if (!create_fn_addr)
         throw dv_exception("");
 
+    auto plugin_type_fn_addr = GetProcAddress(handle, "plugin_type");
+    if (!plugin_type_fn_addr)
+        throw dv_exception("");
+
     typedef devue::plugins::dv_plugin_importer* create_fn();
     create_fn* create = (create_fn*)create_fn_addr;
     if (!create)
@@ -168,7 +172,15 @@ plugin_handle create_handle(const char* path) {
     if (!importer)
         throw dv_exception("");
 
-    return { handle, importer };
+    typedef uint8_t plugin_type_fn();
+    plugin_type_fn* plugin_type = (plugin_type_fn*)plugin_type_fn_addr;
+    if (!plugin_type)
+        throw dv_exception("");
+
+    devue::plugins::dv_plugin_importer::plugin_type type =
+        (devue::plugins::dv_plugin_importer::plugin_type)plugin_type();
+
+    return { handle, importer, type };
 }
 
 void release_handle(HMODULE handle) {
