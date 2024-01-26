@@ -21,6 +21,7 @@ ADD_EXECUTABLE(devue
 	"src/systems/dv_systems.cpp"
     "src/utilities/dv_util_dialog.cpp"
 	"src/utilities/dv_util_command.cpp"
+	"src/utilities/dv_util_imgui.cpp"
 )
 
 TARGET_LINK_OPTIONS(devue PRIVATE "/SUBSYSTEM:WINDOWS")

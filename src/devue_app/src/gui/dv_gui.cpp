@@ -5,6 +5,7 @@
 #include "rendering/dv_multisample_frame_buffer.hpp"
 #include "utilities/dv_util_diag.hpp"
 #include "utilities/dv_util_log.hpp"
+#include "utilities/dv_util_imgui.hpp"
 #include "gui/fonts/font_fontawesome_solid.hpp"
 #include "gui/fonts/font_average_mono.hpp"
 
@@ -41,6 +42,8 @@ dv_gui::~dv_gui() {}
 bool dv_gui::prepare() {
     set_theme();
     set_borderless();
+
+    dv_util_imgui::init();
 
     m_custom_titlebar_height = 25;
 
