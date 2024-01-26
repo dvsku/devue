@@ -1,5 +1,4 @@
 #include "dv_model_plugin.hpp"
-#include "dv_serialization.hpp"
 
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
@@ -17,7 +16,14 @@ std::unique_ptr<dv_model_plugin> g_plugin = nullptr;
 DV_API dv_plugin_importer* create() {
     if (g_plugin) return g_plugin.get();
 
-    g_plugin = std::make_unique<dv_model_plugin>();
+    try {
+        g_plugin = std::make_unique<dv_model_plugin>();
+        g_plugin->init();
+    }
+    catch (...) {
+        return nullptr;
+    }
+
     return g_plugin.get();
 }
 
@@ -28,23 +34,20 @@ DV_API void release() {
 ///////////////////////////////////////////////////////////////////////////////
 // IMPL
 
-void dv_model_plugin::_init() noexcept {
-    this->m_name   = "devue model plugin";
-    this->m_author = "";
-    this->m_link   = "";
-
-    // Version is displayed as {major}.{minor}
-    this->m_plugin_version_major = 1U;
-    this->m_plugin_version_minor = 0.0f;
+void dv_model_plugin::init() {
+    this->m_name    = "devue model plugin";
+    this->m_author  = "";
+    this->m_website = "";
+    this->m_version = "1.0.0";
 }
 
-std::vector<dv_file_type> dv_model_plugin::_get_supported_types() noexcept {
+std::vector<dv_file_type> dv_model_plugin::_get_supported_types() {
     return {
         { "Wavefront object", ".obj"}
     };
 }
 
-dv_plugin_model dv_model_plugin::_import(const std::filesystem::path& filepath) noexcept {
+dv_plugin_model dv_model_plugin::_import(const std::filesystem::path& filepath) {
     const aiScene* scene = importer.ReadFile(filepath.string().c_str(), aiProcess_Triangulate);
 
     if (!scene || !scene->mRootNode)

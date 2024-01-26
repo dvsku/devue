@@ -7,10 +7,12 @@
 
 namespace devue::plugins {
     class dv_model_plugin : public dv_model_plugin_adapter {
-    protected:
-        virtual void _init() noexcept final override;
-        virtual std::vector<dv_file_type> _get_supported_types() noexcept final override;
-        virtual dv_plugin_model _import(const std::filesystem::path& filepath) noexcept final override;
+    public:
+        virtual void init() final override;
+
+    protected:   
+        virtual std::vector<dv_file_type> _get_supported_types() final override;
+        virtual dv_plugin_model _import(const std::filesystem::path& filepath) final override;
 
     private:
         Assimp::Importer importer;
