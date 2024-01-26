@@ -1,3 +1,6 @@
+// Adapted from:
+// https://asliceofrendering.com/scene%20helper/2020/01/05/InfiniteGrid/
+
 #version 330 core
     	
 in vec3 near_point;
