@@ -27,6 +27,8 @@ dv_sys_plugin::dv_sys_plugin(dv_systems_bundle* systems)
 
 dv_sys_plugin::~dv_sys_plugin() {
     m_systems->texture.release_importers();
+    for (auto& [uuid, plugin] : model_plugins)
+        release_plugin(plugin);
 
     for (auto& [uuid, plugin] : m_texture_plugins)
         release_plugin(plugin);
@@ -35,17 +37,6 @@ dv_sys_plugin::~dv_sys_plugin() {
 void dv_sys_plugin::prepare() {
     create_model_plugins();
     create_texture_plugins();
-
-    for (auto& [uuid, plugin] : m_model_plugins) {
-        m_systems->model.create_importer(
-            {
-                plugin.supported_file_types,
-                [&](const std::string& filepath) {
-                    return plugin.import(filepath);
-                }
-            }
-        );
-    }
 
     m_systems->model.update_supported_file_types();
 
@@ -128,18 +119,18 @@ void dv_sys_plugin::create_model_plugins() {
 
         devue::uuid uuid = dv_util_uuid::create(filepath.string());
 
-        if (m_model_plugins.contains(uuid))
+        if (model_plugins.contains(uuid))
             continue;
 
         try {
-            m_model_plugins[uuid] = std::move(load_model_plugin(filepath));
+            model_plugins[uuid] = std::move(load_model_plugin(filepath));
         }
         catch (...) {
             DV_LOG("Failed to load `{}` model plugin.", filepath.filename().string());
             continue;
         }
 
-        DV_LOG("Loaded model plugin `{}` from `{}`.", m_model_plugins[uuid].name, m_model_plugins[uuid].filename);
+        DV_LOG("Loaded model plugin `{}` from `{}`.", model_plugins[uuid].name, model_plugins[uuid].filename);
     }
 }
 

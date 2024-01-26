@@ -92,7 +92,9 @@ dv_plugin_model dv_model_plugin::import(const std::string & filepath) {
         model.meshes.push_back(mesh);
     }
 
-    m_importer->cleanup();
-
     return model;
+}
+
+void dv_model_plugin::cleanup() {
+    m_importer->cleanup();
 }

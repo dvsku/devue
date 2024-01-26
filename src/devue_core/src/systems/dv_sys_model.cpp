@@ -1,4 +1,5 @@
 #include "systems/dv_sys_model.hpp"
+#include "systems/dv_systems_bundle.hpp"
 #include "dv_plugin_model.hpp"
 #include "utilities/dv_util_string.hpp"
 
@@ -37,21 +38,15 @@ const std::vector<dv_file_filter>& dv_sys_model::get_supported_file_types() cons
 }
 
 void dv_sys_model::update_supported_file_types() {
-    for (auto& importer : m_importers)
-        for (auto& file_type : importer.types)
+    for (auto& [uuid, plugin] : m_systems->plugin.model_plugins) {
+        for (auto& file_type : plugin.supported_file_types) {
             m_supported_file_types.emplace_back(dv_file_filter(file_type));
+        }
+    }
 
     std::sort(m_supported_file_types.begin(), m_supported_file_types.end(), compare_file_filters);
 
     m_supported_file_types.push_back({ L"All files (*.*)\0", L"*.*\0" });
-}
-
-void dv_sys_model::create_importer(dv_model_importer&& importer) {
-    m_importers.emplace_back(importer);
-}
-
-void dv_sys_model::release_importers() {
-    m_importers.clear();
 }
 
 dv_model& dv_sys_model::import(const std::string& path, const std::string& texture_path) {
@@ -62,18 +57,21 @@ dv_model& dv_sys_model::import(const std::string& path, const std::string& textu
     	return dv_util_string::contains(type.extensions, ext);
     };
 
-    for (auto& importer : m_importers) {
-    	if (std::none_of(importer.types.begin(), importer.types.end(), cmp_fn))
-    		continue;
-    	
+    for (auto& [uuid, plugin] : m_systems->plugin.model_plugins) {
+        if (std::none_of(plugin.supported_file_types.begin(), plugin.supported_file_types.end(), cmp_fn))
+            continue;
+
         dv_plugin_model pmodel;
 
         try {
-            pmodel = importer.fn(path);
+            pmodel = plugin.import(path);
         }
         catch (...) {
+            plugin.cleanup();
             continue;
         }
+
+        plugin.cleanup();
 
     	dv_model model;
 

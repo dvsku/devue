@@ -16,6 +16,8 @@ namespace devue::core {
         dv_model_plugin& operator=(const dv_model_plugin&) = delete;
         dv_model_plugin& operator=(dv_model_plugin&&)      = default;
 
+    public:
         devue::plugins::dv_plugin_model import(const std::string & filepath);
+        void cleanup();
     };
 }
