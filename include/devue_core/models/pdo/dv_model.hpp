@@ -26,6 +26,8 @@ namespace devue::core {
 
     	float min_y = 0.0f;
 
+        bool marked_for_removal = false;
+
     	dv_model()				  = default;
     	dv_model(const dv_model&) = default;
     	dv_model(dv_model&&)	  = default;

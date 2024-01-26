@@ -109,6 +109,9 @@ void dv_gui::on_before_update() {
 
 void dv_gui::on_update() {
     m_sytems.scene.render_current_scene(m_scene_render_target.get());
+    
+    // This has to be called after scene is done rendering
+    m_sytems.model.remove_marked_models();
 }
 
 void dv_gui::on_after_update() {}

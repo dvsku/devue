@@ -1,6 +1,6 @@
+#include "dv_plugin_model.hpp"
 #include "systems/dv_sys_model.hpp"
 #include "systems/dv_systems_bundle.hpp"
-#include "dv_plugin_model.hpp"
 #include "utilities/dv_util_string.hpp"
 
 #include <algorithm>
@@ -112,6 +112,26 @@ dv_model& dv_sys_model::import(const std::string& path, const std::string& textu
     }
 
     throw std::runtime_error("Unsupported model type");
+}
+
+void dv_sys_model::remove(dv_model& model) {
+    if (!models.contains(model.uuid)) return;
+    model.marked_for_removal = true;
+}
+
+void dv_sys_model::remove_marked_models() {
+    try {
+        auto it = models.begin();
+        while (it != models.end()) {
+            if (it->second.marked_for_removal) {
+                it = models.erase(it);
+            }
+            else {
+                ++it;
+            }
+        }
+    }
+    catch (...) {}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
