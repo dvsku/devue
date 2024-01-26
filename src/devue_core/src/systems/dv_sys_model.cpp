@@ -63,7 +63,15 @@ dv_model& dv_sys_model::import(const std::string& path, const std::string& textu
     	if (std::none_of(importer.types.begin(), importer.types.end(), cmp_fn))
     		continue;
     	
-    	dv_plugin_model pmodel = importer.fn(path);
+        dv_plugin_model pmodel;
+
+        try {
+            pmodel = importer.fn(path);
+        }
+        catch (...) {
+            continue;
+        }
+
     	dv_model model;
 
     	// Create uuid from path
