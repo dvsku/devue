@@ -24,15 +24,6 @@ static bool compare_file_filters(const dv_file_filter& a, const dv_file_filter& 
 dv_sys_model::dv_sys_model(dv_systems_bundle* systems) 
     : m_systems(systems) {}
 
-dv_model* dv_sys_model::get(const devue::uuid& uuid) {
-    if (!models.contains(uuid)) return nullptr;
-    return &models[uuid];
-}
-
-size_t dv_sys_model::count() const {
-    return models.size();
-}
-
 const std::vector<dv_file_filter>& dv_sys_model::get_supported_file_types() const {
     return m_supported_file_types;
 }

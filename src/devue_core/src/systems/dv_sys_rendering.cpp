@@ -118,8 +118,6 @@ void dv_sys_rendering::release_model(dv_scene_model& smodel) {
 }
 
 void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_lighting& lighting) {
-    dv_model* model = m_systems->model.get(smodel.model_uuid);
-
     glm::mat4 mvp = camera.get_proj_matrix() * camera.get_view_matrix() * smodel.transform.get_transform_matrix();
     glm::mat3 normal_matrix = smodel.transform.get_normal_matrix();
 

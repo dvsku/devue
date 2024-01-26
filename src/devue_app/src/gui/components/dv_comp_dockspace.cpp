@@ -69,7 +69,7 @@ bool dv_comp_dockspace::render() {
     ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 3);
     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 8);
     ImGui::Text("M: %d SM: %d MAT: %d TEX: %d",
-    			m_systems->model.count(),
+    			m_systems->model.models.size(),
     			m_systems->scene.count(),
     			m_systems->material.count(),
                 m_systems->texture.count());

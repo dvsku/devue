@@ -24,9 +24,6 @@ namespace devue::core {
         dv_sys_model& operator=(dv_sys_model&&)      = delete;
 
     public:
-        dv_model* get(const devue::uuid& uuid);
-    	size_t count() const;
-
         const std::vector<dv_file_filter>& get_supported_file_types() const;
         void update_supported_file_types();
 
@@ -35,6 +32,6 @@ namespace devue::core {
     private:
         dv_systems_bundle* m_systems;
 
-    	std::vector<dv_file_filter>    m_supported_file_types;
+    	std::vector<dv_file_filter> m_supported_file_types;
     };
 }
