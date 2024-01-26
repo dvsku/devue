@@ -12,8 +12,9 @@ using namespace devue::core;
 // INTERNAL FORWARD
 
 struct plugin_handle {
-    HMODULE handle                               = nullptr;
-    devue::plugins::dv_plugin_importer* importer = nullptr;
+    HMODULE handle                                       = nullptr;
+    devue::plugins::dv_plugin_importer* importer         = nullptr;
+    devue::plugins::dv_plugin_importer::plugin_type type = devue::plugins::dv_plugin_importer::plugin_type::undefined;
 };
 
 static plugin_handle create_handle(const char* path);
