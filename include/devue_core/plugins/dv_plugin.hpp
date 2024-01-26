@@ -13,11 +13,10 @@ namespace devue::core {
         std::string filename = "";
         std::string name     = "";
         std::string author   = "";
-        std::string link     = "";
+        std::string website  = "";
+        std::string version  = "";
 
-        uint8_t  plugin_version_major    = 0U;
-        float    plugin_version_minor    = 0.0f;
-        uint32_t plugin_version_internal = 0U;
+        plugins::dv_plugin_importer::plugin_type type = plugins::dv_plugin_importer::plugin_type::undefined;
 
         std::vector<plugins::dv_file_type> supported_file_types;
 

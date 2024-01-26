@@ -1,61 +1,41 @@
 #include "dv_plugin_adapter.hpp"
-#include "dv_serialization.hpp"
+#include "lib/json.hpp"
 
 using namespace devue::plugins;
 
-dv_plugin_adapter::dv_plugin_adapter() { }
+dv_plugin_importer::serialized dv_plugin_adapter::get_plugin_info() noexcept {
+    nlohmann::json json = nlohmann::json::object();
 
-dv_plugin_adapter::~dv_plugin_adapter() {}
+    try {
+        json["name"]            = m_name;
+        json["type"]            = (uint8_t)m_type;
+        json["author"]          = m_author;
+        json["website"]         = m_website;
+        json["version"]         = m_version;
+        json["supported_types"] = nlohmann::json::array();
 
-dv_plugin_importer::serialized dv_plugin_adapter::get_name() {
-    dv_bin_writer bw(m_buffer);
-    bw << m_name;
+        auto supported_types = _get_supported_types();
+        for (size_t i = 0; i < supported_types.size(); i++) {
+            auto& type = supported_types[i];
+
+            json["supported_types"][i]               = nlohmann::json::object();
+            json["supported_types"][i]["name"]       = type.name;
+            json["supported_types"][i]["extensions"] = type.extensions;
+        }
+
+        m_buffer.clear();
+        nlohmann::json::to_bjdata(json, m_buffer);
+    }
+    catch (const std::exception& e) {
+        return {};
+    }
+    catch (...) {
+        return {};
+    }
 
     return { m_buffer.size(), m_buffer.data() };
 }
 
-dv_plugin_importer::serialized dv_plugin_adapter::get_author() {
-    dv_bin_writer bw(m_buffer);
-    bw << m_author;
-
-    return { m_buffer.size(), m_buffer.data() };
-}
-
-dv_plugin_importer::serialized dv_plugin_adapter::get_link() {
-    dv_bin_writer bw(m_buffer);
-    bw << m_link;
-
-    return { m_buffer.size(), m_buffer.data() };
-}
-
-uint8_t dv_plugin_adapter::get_plugin_version_major() {
-    return m_plugin_version_major;
-}
-
-float dv_plugin_adapter::get_plugin_version_minor() {
-    return m_plugin_version_minor;
-}
-
-uint32_t dv_plugin_adapter::get_internal_version() {
-    return 1U;
-}
-
-void dv_plugin_adapter::init() {
-    _init();
-}
-
-void dv_plugin_adapter::cleanup() {
+void dv_plugin_adapter::cleanup() noexcept {
     m_buffer.clear();
-}
-
-dv_plugin_importer::serialized dv_plugin_adapter::get_suported_types() {
-    std::vector<dv_file_type> supported_types = _get_supported_types();
-
-    dv_bin_writer bw(m_buffer);
-    bw << supported_types.size();
-
-    for (dv_file_type& file_type : supported_types)
-        bw << file_type.name << file_type.extensions;
-
-    return { m_buffer.size(), m_buffer.data() };
 }
