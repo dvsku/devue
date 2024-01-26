@@ -1,6 +1,7 @@
 #include "gui/components/dv_comp_hierarchy.hpp"
 #include "gui/dv_components.hpp"
 #include "utilities/dv_util_string.hpp"
+#include "utilities/dv_util_imgui.hpp"
 
 using namespace devue;
 using namespace devue::core;
@@ -9,11 +10,6 @@ dv_comp_hierarchy::dv_comp_hierarchy(dv_systems* systems, dv_components* compone
     : dv_comp(systems, components) {}
 
 bool dv_comp_hierarchy::render() {
-    ImGuiStyle& style = ImGui::GetStyle();
-    ImVec4* colors    = style.Colors;
-
-    auto def_col_header = colors[ImGuiCol_Header];
-
     // Just create the window if there's no
     // active scene
     if (!m_systems->scene.current_scene) {
@@ -32,43 +28,28 @@ bool dv_comp_hierarchy::render() {
     ImGui::PushID("Hierarchy");
 
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-    if (ImGui::CollapsingHeader("Cameras##Cameras")) {
+    if (dv_util_imgui::collapsable("Cameras##Cameras")) {
         is_selected = m_systems->properties.is_inspected(scene->camera);
-        if (is_selected)
-            colors[ImGuiCol_Header] = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
-
-    	if (ImGui::Selectable("Camera 1##Camera1", is_selected)) {
+    	if (dv_util_imgui::selectable("Camera 1##Camera1", is_selected)) {
             m_systems->properties.set_inspected(scene->camera);
     	}
-
-        colors[ImGuiCol_Header] = def_col_header;
     }
 
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-    if (ImGui::CollapsingHeader("Lighting##Lighting")) {
+    if (dv_util_imgui::collapsable("Lighting##Lighting")) {
         is_selected = m_systems->properties.is_inspected(scene->lighting.ambient_light);
-        if (is_selected)
-            colors[ImGuiCol_Header] = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
-
-    	if (ImGui::Selectable("Ambient Light##AmbientLight1", is_selected)) {
+    	if (dv_util_imgui::selectable("Ambient Light##AmbientLight1", is_selected)) {
             m_systems->properties.set_inspected(scene->lighting.ambient_light);
     	}
 
-        colors[ImGuiCol_Header] = def_col_header;
-
         is_selected = m_systems->properties.is_inspected(scene->lighting.directional_light);
-        if (is_selected)
-            colors[ImGuiCol_Header] = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
-
-    	if (ImGui::Selectable("Directional Light##DirectionalLight1", is_selected)) {
+    	if (dv_util_imgui::selectable("Directional Light##DirectionalLight1", is_selected)) {
             m_systems->properties.set_inspected(scene->lighting.directional_light);
     	}
-
-        colors[ImGuiCol_Header] = def_col_header;
     }
 
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-    if (ImGui::CollapsingHeader("Objects##Objects")) {
+    if (dv_util_imgui::collapsable("Objects##Objects")) {
     	if (m_systems->scene.current_scene) {
     		for (auto& kvp : m_systems->scene.current_scene->models) {
     			dv_scene_model& smodel = kvp.second;
@@ -76,14 +57,9 @@ bool dv_comp_hierarchy::render() {
     			ImGui::PushID(DV_FORMAT_C("{}", smodel.uuid));
 
                 is_selected = m_systems->properties.is_inspected(smodel);
-                if (is_selected)
-                    colors[ImGuiCol_Header] = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
-
-    			if (ImGui::Selectable(DV_FORMAT_C("{}##Object", smodel.name), is_selected)) {
+    			if (dv_util_imgui::selectable(DV_FORMAT_C("{}##Object", smodel.name), is_selected)) {
                     m_systems->properties.set_inspected(smodel);
     			}
-
-                colors[ImGuiCol_Header] = def_col_header;
 
     			if (ImGui::BeginPopupContextItem()) {
     				if (ImGui::Selectable("Remove##ContextMenu", false,
