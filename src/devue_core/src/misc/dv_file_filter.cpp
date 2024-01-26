@@ -1,12 +1,11 @@
-#include "importers/dv_file_filter.hpp"
+#include "misc/dv_file_filter.hpp"
 #include "utilities/dv_util_string.hpp"
 
 #include <sstream>
 
 using namespace devue::core;
-using namespace devue::plugins;
 
-dv_file_filter::dv_file_filter(const dv_file_type& file_type) {
+dv_file_filter::dv_file_filter(const plugins::dv_file_type& file_type) {
     std::stringstream name_stream;
 
     name_stream << dv_util_string::trim(file_type.name, " ") << " (";

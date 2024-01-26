@@ -2,8 +2,6 @@
 
 #include "dv_file_type.hpp"
 
-#include <string>
-
 namespace devue::core {
     struct dv_file_filter {
     	std::wstring name		= L"";
