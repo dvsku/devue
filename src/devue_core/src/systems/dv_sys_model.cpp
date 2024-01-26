@@ -116,6 +116,15 @@ dv_model& dv_sys_model::import(const std::string& path, const std::string& textu
 
 void dv_sys_model::remove(dv_model& model) {
     if (!models.contains(model.uuid)) return;
+
+    // Mark for removal scene models that use this model asset
+    if (m_systems->scene.current_scene) {
+        for (auto& [uuid, smodel] : m_systems->scene.current_scene->models) {
+            if (smodel.model_uuid != model.uuid) continue;
+            m_systems->scene.remove_from_scene(smodel);
+        }
+    }
+
     model.marked_for_removal = true;
 }
 
