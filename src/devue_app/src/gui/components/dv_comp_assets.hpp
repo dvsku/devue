@@ -8,5 +8,8 @@ namespace devue {
     	dv_comp_assets(dv_systems* systems, dv_components* components);
 
     	bool render() final override;
+
+    private:
+        void render_context_menu(core::dv_model& model);
     };
 }
