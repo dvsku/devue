@@ -1,4 +1,5 @@
 #include "systems/dv_sys_texture.hpp"
+#include "systems/dv_systems_bundle.hpp"
 #include "exceptions/dv_exception.hpp"
 #include "utilities/dv_util_string.hpp"
 #include "utilities/dv_util_log.hpp"
@@ -8,8 +9,6 @@
 
 using namespace devue::core;
 using namespace devue::plugins;
-
-static dv_scene_texture create_scene_texture(std::filesystem::path& filepath, std::vector<dv_texture_importer>& importers);
 
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC
@@ -40,7 +39,7 @@ void dv_sys_texture::prepare_material_textures(dv_model& model,
             else {
                 m_textures[uuid] = {
                     1U,
-                    create_scene_texture(texture, m_importers)
+                    create_scene_texture(texture)
                 };
             }
     
@@ -71,18 +70,10 @@ void dv_sys_texture::release_textures(dv_scene_material& smaterial) {
     }
 }
 
-void dv_sys_texture::create_importer(dv_texture_importer&& importer) {
-    m_importers.emplace_back(importer);
-}
-
-void devue::core::dv_sys_texture::release_importers() {
-    m_importers.clear();
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 
-dv_scene_texture create_scene_texture(std::filesystem::path& filepath, std::vector<dv_texture_importer>& importers) {
+ dv_scene_texture dv_sys_texture::create_scene_texture(std::filesystem::path& filepath) {
     if (!std::filesystem::exists(filepath))
         throw dv_exception(DV_FORMAT("`{}` file not found.", filepath.string()));
 
@@ -92,11 +83,21 @@ dv_scene_texture create_scene_texture(std::filesystem::path& filepath, std::vect
         return dv_util_string::contains(type.extensions, ext);
     };
 
-    for (auto& importer : importers) {
-        if (std::none_of(importer.types.begin(), importer.types.end(), cmp_fn))
+    for (auto& [uuid, plugin] : m_systems->plugin.texture_plugins) {
+        if (std::none_of(plugin.supported_file_types.begin(), plugin.supported_file_types.end(), cmp_fn))
             continue;
 
-        dv_plugin_texture ptexture = importer.fn(filepath.string());
+        dv_plugin_texture ptexture;
+
+        try {
+            ptexture = plugin.import(filepath.string());
+        }
+        catch (...) {
+            plugin.cleanup();
+            continue;
+        }
+
+        plugin.cleanup();
 
         if (!ptexture.height || !ptexture.width || ptexture.data.empty()) 
             throw;

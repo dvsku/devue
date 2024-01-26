@@ -12,6 +12,7 @@ namespace devue::core {
 
     class dv_sys_plugin {
     public:
+        std::unordered_map<devue::uuid, dv_texture_plugin> texture_plugins;
         std::unordered_map<devue::uuid, dv_model_plugin>   model_plugins;
 
     public:
@@ -30,7 +31,6 @@ namespace devue::core {
 
     private:
         dv_systems_bundle* m_systems;
-        std::unordered_map<devue::uuid, devue::core::dv_texture_plugin> m_texture_plugins;
 
     private:
         void create_texture_plugins();

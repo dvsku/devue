@@ -16,6 +16,8 @@ namespace devue::core {
         dv_texture_plugin& operator=(const dv_texture_plugin&) = delete;
         dv_texture_plugin& operator=(dv_texture_plugin&&)      = default;
 
+    public:
         devue::plugins::dv_plugin_texture import(const std::string& filepath);
+        void cleanup();
     };
 }

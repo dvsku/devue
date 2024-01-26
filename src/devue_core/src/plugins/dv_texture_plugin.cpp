@@ -24,7 +24,9 @@ dv_plugin_texture dv_texture_plugin::import(const std::string& filepath) {
     if (json.contains("data") && json["data"].is_binary())
         texture.data = std::move(json["data"].get_binary());
 
-    //m_importer->cleanup();
-
     return texture;
+}
+
+void dv_texture_plugin::cleanup() {
+    m_importer->cleanup();
 }

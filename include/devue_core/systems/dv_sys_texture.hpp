@@ -3,7 +3,6 @@
 #include "models/pdo/dv_model.hpp"
 #include "scene/model/dv_scene_material.hpp"
 #include "scene/model/dv_scene_texture.hpp"
-#include "importers/dv_texture_importer.hpp"
 #include "utilities/dv_util_uuid.hpp"
 
 #include <utility>
@@ -30,13 +29,12 @@ namespace devue::core {
         void prepare_material_textures(dv_model& model, dv_material& material, dv_scene_material& smaterial);
         void release_textures(dv_scene_material& smaterial);
 
-        void create_importer(dv_texture_importer&& importer);
-        void release_importers();
-
     private:
         dv_systems_bundle* m_systems;
 
-        std::vector<dv_texture_importer> m_importers;
     	std::unordered_map<devue::uuid, std::pair<uint16_t, dv_scene_texture>> m_textures;
+
+    private:
+        dv_scene_texture create_scene_texture(std::filesystem::path& filepath);
     };
 }
