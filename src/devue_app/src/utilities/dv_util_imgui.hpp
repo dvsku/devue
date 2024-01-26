@@ -15,6 +15,8 @@ namespace devue {
 
         static bool selectable(const char* label, bool selected = false, ImGuiSelectableFlags flags = 0, const ImVec2& size = ImVec2(0, 0));
 
+        static bool begin_item_context_menu(const char* str_id = nullptr, ImGuiPopupFlags popup_flags = 1);
+
     private:
         enum class widget_color : uint16_t {
             collapsable,
