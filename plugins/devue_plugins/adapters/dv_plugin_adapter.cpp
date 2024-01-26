@@ -8,7 +8,6 @@ dv_plugin_importer::serialized dv_plugin_adapter::get_plugin_info() noexcept {
 
     try {
         json["name"]            = m_name;
-        json["type"]            = (uint8_t)m_type;
         json["author"]          = m_author;
         json["website"]         = m_website;
         json["version"]         = m_version;

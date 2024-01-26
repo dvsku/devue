@@ -16,4 +16,5 @@ namespace devue::plugins {
 }
 
 DV_API devue::plugins::dv_plugin_importer* create();
-DV_API void release();
+DV_API void                                release();
+DV_API uint8_t                             plugin_type();

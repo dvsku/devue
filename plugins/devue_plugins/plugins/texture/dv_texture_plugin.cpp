@@ -31,6 +31,10 @@ DV_API void release() {
     return g_plugin.reset();
 }
 
+DV_API uint8_t plugin_type() {
+    return (uint8_t)dv_plugin_importer::plugin_type::texture;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // IMPL
 

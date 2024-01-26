@@ -27,7 +27,6 @@ namespace devue::plugins {
         std::string m_author  = "";
         std::string m_website = "";
         std::string m_version = "";
-        plugin_type m_type    = plugin_type::undefined;
 
     protected:
         virtual std::vector<dv_file_type> _get_supported_types() = 0;

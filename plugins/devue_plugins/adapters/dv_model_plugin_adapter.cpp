@@ -3,9 +3,7 @@
 
 using namespace devue::plugins;
 
-dv_model_plugin_adapter::dv_model_plugin_adapter() {
-    m_type = plugin_type::model;
-}
+dv_model_plugin_adapter::dv_model_plugin_adapter() {}
 
 dv_plugin_importer::serialized dv_model_plugin_adapter::import(const char* filepath) noexcept {
     nlohmann::json json = nlohmann::json::object();

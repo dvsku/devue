@@ -3,9 +3,7 @@
 
 using namespace devue::plugins;
 
-dv_texture_plugin_adapter::dv_texture_plugin_adapter() {
-    m_type = plugin_type::texture;
-}
+dv_texture_plugin_adapter::dv_texture_plugin_adapter() {}
 
 dv_plugin_importer::serialized dv_texture_plugin_adapter::import(const char* filepath) noexcept {
     nlohmann::json json = nlohmann::json::object();
