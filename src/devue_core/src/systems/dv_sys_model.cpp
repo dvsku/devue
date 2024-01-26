@@ -53,11 +53,17 @@ dv_model& dv_sys_model::import(const std::string& path, const std::string& textu
     std::filesystem::path filepath = path;
     std::string ext				   = filepath.extension().string();
     
+    // Create uuid from path
+    devue::uuid uuid = devue::core::dv_util_uuid::create(path);
+
+    if (models.contains(uuid))
+        return models[uuid];
+
     auto cmp_fn = [&](const dv_file_type& type) {
     	return dv_util_string::contains(type.extensions, ext);
     };
 
-    for (auto& [uuid, plugin] : m_systems->plugin.model_plugins) {
+    for (auto& [plugin_uuid, plugin] : m_systems->plugin.model_plugins) {
         if (std::none_of(plugin.supported_file_types.begin(), plugin.supported_file_types.end(), cmp_fn))
             continue;
 
@@ -74,10 +80,6 @@ dv_model& dv_sys_model::import(const std::string& path, const std::string& textu
         plugin.cleanup();
 
     	dv_model model;
-
-    	// Create uuid from path
-    	devue::uuid uuid = devue::core::dv_util_uuid::create(path);
-
     	model.uuid        = uuid;
     	model.name        = filepath.filename().replace_extension("").string();
         model.texture_dir = texture_path;
