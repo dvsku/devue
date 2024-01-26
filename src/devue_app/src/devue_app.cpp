@@ -4,7 +4,7 @@
 using namespace devue;
 using namespace devue::core;
 
-int main() {
+INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdShow) {
     dv_util_log::add_source(&std::cout);
 
     dv_gui gui(1024, 768, "devue");

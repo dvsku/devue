@@ -1,6 +1,10 @@
 ﻿CMAKE_MINIMUM_REQUIRED (VERSION 3.8)
 
+SET(DEVUE_APP_RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/resources/app.rc")
+
 ADD_EXECUTABLE(devue 
+	${DEVUE_APP_RESOURCES}
+
     "src/devue_app.cpp"
     "src/gui/dv_gui.cpp"
     "src/gui/base/dv_comp.cpp"   
@@ -18,6 +22,8 @@ ADD_EXECUTABLE(devue
     "src/utilities/dv_util_dialog.cpp"
 	"src/utilities/dv_util_command.cpp"
 )
+
+TARGET_LINK_OPTIONS(devue PRIVATE "/SUBSYSTEM:WINDOWS")
 
 TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${DEVUE_LIB_DIR}/glad/include")
 TARGET_INCLUDE_DIRECTORIES(devue PRIVATE "${DEVUE_LIB_DIR}/khr/include")
