@@ -1,5 +1,5 @@
 #include "plugins/dv_texture_plugin.hpp"
-#include "dv_serialization.hpp"
+#include "json/include/json.hpp"
 
 using namespace devue::core;
 using namespace devue::plugins;
@@ -10,13 +10,21 @@ dv_plugin_texture dv_texture_plugin::import(const std::string& filepath) {
 
     serialized = m_importer->import(filepath.c_str());
 
-    if (!serialized.size || !serialized.data)
+    if (!serialized)
         throw;
 
-    dv_bin_reader br(serialized.data, serialized.size);
-    br >> texture.width >> texture.height >> texture.data;
+    nlohmann::json json = nlohmann::json::from_cbor(serialized.data, serialized.data + serialized.size);
 
-    m_importer->cleanup();
+    if (json.contains("width") && json["width"].is_number())
+        texture.width = json["width"];
+
+    if (json.contains("height") && json["height"].is_number())
+        texture.height = json["height"];
+
+    if (json.contains("data") && json["data"].is_binary())
+        texture.data = std::move(json["data"].get_binary());
+
+    //m_importer->cleanup();
 
     return texture;
 }

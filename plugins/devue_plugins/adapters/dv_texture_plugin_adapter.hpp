@@ -8,11 +8,15 @@
 namespace devue::plugins {
     class dv_texture_plugin_adapter : public dv_plugin_adapter {
     public:
-        serialized import(const char* filepath) final override;
+        dv_texture_plugin_adapter();
+        virtual ~dv_texture_plugin_adapter() = default;
+
+    public:
+        serialized import(const char* filepath) noexcept final override;
+        virtual void init() override = 0;
 
     protected:
-        virtual void _init() noexcept override = 0;    
-        virtual std::vector<dv_file_type> _get_supported_types() noexcept override = 0;
-        virtual dv_plugin_texture _import(const std::filesystem::path& filepath) noexcept = 0;
+        virtual std::vector<dv_file_type> _get_supported_types() override = 0;
+        virtual dv_plugin_texture _import(const std::filesystem::path& filepath) = 0;
     };
 }

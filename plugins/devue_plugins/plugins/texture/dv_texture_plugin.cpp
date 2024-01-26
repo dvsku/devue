@@ -1,5 +1,4 @@
 #include "dv_texture_plugin.hpp"
-#include "dv_serialization.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
@@ -17,7 +16,14 @@ std::unique_ptr<dv_texture_plugin> g_plugin = nullptr;
 DV_API dv_plugin_importer* create() {
     if (g_plugin) return g_plugin.get();
 
-    g_plugin = std::make_unique<dv_texture_plugin>();
+    try {
+        g_plugin = std::make_unique<dv_texture_plugin>();
+        g_plugin->init();
+    }
+    catch (...) {
+        return nullptr;
+    }
+
     return g_plugin.get();
 }
 
@@ -28,17 +34,14 @@ DV_API void release() {
 ///////////////////////////////////////////////////////////////////////////////
 // IMPL
 
-void dv_texture_plugin::_init() noexcept {
-    this->m_name   = "devue texture plugin";
-    this->m_author = "";
-    this->m_link   = "";
-
-    // Version is displayed as {major}.{minor}
-    this->m_plugin_version_major = 1U;
-    this->m_plugin_version_minor = 0.0f;
+void dv_texture_plugin::init() {
+    this->m_name    = "devue texture plugin";
+    this->m_author  = "";
+    this->m_website = "";
+    this->m_version = "1.0.0";
 }
 
-std::vector<dv_file_type> dv_texture_plugin::_get_supported_types() noexcept {
+std::vector<dv_file_type> dv_texture_plugin::_get_supported_types() {
     return {
         { "JPEG",   ".jpg;.jpeg"},
         { "PNG",    ".png"},
@@ -46,7 +49,7 @@ std::vector<dv_file_type> dv_texture_plugin::_get_supported_types() noexcept {
     };
 }
 
-dv_plugin_texture dv_texture_plugin::_import(const std::filesystem::path& filepath) noexcept {
+dv_plugin_texture dv_texture_plugin::_import(const std::filesystem::path& filepath) {
     dv_plugin_texture texture;
 
     stbi_set_flip_vertically_on_load(true);
