@@ -20,6 +20,9 @@ static bool compare_file_filters(const dv_file_filter& a, const dv_file_filter& 
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC
 
+dv_sys_model::dv_sys_model(dv_systems_bundle* systems) 
+    : m_systems(systems) {}
+
 dv_model* dv_sys_model::get(const devue::uuid& uuid) {
     if (!models.contains(uuid)) return nullptr;
     return &models[uuid];

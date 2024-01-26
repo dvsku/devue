@@ -8,9 +8,21 @@
 #include <unordered_map>
 
 namespace devue::core {
+    struct dv_systems_bundle;
+
     class dv_sys_model {
     public:
     	std::unordered_map<devue::uuid, dv_model> models;
+
+    public:
+        dv_sys_model() = delete;
+        dv_sys_model(dv_systems_bundle* systems);
+
+        dv_sys_model(const dv_sys_model&) = delete;
+        dv_sys_model(dv_sys_model&&)      = delete;
+
+        dv_sys_model& operator=(const dv_sys_model&) = delete;
+        dv_sys_model& operator=(dv_sys_model&&)      = delete;
 
     public:
         dv_model* get(const devue::uuid& uuid);
@@ -25,6 +37,8 @@ namespace devue::core {
     	dv_model& import(const std::string& path, const std::string& texture_path = "");
 
     private:
+        dv_systems_bundle* m_systems;
+
     	std::vector<dv_model_importer> m_importers;
     	std::vector<dv_file_filter>    m_supported_file_types;
     };
