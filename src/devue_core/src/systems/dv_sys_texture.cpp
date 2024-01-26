@@ -14,6 +14,9 @@ static dv_scene_texture create_scene_texture(std::filesystem::path& filepath, st
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC
 
+dv_sys_texture::dv_sys_texture(dv_systems_bundle* systems) 
+    : m_systems(systems) {}
+
 const dv_scene_texture* dv_sys_texture::get_texture(devue::uuid uuid) {
     if (!m_textures.contains(uuid)) return nullptr;
     return &m_textures[uuid].second;

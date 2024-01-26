@@ -10,15 +10,20 @@
 #include <unordered_map>
 
 namespace devue::core {
+    struct dv_systems_bundle;
+
     class dv_sys_texture {
     public:
-        dv_sys_texture()                      = default;
+        dv_sys_texture() = delete;
+        dv_sys_texture(dv_systems_bundle* systems);
+
         dv_sys_texture(const dv_sys_texture&) = delete;
         dv_sys_texture(dv_sys_texture&&)      = default;
 
         dv_sys_texture& operator=(const dv_sys_texture&) = delete;
         dv_sys_texture& operator=(dv_sys_texture&&)      = default;
 
+    public:
         const dv_scene_texture* get_texture(devue::uuid uuid);
     	size_t count() const;
 
@@ -29,6 +34,8 @@ namespace devue::core {
         void release_importers();
 
     private:
+        dv_systems_bundle* m_systems;
+
         std::vector<dv_texture_importer> m_importers;
     	std::unordered_map<devue::uuid, std::pair<uint16_t, dv_scene_texture>> m_textures;
     };
