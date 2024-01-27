@@ -31,8 +31,6 @@ ADD_LIBRARY(devue_core STATIC
 	"src/scene/dv_camera.cpp"
 	"src/scene/dv_scene_grid.cpp"
 	"src/plugins/dv_plugin.cpp"
-	"src/plugins/dv_texture_plugin.cpp"
-	"src/plugins/dv_model.plugin.cpp"
 )
 
 # COPY RESOURCES TO OUTPUT DIR
@@ -54,4 +52,4 @@ TARGET_INCLUDE_DIRECTORIES(devue_core PRIVATE "${DEVUE_LIB_DIR}/glm/include")
 TARGET_INCLUDE_DIRECTORIES(devue_core PRIVATE "${DEVUE_LIB_DIR}")
 
 TARGET_INCLUDE_DIRECTORIES(devue_core PRIVATE "${DEVUE_INCLUDE_DIR}/devue_core")
-TARGET_INCLUDE_DIRECTORIES(devue_core PRIVATE "${DEVUE_INCLUDE_DIR}/devue_plugins")
+TARGET_INCLUDE_DIRECTORIES(devue_core PRIVATE "${DEVUE_LIB_DIR}/devue_plugin/include")
