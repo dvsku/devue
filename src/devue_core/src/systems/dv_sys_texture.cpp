@@ -83,14 +83,14 @@ void dv_sys_texture::release_textures(dv_scene_material& smaterial) {
         return dv_util_string::contains(type.extensions, ext);
     };
 
-    for (auto& [uuid, plugin] : m_systems->plugin.texture_plugins) {
-        if (std::none_of(plugin.supported_file_types.begin(), plugin.supported_file_types.end(), cmp_fn))
+    for (auto& [uuid, plugin] : m_systems->plugin.plugins) {
+        if (std::none_of(plugin.supported_texture_types.begin(), plugin.supported_texture_types.end(), cmp_fn))
             continue;
 
-        dv_plugin_texture ptexture;
+        devue_plugin_texture ptexture;
 
         try {
-            ptexture = plugin.import(filepath.string());
+            ptexture = plugin.import_texture(filepath.string());
         }
         catch (...) {
             plugin.cleanup();
