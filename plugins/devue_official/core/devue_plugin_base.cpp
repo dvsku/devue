@@ -23,7 +23,7 @@ devue_plugin_interface::serialized devue_plugin_base::get_plugin_info() noexcept
             json["model_types"][i]["extensions"] = type.extensions;
         }
 
-        auto texture_types = impl_get_model_types();
+        auto texture_types = impl_get_texture_types();
         for (size_t i = 0; i < texture_types.size(); i++) {
             auto& type = texture_types[i];
 
