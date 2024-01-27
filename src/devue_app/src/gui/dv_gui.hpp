@@ -24,6 +24,7 @@ namespace devue {
     	void on_scroll(double dx, double dy)					override final;
     	void on_mouse_button(int btn, int action, int modifier) override final;
     	void on_mouse_move(double dx, double dy)				override final;
+        void on_drop(int count, const char* paths[])            override final;
 
         void set_theme();
 
