@@ -31,6 +31,9 @@ namespace devue::core {
         // Supported file formats are pulled from plugins
         void update_supported_file_types();
 
+        // Check if file type is supported
+        bool is_supported_file_type(const std::string& path);
+
         // Import model asset
     	dv_model& import(const std::string& path, const std::string& texture_path = "");
 

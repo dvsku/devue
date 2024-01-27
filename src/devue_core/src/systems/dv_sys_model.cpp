@@ -40,6 +40,27 @@ void dv_sys_model::update_supported_file_types() {
     m_supported_file_types.push_back({ L"All files (*.*)\0", L"*.*\0" });
 }
 
+bool dv_sys_model::is_supported_file_type(const std::string& path) {
+    std::filesystem::path filepath = path;
+
+    if (!std::filesystem::is_regular_file(filepath))
+        return false;
+
+    std::string ext = filepath.extension().string();
+
+    auto cmp_fn = [&](const dv_file_type& type) {
+        return dv_util_string::contains(type.extensions, ext);
+    };
+
+    for (auto& [plugin_uuid, plugin] : m_systems->plugin.model_plugins) {
+        if (std::none_of(plugin.supported_file_types.begin(), plugin.supported_file_types.end(), cmp_fn))
+            continue;
+        return true;
+    }
+
+    return false;
+}
+
 dv_model& dv_sys_model::import(const std::string& path, const std::string& texture_path) {
     std::filesystem::path filepath = path;
     std::string ext				   = filepath.extension().string();
