@@ -6,15 +6,15 @@
 #include <windows.h>
 #include <filesystem>
 
+using namespace devue;
 using namespace devue::core;
 
 ///////////////////////////////////////////////////////////////////////////////
 // INTERNAL FORWARD
 
 struct plugin_handle {
-    HMODULE handle                                       = nullptr;
-    devue::plugins::dv_plugin_importer* importer         = nullptr;
-    devue::plugins::dv_plugin_importer::plugin_type type = devue::plugins::dv_plugin_importer::plugin_type::undefined;
+    HMODULE handle                         = nullptr;
+    plugins::devue_plugin_interface* iface = nullptr;
 };
 
 static plugin_handle create_handle(const char* path);
@@ -67,7 +67,7 @@ void dv_sys_plugin::prepare_plugins() {
 
         devue::uuid uuid = dv_util_uuid::create(filepath.string());
 
-        if (model_plugins.contains(uuid) || texture_plugins.contains(uuid))
+        if (plugins.contains(uuid))
             continue;
 
         try {
@@ -85,22 +85,19 @@ void dv_sys_plugin::prepare_plugins() {
 }
 
 void dv_sys_plugin::release_plugins() {
-    for (auto& [uuid, plugin] : model_plugins)
-        release_plugin(plugin);
-
-    for (auto& [uuid, plugin] : texture_plugins)
+    for (auto& [uuid, plugin] : plugins)
         release_plugin(plugin);
 }
 
 void dv_sys_plugin::release_plugin(dv_plugin& plugin) {
-    if (plugin.m_importer)
-        plugin.m_importer->cleanup();
+    if (plugin.m_iface)
+        plugin.m_iface->cleanup();
 
     if (plugin.m_handle)
         release_handle(plugin.m_handle);
 
-    plugin.m_handle   = nullptr;
-    plugin.m_importer = nullptr;
+    plugin.m_handle = nullptr;
+    plugin.m_iface  = nullptr;
 
     DV_LOG("Released plugin `{}`", plugin.filename);
 }
@@ -108,41 +105,23 @@ void dv_sys_plugin::release_plugin(dv_plugin& plugin) {
 void dv_sys_plugin::load_plugin(const std::filesystem::path& path, devue::uuid uuid) {
     auto phandle = create_handle(path.string().c_str());
 
-    if (phandle.type == plugins::dv_plugin_importer::plugin_type::undefined)
-        throw dv_exception("Failed to determine plugin type.");
+    dv_plugin plugin;
+    plugin.m_handle = phandle.handle;
+    plugin.m_iface  = phandle.iface;
+    plugin.filename = path.filename().string();
 
-    if (phandle.type == plugins::dv_plugin_importer::plugin_type::model) {
-        dv_model_plugin plugin;
-        plugin.m_handle   = phandle.handle;
-        plugin.m_importer = phandle.importer;
-        plugin.filename   = path.filename().string();
+    plugin.prepare();
 
-        plugin.prepare();
+    plugins[uuid] = std::move(plugin);
 
-        model_plugins[uuid] = std::move(plugin);
-
-        DV_LOG("Loaded texture plugin `{}` from `{}`.", model_plugins[uuid].name, model_plugins[uuid].filename);
-    }
-    else if (phandle.type == plugins::dv_plugin_importer::plugin_type::texture) {
-        dv_texture_plugin plugin;
-        plugin.m_handle   = phandle.handle;
-        plugin.m_importer = phandle.importer;
-        plugin.filename   = path.filename().string();
-
-        plugin.prepare();
-
-        texture_plugins[uuid] = std::move(plugin);
-
-        DV_LOG("Loaded texture plugin `{}` from `{}`.", texture_plugins[uuid].name, texture_plugins[uuid].filename);
-    }
+    DV_LOG("Loaded texture plugin `{}` from `{}`.", plugins[uuid].name, plugins[uuid].filename);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // INTERNAL
 
 plugin_handle create_handle(const char* path) {
-    typedef devue::plugins::dv_plugin_importer* fn_create();
-    typedef uint8_t                             fn_plugin_type();
+    typedef plugins::devue_plugin_interface* fn_create();
 
     HMODULE handle = LoadLibrary(path);
     if (!handle)
@@ -154,19 +133,11 @@ plugin_handle create_handle(const char* path) {
     if (!create_fn_addr || !create_fn)
         throw dv_exception("");
 
-    auto            plugin_type_fn_addr = GetProcAddress(handle, "plugin_type");
-    fn_plugin_type* plugin_type_fn      = (fn_plugin_type*)plugin_type_fn_addr;
-
-    if (!plugin_type_fn_addr || !plugin_type_fn)
+    plugins::devue_plugin_interface* iface = create_fn();
+    if (!iface)
         throw dv_exception("");
 
-    devue::plugins::dv_plugin_importer* importer = create_fn();
-    if (!importer)
-        throw dv_exception("");
-
-    auto plugin_type = (devue::plugins::dv_plugin_importer::plugin_type)plugin_type_fn();
-
-    return { handle, importer, plugin_type };
+    return { handle, iface };
 }
 
 void release_handle(HMODULE handle) {

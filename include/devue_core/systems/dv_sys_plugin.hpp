@@ -1,7 +1,6 @@
 #pragma once
 
-#include "plugins/dv_texture_plugin.hpp"
-#include "plugins/dv_model_plugin.hpp"
+#include "plugins/dv_plugin.hpp"
 #include "utilities/dv_util_uuid.hpp"
 
 #include <unordered_map>
@@ -12,8 +11,7 @@ namespace devue::core {
 
     class dv_sys_plugin {
     public:
-        std::unordered_map<devue::uuid, dv_texture_plugin> texture_plugins;
-        std::unordered_map<devue::uuid, dv_model_plugin>   model_plugins;
+        std::unordered_map<devue::uuid, dv_plugin> plugins;
 
     public:
         dv_sys_plugin() = delete;
