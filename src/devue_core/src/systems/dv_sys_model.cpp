@@ -1,4 +1,4 @@
-#include "dv_plugin_model.hpp"
+#include "devue_plugin_model.hpp"
 #include "systems/dv_sys_model.hpp"
 #include "systems/dv_systems_bundle.hpp"
 #include "utilities/dv_util_string.hpp"
@@ -29,8 +29,8 @@ const std::vector<dv_file_filter>& dv_sys_model::get_supported_file_types() cons
 }
 
 void dv_sys_model::update_supported_file_types() {
-    for (auto& [uuid, plugin] : m_systems->plugin.model_plugins) {
-        for (auto& file_type : plugin.supported_file_types) {
+    for (auto& [uuid, plugin] : m_systems->plugin.plugins) {
+        for (auto& file_type : plugin.supported_model_types) {
             m_supported_file_types.emplace_back(dv_file_filter(file_type));
         }
     }
@@ -52,8 +52,8 @@ bool dv_sys_model::is_supported_file_type(const std::string& path) {
         return dv_util_string::contains(type.extensions, ext);
     };
 
-    for (auto& [plugin_uuid, plugin] : m_systems->plugin.model_plugins) {
-        if (std::none_of(plugin.supported_file_types.begin(), plugin.supported_file_types.end(), cmp_fn))
+    for (auto& [plugin_uuid, plugin] : m_systems->plugin.plugins) {
+        if (std::none_of(plugin.supported_model_types.begin(), plugin.supported_model_types.end(), cmp_fn))
             continue;
         return true;
     }
@@ -75,14 +75,14 @@ dv_model& dv_sys_model::import(const std::string& path, const std::string& textu
     	return dv_util_string::contains(type.extensions, ext);
     };
 
-    for (auto& [plugin_uuid, plugin] : m_systems->plugin.model_plugins) {
-        if (std::none_of(plugin.supported_file_types.begin(), plugin.supported_file_types.end(), cmp_fn))
+    for (auto& [plugin_uuid, plugin] : m_systems->plugin.plugins) {
+        if (std::none_of(plugin.supported_model_types.begin(), plugin.supported_model_types.end(), cmp_fn))
             continue;
 
-        dv_plugin_model pmodel;
+        devue_plugin_model pmodel;
 
         try {
-            pmodel = plugin.import(path);
+            pmodel = plugin.import_model(path);
         }
         catch (...) {
             plugin.cleanup();
