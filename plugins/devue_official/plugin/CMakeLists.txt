@@ -1,6 +1,7 @@
 ﻿CMAKE_MINIMUM_REQUIRED (VERSION 3.8)
 
 ADD_LIBRARY(dv_plg_devue_official SHARED
+	"${CMAKE_CURRENT_SOURCE_DIR}/resources/plugin.rc"
 	"devue_plugin.cpp"
 )
 
