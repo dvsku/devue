@@ -182,9 +182,15 @@ void dv_gui::on_gui_update() {
                 if (ImGui::BeginMenuBar()) {
                     ImGui::PushID("FileMenu");
 
-                    if (ImGui::BeginMenu("File")) {
+                    if (dv_util_imgui::begin_menu("File")) {
                         if (ImGui::MenuItem("Import##MenuItem")) {
                             m_sytems.command.set_execute(dv_commands::flag_show_modal_import);
+                        }
+
+                        ImGui::Separator();
+
+                        if (ImGui::MenuItem("Exit##MenuItem")) {
+                            glfwSetWindowShouldClose(m_native, 1);
                         }
 
                         ImGui::EndMenu();
@@ -194,7 +200,7 @@ void dv_gui::on_gui_update() {
 
                     ImGui::PushID("ViewMenu");
 
-                    if (ImGui::BeginMenu("View")) {
+                    if (dv_util_imgui::begin_menu("View")) {
                         bool& is_executable = m_sytems.command.is_executable(dv_commands::flag_show_console);
                         ImGui::MenuItem("Console##MenuItem", "", &is_executable);
 
