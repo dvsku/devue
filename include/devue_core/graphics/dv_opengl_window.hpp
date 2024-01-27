@@ -44,6 +44,7 @@ namespace devue::core {
     	virtual void on_scroll(double dx, double dy);
     	virtual void on_mouse_button(int btn, int action, int modifier);
     	virtual void on_mouse_move(double dx, double dy);
+        virtual void on_drop(int count, const char* paths[]);
 
     protected:
         void set_borderless();
@@ -59,5 +60,6 @@ namespace devue::core {
     	static void mouse_button_callback(GLFWwindow* window, int button, int action, int modifier);
     	static void mouse_move_callback(GLFWwindow* window, double x, double y);
     	static void iconify_callback(GLFWwindow* window, int iconified);
+        static void drop_callback(GLFWwindow* window, int count, const char* paths[]);
     };
 }

@@ -74,6 +74,7 @@ dv_opengl_window::dv_opengl_window(uint32_t width, uint32_t height, const std::s
     glfwSetMouseButtonCallback(m_native, mouse_button_callback);
     glfwSetCursorPosCallback(m_native, mouse_move_callback);
     glfwSetWindowIconifyCallback(m_native, iconify_callback);
+    glfwSetDropCallback(m_native, drop_callback);
 
     // Init glad
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -232,6 +233,8 @@ void dv_opengl_window::on_mouse_button(int btn, int action, int modifier) {}
 
 void dv_opengl_window::on_mouse_move(double dx, double dy) {}
 
+void dv_opengl_window::on_drop(int count, const char* paths[]) {}
+
 void dv_opengl_window::set_borderless() {
     auto win32_wnd = glfwGetWin32Window(m_native);
     if (!win32_wnd)
@@ -332,4 +335,9 @@ void dv_opengl_window::mouse_move_callback(GLFWwindow* window, double x, double 
 void dv_opengl_window::iconify_callback(GLFWwindow* window, int iconified) {
     dv_opengl_window* instance = static_cast<dv_opengl_window*>(glfwGetWindowUserPointer(window));
     instance->m_minimized = (bool)iconified;
+}
+
+void dv_opengl_window::drop_callback(GLFWwindow* window, int count, const char* paths[]) {
+    dv_opengl_window* instance = static_cast<dv_opengl_window*>(glfwGetWindowUserPointer(window));
+    instance->on_drop(count, paths);
 }
