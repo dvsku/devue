@@ -43,10 +43,10 @@ _deps
 !shared/**/*.lib
 !shared/**/*.a
 
-libdvsku/**/build/
 build/
 install/
 bin/
+binaries/
 
 # Executables
 *.exe
