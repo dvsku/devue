@@ -5,7 +5,7 @@
 
 using namespace devue::core;
 
-dv_file_filter::dv_file_filter(const plugins::dv_file_type& file_type) {
+dv_file_filter::dv_file_filter(const dv_file_type& file_type) {
     std::stringstream name_stream;
 
     name_stream << dv_util_string::trim(file_type.name, " ") << " (";
