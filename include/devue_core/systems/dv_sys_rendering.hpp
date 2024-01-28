@@ -1,12 +1,12 @@
 #pragma once
 
 #include "models/pdo/dv_mesh.hpp"
-#include "scene/model/dv_scene_model.hpp"
-#include "scene/model/dv_scene_material.hpp"
-#include "scene/lighting/dv_lighting.hpp"
-#include "scene/dv_scene_grid.hpp"
-#include "scene/dv_camera.hpp"
 #include "rendering/dv_shader.hpp"
+#include "scene/dv_camera.hpp"
+#include "scene/dv_scene_grid.hpp"
+#include "scene/lighting/dv_lighting.hpp"
+#include "scene/model/dv_scene_material.hpp"
+#include "scene/model/dv_scene_model.hpp"
 
 #include <unordered_map>
 
@@ -24,6 +24,7 @@ namespace devue::core {
     	dv_sys_rendering& operator=(const dv_sys_rendering&) = delete;
     	dv_sys_rendering& operator=(dv_sys_rendering&&)		 = delete;
 
+    public:
     	void prepare();
     	void prepare_model(dv_scene_model& smodel);
     	void prepare_model(dv_scene_mesh& smesh, dv_mesh& mesh, bool is_static = true);
@@ -35,18 +36,18 @@ namespace devue::core {
     	
     private:
     	dv_systems_bundle* m_systems;
+
     	std::unordered_map<uint8_t, dv_shader> m_shaders;
+        uint8_t                                m_current_shader_id = 0U;
 
     private:
+        // Read shader source code file into string
     	std::string get_shader_source(const std::string& path);
-    	dv_shader create_shader(const std::string& vertex, const std::string& fragment);
+    	
+        // Compile shader from vertex and frag source code
+        dv_shader create_shader(const std::string& vertex, const std::string& fragment);
 
-    	void render_solid(dv_scene_model& smodel, dv_scene_mesh& smesh,
-    					  dv_camera& camera, dv_lighting& lighting, glm::mat4& mvp, glm::mat3& nm);
-
-    	void render_textured(const dv_scene_material* smaterial, dv_scene_mesh& smesh,
-    						  dv_camera& camera, dv_lighting& lighting, glm::mat4& mvp, glm::mat3& nm);
-
-    	void render_grid(dv_scene_model& smodel, dv_scene_mesh& smesh, dv_camera& camera);
+        // Set shader if it's not set already
+        dv_shader* set_shader(uint8_t shader_id);
     };
 }

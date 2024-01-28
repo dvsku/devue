@@ -1,6 +1,6 @@
+#include "exceptions/dv_exception.hpp"
 #include "systems/dv_sys_rendering.hpp"
 #include "systems/dv_systems_bundle.hpp"
-#include "exceptions/dv_exception.hpp"
 #include "utilities/dv_util_string.hpp"
 
 #include "glad/glad.h"
@@ -10,19 +10,17 @@
 
 using namespace devue::core;
 
-enum shader_type : uint8_t {
-    solid,
-    texture,
-    grid
+enum integrated_shader : uint8_t {
+    def  = 0x1,
+    grid = 0x2
 };
 
 dv_sys_rendering::dv_sys_rendering(dv_systems_bundle* systems)
     : m_systems(systems) {}
 
 void dv_sys_rendering::prepare() {
-    m_shaders[shader_type::solid]   = create_shader("resources/shaders/solid_color.vert", "resources/shaders/solid_color.frag");
-    m_shaders[shader_type::texture] = create_shader("resources/shaders/texture.vert", "resources/shaders/texture.frag");
-    m_shaders[shader_type::grid]    = create_shader("resources/shaders/grid.vert", "resources/shaders/grid.frag");
+    m_shaders[integrated_shader::def]  = create_shader("resources/shaders/default.vert", "resources/shaders/default.frag");
+    m_shaders[integrated_shader::grid] = create_shader("resources/shaders/grid.vert",    "resources/shaders/grid.frag");
 
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
@@ -124,12 +122,52 @@ void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_ligh
     for (dv_scene_mesh& smesh : smodel.meshes) {
         if (!smesh.vao || !smesh.vbo || !smesh.ibo) continue;
 
-        const dv_scene_material* material = m_systems->material.get_material(smesh.material_uuid);
+        // Set default shader
+        dv_shader* shader = set_shader(integrated_shader::def);
+        if (!shader) continue;
 
-        if (material && material->diffuse_texture_uuid && !smodel.wireframe)
-            render_textured(material, smesh, camera, lighting, mvp, normal_matrix);
-        else
-            render_solid(smodel, smesh, camera, lighting, mvp, normal_matrix);
+        const dv_scene_material* material        = m_systems->material.get_material(smesh.material_uuid);
+        const dv_scene_texture*  diffuse_texture = material ? m_systems->texture.get_texture(material->diffuse_texture_uuid) : nullptr;
+        bool                     textured        = diffuse_texture && diffuse_texture->texture_id;
+
+        shader->set("uf_mvp",        mvp);
+        shader->set("uf_normal_mat", normal_matrix);
+        shader->set("uf_textured",   textured ? 1.0f : 0.0f);
+        shader->set("uf_col",        glm::vec3(1.0f, 1.0f, 1.0f));
+        shader->set("uf_al_col",     lighting.ambient_light.get_light_color());
+        shader->set("uf_dl_dir",     lighting.directional_light.direction);
+        shader->set("uf_dl_col",     lighting.directional_light.get_light_color());
+        
+        if (textured)
+            glBindTexture(GL_TEXTURE_2D, diffuse_texture->texture_id);
+
+        glBindVertexArray(smesh.vao);
+        glBindBuffer(GL_ARRAY_BUFFER, smesh.vbo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, smesh.ibo);
+        glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_SHORT, 0);
+
+        if (smodel.wireframe && !textured) {
+            // Set wire colors
+            shader->set("uf_col",    glm::vec3(0.5f, 0.5f, 0.5f));
+            shader->set("uf_al_col", glm::vec3(1.0f, 1.0f, 1.0f));
+            shader->set("uf_dl_col", glm::vec3(0.0f, 0.0f, 0.0f));
+
+            // Enable wireframe mode
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+            // Offset lines a bit outside the model so they don't overlap
+            glEnable(GL_POLYGON_OFFSET_LINE);
+            glPolygonOffset(-0.5, -0.5);
+
+            // Draw wireframe
+            glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_SHORT, 0);
+
+            // Disable offset
+            glDisable(GL_POLYGON_OFFSET_FILL);
+
+            // Disable wireframe mode
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
     }
 }
 
@@ -137,7 +175,18 @@ void dv_sys_rendering::render(dv_scene_grid& sgrid, dv_camera& camera, dv_lighti
     for (dv_scene_mesh& smesh : sgrid.meshes) {
         if (!smesh.vao || !smesh.vbo || !smesh.ibo) continue;
 
-        render_grid(sgrid, smesh, camera);
+        // Set grid shader
+        dv_shader* shader = set_shader(integrated_shader::grid);
+        if (!shader) continue;
+
+        shader->set("uf_model_mat", sgrid.transform.get_transform_matrix());
+        shader->set("uf_view_mat",  camera.get_view_matrix());
+        shader->set("uf_proj_mat",  camera.get_proj_matrix());
+
+        glBindVertexArray(smesh.vao);
+        glBindBuffer(GL_ARRAY_BUFFER, smesh.vbo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, smesh.ibo);
+        glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_SHORT, 0);
     }
 }
 
@@ -241,81 +290,12 @@ dv_shader dv_sys_rendering::create_shader(const std::string& vertex, const std::
     return shader;
 }
 
-void dv_sys_rendering::render_solid(dv_scene_model& smodel, dv_scene_mesh& smesh, 
-    								dv_camera& camera, dv_lighting& lighting, glm::mat4& mvp, glm::mat3& nm) 
-{
-    auto& shader = m_shaders[shader_type::solid];
+dv_shader* dv_sys_rendering::set_shader(uint8_t shader_id) {
+    if (m_current_shader_id == shader_id) return &m_shaders[m_current_shader_id];
+    if (!m_shaders.contains(shader_id))   return nullptr;
 
-    shader.use();
-    shader.set("mvp",               mvp);
-    shader.set("normal_mat",        nm);
-    shader.set("object_color",      glm::vec3(1.0f, 1.0f, 1.0f));
-    shader.set("ambient_light",     lighting.ambient_light.get_light_color());
-    shader.set("dir_light_dir",     lighting.directional_light.direction);
-    shader.set("dir_light_color",   lighting.directional_light.get_light_color());
+    m_current_shader_id = shader_id;
+    m_shaders[shader_id].use();
 
-    glBindVertexArray(smesh.vao);
-    glBindBuffer(GL_ARRAY_BUFFER, smesh.vbo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, smesh.ibo);
-    glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_SHORT, 0);
-
-    if (smodel.wireframe) {
-        // Set wire colors
-        shader.set("object_color",      glm::vec3(0.5f, 0.5f, 0.5f));
-        shader.set("ambient_light",     glm::vec3(1.0f, 1.0f, 1.0f));
-        shader.set("dir_light_color",   glm::vec3(0.0f, 0.0f, 0.0f));
-
-        // Enable wireframe mode
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-        // Offset lines a bit outside the model so they don't overlap
-        glEnable(GL_POLYGON_OFFSET_LINE);
-        glPolygonOffset(-0.5, -0.5);
-
-        // Draw wireframe
-        glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_SHORT, 0);
-
-        // Disable offset
-        glDisable(GL_POLYGON_OFFSET_FILL);
-
-        // Disable wireframe mode
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
-}
-
-void dv_sys_rendering::render_textured(const dv_scene_material* smaterial, dv_scene_mesh& smesh, 
-    								   dv_camera& camera, dv_lighting& lighting, glm::mat4& mvp, glm::mat3& nm) 
-{
-    auto& shader = m_shaders[shader_type::texture];
-
-    shader.use();
-    shader.set("mvp",               mvp);
-    shader.set("normal_mat",        nm);
-    shader.set("ambient_light",     lighting.ambient_light.get_light_color());
-    shader.set("dir_light_dir",     lighting.directional_light.direction);
-    shader.set("dir_light_color",   lighting.directional_light.get_light_color());
-
-    auto diffuse_texture = m_systems->texture.get_texture(smaterial->diffuse_texture_uuid);
-    if (diffuse_texture && diffuse_texture->texture_id)
-        glBindTexture(GL_TEXTURE_2D, diffuse_texture->texture_id);
-
-    glBindVertexArray(smesh.vao);
-    glBindBuffer(GL_ARRAY_BUFFER, smesh.vbo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, smesh.ibo);
-    glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_SHORT, 0);
-}
-
-void dv_sys_rendering::render_grid(dv_scene_model& smodel, dv_scene_mesh& smesh, dv_camera& camera) 
-{
-    auto& shader = m_shaders[shader_type::grid];
-
-    shader.use();
-    shader.set("mat_view", camera.get_view_matrix());
-    shader.set("mat_proj", camera.get_proj_matrix());
-    shader.set("mat_mod",  smodel.transform.get_transform_matrix());
-
-    glBindVertexArray(smesh.vao);
-    glBindBuffer(GL_ARRAY_BUFFER, smesh.vbo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, smesh.ibo);
-    glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_SHORT, 0);
+    return &m_shaders[shader_id];
 }
