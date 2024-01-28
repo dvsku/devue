@@ -126,17 +126,24 @@ void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_ligh
         dv_shader* shader = set_shader(integrated_shader::def);
         if (!shader) continue;
 
-        const dv_scene_material* material        = m_systems->material.get_material(smesh.material_uuid);
-        const dv_scene_texture*  diffuse_texture = material ? m_systems->texture.get_texture(material->diffuse_texture_uuid) : nullptr;
-        bool                     textured        = diffuse_texture && diffuse_texture->texture_id;
+        const dv_scene_material* material        = nullptr;
+        const dv_scene_texture*  diffuse_texture = nullptr;
+        bool                     wireframe       = smodel.wireframe;
+        bool                     textured        = false;
+
+        if (!wireframe) {
+            material        = m_systems->material.get_material(smesh.material_uuid);
+            diffuse_texture = material ? m_systems->texture.get_texture(material->diffuse_texture_uuid) : nullptr;
+            textured        = diffuse_texture && diffuse_texture->texture_id;
+        }
 
         shader->set("uf_mvp",        mvp);
         shader->set("uf_normal_mat", normal_matrix);
         shader->set("uf_textured",   textured ? 1.0f : 0.0f);
         shader->set("uf_col",        glm::vec3(1.0f, 1.0f, 1.0f));
-        shader->set("uf_al_col",     lighting.ambient_light.get_light_color());
+        shader->set("uf_al_col",     wireframe ? glm::vec3(1.0f, 1.0f, 1.0f) : lighting.ambient_light.get_light_color());
         shader->set("uf_dl_dir",     lighting.directional_light.direction);
-        shader->set("uf_dl_col",     lighting.directional_light.get_light_color());
+        shader->set("uf_dl_col",     wireframe ? glm::vec3(0.0f, 0.0f, 0.0f) : lighting.directional_light.get_light_color());
         
         if (textured)
             glBindTexture(GL_TEXTURE_2D, diffuse_texture->texture_id);
@@ -146,7 +153,7 @@ void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_ligh
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, smesh.ibo);
         glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_SHORT, 0);
 
-        if (smodel.wireframe && !textured) {
+        if (wireframe) {
             // Set wire colors
             shader->set("uf_col",    glm::vec3(0.5f, 0.5f, 0.5f));
             shader->set("uf_al_col", glm::vec3(1.0f, 1.0f, 1.0f));
