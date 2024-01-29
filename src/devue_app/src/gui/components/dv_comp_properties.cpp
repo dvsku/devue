@@ -1,5 +1,6 @@
 #include "gui/components/dv_comp_properties.hpp"
 #include "gui/dv_components.hpp"
+#include "utilities/dv_util_imgui.hpp"
 
 using namespace devue;
 
@@ -10,6 +11,7 @@ bool dv_comp_properties::render() {
     ImGui::Begin("Properties##Window");
 
     switch (m_systems->properties.get_inspected().inspected_type) {
+        case inspectable::type::model:             render_model();             break;
     	case inspectable::type::scene_model:	   render_scene_model();       break;
     	case inspectable::type::camera:			   render_camera();            break;
         case inspectable::type::ambient_light:	   render_ambient_light();     break;
@@ -20,6 +22,25 @@ bool dv_comp_properties::render() {
     ImGui::End();
 
     return true;
+}
+
+void dv_comp_properties::render_model() {
+    uuid uuid = m_systems->properties.get_inspected().inspected_id;
+
+    if (!m_systems->model.models.contains(uuid)) return;
+    core::dv_model& model = m_systems->model.models[uuid];
+
+    ImGui::PushID("PropertiesModel");
+
+    ImGui::Checkbox("Flip Z-up to Y-up##ZupToYup", &model.flag_z_up_to_y_up);
+    ImGui::SameLine();
+    dv_util_imgui::help_marker("Flip model from Z axis up to Y axis up");
+    
+    ImGui::Checkbox("Flip LH to RH##LHToRH", &model.flag_lh_to_rh);
+    ImGui::SameLine();
+    dv_util_imgui::help_marker("Flip model 180 degrees around up axis");
+
+    ImGui::PopID();
 }
 
 void dv_comp_properties::render_scene_model() {

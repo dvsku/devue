@@ -9,6 +9,7 @@ namespace devue {
     	bool render() final override;
 
     private:
+        void render_model();
     	void render_scene_model();
     	void render_camera();
     	void render_ambient_light();
