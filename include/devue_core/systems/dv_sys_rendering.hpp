@@ -27,6 +27,7 @@ namespace devue::core {
     public:
     	void prepare();
     	void prepare_model(dv_scene_model& smodel);
+        void prepare_model(dv_scene_model& smodel, dv_model& model);
     	void prepare_model(dv_scene_mesh& smesh, dv_mesh& mesh, bool is_static = true);
 
     	void release_model(dv_scene_model& smodel);

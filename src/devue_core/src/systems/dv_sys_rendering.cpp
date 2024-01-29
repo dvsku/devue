@@ -35,9 +35,32 @@ void dv_sys_rendering::prepare() {
 
 void dv_sys_rendering::prepare_model(dv_scene_model& smodel) {
     if (!m_systems->model.models.contains(smodel.model_uuid)) return;
-    if (smodel.meshes.size())                                 return;
+    prepare_model(smodel, m_systems->model.models[smodel.model_uuid]);
+}
 
-    dv_model& model = m_systems->model.models[smodel.model_uuid];
+void dv_sys_rendering::prepare_model(dv_scene_model& smodel, dv_model& model) {
+    if (smodel.meshes.size()) return;
+
+    // Generate vao
+    glGenVertexArrays(1, &smodel.vao);
+
+    // Bind vao
+    glBindVertexArray(smodel.vao);
+
+    // Generate vbo
+    glGenBuffers(1, &smodel.vbo);
+
+    // Bind vbo for setting up
+    glBindBuffer(GL_ARRAY_BUFFER, smodel.vbo);
+
+    // Set vertex data
+    // If models have bones, then their vertex positions are gonna change
+    // according to the bone matrix.
+    // Else they are static and their vertex positions don't change.
+    glBufferData(GL_ARRAY_BUFFER,
+        model.vertices.size() * sizeof(dv_vertex),
+        &model.vertices[0],
+        model.skeleton.bones.size() > 0 ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 
     for (auto& kvp : model.meshes) {
         dv_mesh& mesh = kvp.second;
@@ -45,46 +68,6 @@ void dv_sys_rendering::prepare_model(dv_scene_model& smodel) {
         smodel.meshes.push_back({});
         prepare_model(smodel.meshes.back(), mesh, model.skeleton.bones.size() > 0);
     }
-
-    m_systems->material.prepare_model_materials(model);
-}
-
-void dv_sys_rendering::prepare_model(dv_scene_mesh& smesh, dv_mesh& mesh, bool is_static) {
-    smesh.name = mesh.name;
-    smesh.material_uuid = mesh.material_uuid;
-
-    glGenVertexArrays(1, &smesh.vao);
-
-    glBindVertexArray(smesh.vao);
-
-    // Generate vbo
-    glGenBuffers(1, &smesh.vbo);
-
-    // Bind vbo for setting up
-    glBindBuffer(GL_ARRAY_BUFFER, smesh.vbo);
-
-    // Set vertex data
-    // If models have bones, then their vertex positions are gonna change
-    // according to the bone matrix.
-    // Else they are static and their vertex positions don't change.
-    glBufferData(GL_ARRAY_BUFFER,
-                 mesh.vertices.size() * sizeof(dv_vertex),
-                 &mesh.vertices[0],
-                 is_static ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
-
-    // Generate ibo
-    glGenBuffers(1, &smesh.ibo);
-
-    // Bind ibo for setting up
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, smesh.ibo);
-
-    // Set index data
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 mesh.faces.size() * sizeof(glm::u16vec3),
-                 &mesh.faces[0],
-                 GL_STATIC_DRAW);
-
-    smesh.face_count = mesh.faces.size();
 
     // Position attribute
     glEnableVertexAttribArray(0);
@@ -97,6 +80,26 @@ void dv_sys_rendering::prepare_model(dv_scene_mesh& smesh, dv_mesh& mesh, bool i
     // UV attribute
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(dv_vertex), (void*)offsetof(dv_vertex, uv));
+
+    m_systems->material.prepare_model_materials(model);
+}
+
+void dv_sys_rendering::prepare_model(dv_scene_mesh& smesh, dv_mesh& mesh, bool is_static) {
+    smesh.name          = mesh.name;
+    smesh.material_uuid = mesh.material_uuid;
+    smesh.face_count    = mesh.faces.size();
+
+    // Generate ibo
+    glGenBuffers(1, &smesh.ibo);
+
+    // Bind ibo for setting up
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, smesh.ibo);
+
+    // Set index data
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                    smesh.face_count * sizeof(glm::u16vec3),
+                    &mesh.faces[0],
+                    GL_STATIC_DRAW);
 }
 
 void dv_sys_rendering::release_model(dv_scene_model& smodel) {
@@ -105,21 +108,27 @@ void dv_sys_rendering::release_model(dv_scene_model& smodel) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     for (auto& smesh : smodel.meshes) {
-        glDeleteVertexArrays(1, &smesh.vao);
-        glDeleteBuffers(1, &smesh.vbo);
         glDeleteBuffers(1, &smesh.ibo);
 
-        smesh.vao = 0U;
-        smesh.vbo = 0U;
         smesh.ibo = 0U;
     }
+
+    glDeleteVertexArrays(1, &smodel.vao);
+    glDeleteBuffers(1, &smodel.vbo);
+
+    smodel.vao = 0U;
+    smodel.vbo = 0U;
 }
 
 void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_lighting& lighting) {
+    if (!smodel.vao || !smodel.vbo)                           return;
     if (!m_systems->model.models.contains(smodel.model_uuid)) return;
-    const dv_model& model = m_systems->model.models[smodel.model_uuid];
 
-    glm::mat4 model_matrix = smodel.transform.get_transform_matrix();
+    dv_shader* shader = set_shader(integrated_shader::def);
+    if (!shader) return;
+
+    const dv_model& model        = m_systems->model.models[smodel.model_uuid];
+    glm::mat4       model_matrix = smodel.transform.get_transform_matrix();
 
     // Apply model modifications
     if (model.flag_z_up_to_y_up && model.flag_lh_to_rh) {
@@ -133,26 +142,28 @@ void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_ligh
         model_matrix = glm::rotate(model_matrix, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     }
 
-    glm::mat3 normal_matrix{
+    glm::mat3 normal_matrix {
         glm::normalize(glm::vec3(model_matrix[0])),
         glm::normalize(glm::vec3(model_matrix[1])),
         glm::normalize(glm::vec3(model_matrix[2]))
     };
-
     normal_matrix = glm::transpose(glm::inverse(normal_matrix));
 
-    glm::mat4 mvp = camera.get_proj_matrix() * camera.get_view_matrix() * model_matrix;
+    glm::mat4 mvp       = camera.get_proj_matrix() * camera.get_view_matrix() * model_matrix;
+    bool      wireframe = smodel.wireframe;
+
+    shader->set("uf_mvp",        mvp);
+    shader->set("uf_normal_mat", normal_matrix);
+    shader->set("uf_dl_dir",     lighting.directional_light.direction);
+    
+    glBindVertexArray(smodel.vao);
+    glBindBuffer(GL_ARRAY_BUFFER, smodel.vbo);
 
     for (dv_scene_mesh& smesh : smodel.meshes) {
-        if (!smesh.vao || !smesh.vbo || !smesh.ibo) continue;
-
-        // Set default shader
-        dv_shader* shader = set_shader(integrated_shader::def);
-        if (!shader) continue;
+        if (!smesh.ibo) continue;
 
         const dv_scene_material* material        = nullptr;
-        const dv_scene_texture*  diffuse_texture = nullptr;
-        bool                     wireframe       = smodel.wireframe;
+        const dv_scene_texture*  diffuse_texture = nullptr;   
         bool                     textured        = false;
 
         if (!wireframe) {
@@ -161,19 +172,14 @@ void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_ligh
             textured        = diffuse_texture && diffuse_texture->texture_id;
         }
 
-        shader->set("uf_mvp",        mvp);
-        shader->set("uf_normal_mat", normal_matrix);
-        shader->set("uf_textured",   textured ? 1.0f : 0.0f);
-        shader->set("uf_col",        glm::vec3(1.0f, 1.0f, 1.0f));
-        shader->set("uf_al_col",     wireframe ? glm::vec3(1.0f, 1.0f, 1.0f) : lighting.ambient_light.get_light_color());
-        shader->set("uf_dl_dir",     lighting.directional_light.direction);
-        shader->set("uf_dl_col",     wireframe ? glm::vec3(0.0f, 0.0f, 0.0f) : lighting.directional_light.get_light_color());
-        
+        shader->set("uf_textured", textured ? 1.0f : 0.0f);
+        shader->set("uf_col",      glm::vec3(1.0f, 1.0f, 1.0f));
+        shader->set("uf_al_col",   wireframe ? glm::vec3(1.0f, 1.0f, 1.0f) : lighting.ambient_light.get_light_color());
+        shader->set("uf_dl_col",   wireframe ? glm::vec3(0.0f, 0.0f, 0.0f) : lighting.directional_light.get_light_color());
+
         if (textured)
             glBindTexture(GL_TEXTURE_2D, diffuse_texture->texture_id);
 
-        glBindVertexArray(smesh.vao);
-        glBindBuffer(GL_ARRAY_BUFFER, smesh.vbo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, smesh.ibo);
         glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_SHORT, 0);
 
@@ -203,19 +209,22 @@ void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_ligh
 }
 
 void dv_sys_rendering::render(dv_scene_grid& sgrid, dv_camera& camera, dv_lighting& lighting) {
+    if (!sgrid.vao || !sgrid.vbo) return;
+
+    // Set grid shader
+    dv_shader* shader = set_shader(integrated_shader::grid);
+    if (!shader) return;
+
+    shader->set("uf_model_mat", sgrid.transform.get_transform_matrix());
+    shader->set("uf_view_mat",  camera.get_view_matrix());
+    shader->set("uf_proj_mat",  camera.get_proj_matrix());
+
+    glBindVertexArray(sgrid.vao);
+    glBindBuffer(GL_ARRAY_BUFFER, sgrid.vbo);
+
     for (dv_scene_mesh& smesh : sgrid.meshes) {
-        if (!smesh.vao || !smesh.vbo || !smesh.ibo) continue;
+        if (!smesh.ibo) continue;
 
-        // Set grid shader
-        dv_shader* shader = set_shader(integrated_shader::grid);
-        if (!shader) continue;
-
-        shader->set("uf_model_mat", sgrid.transform.get_transform_matrix());
-        shader->set("uf_view_mat",  camera.get_view_matrix());
-        shader->set("uf_proj_mat",  camera.get_proj_matrix());
-
-        glBindVertexArray(smesh.vao);
-        glBindBuffer(GL_ARRAY_BUFFER, smesh.vbo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, smesh.ibo);
         glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_SHORT, 0);
     }
