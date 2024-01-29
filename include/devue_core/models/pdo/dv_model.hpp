@@ -26,6 +26,9 @@ namespace devue::core {
 
     	float min_y = 0.0f;
 
+        bool flag_z_up_to_y_up = false;
+        bool flag_lh_to_rh     = false;
+
         bool marked_for_removal = false;
 
     	dv_model()				  = default;
