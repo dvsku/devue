@@ -96,6 +96,14 @@ dv_model& dv_sys_model::import(const std::string& path, const std::string& textu
     	model.name        = filepath.filename().replace_extension("").string();
         model.texture_dir = texture_path;
     	
+        for (auto& pvertex : pmodel.vertices) {
+            dv_vertex vertex;
+            vertex.position = pvertex.position;
+            vertex.normal   = pvertex.normal;
+            vertex.uv       = pvertex.uv;
+            model.vertices.push_back(vertex);
+        }
+
     	for (auto& pmesh : pmodel.meshes) {
     		devue::uuid mesh_uuid	  = dv_util_uuid::create(DV_FORMAT("{}_{}", path, pmesh.name));
     		devue::uuid material_uuid = dv_util_uuid::create(DV_FORMAT("{}_{}", mesh_uuid, pmesh.material.name));
@@ -115,14 +123,6 @@ dv_model& dv_sys_model::import(const std::string& path, const std::string& textu
     				pmesh.indices[i + 1],
     				pmesh.indices[i + 2],
     			});
-    		}
-
-    		for (auto& pvertex : pmesh.vertices) {
-    			dv_vertex vertex;
-    			vertex.position = pvertex.position;
-    			vertex.normal = pvertex.normal;
-    			vertex.uv = pvertex.uv;
-    			mesh.vertices.push_back(vertex);
     		}
     	}
 
