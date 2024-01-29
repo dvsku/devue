@@ -35,4 +35,4 @@ Since then I've started learning OpenGL and expanded it further. It is meant to 
 devue comes with a set of included model and texture plugins that enable loading of popular formats.</br>
 It can be extended by custom plugins by implementing the shared C interface.
 
-You can use [this](https://github.com/dvsku/devue_plugin_template) template to make your own plugin. See [official plugin implementation](https://github.com/dvsku/devue/tree/main/plugins/devue_official/plugin) as an example on how to implement it.
+You can use [this](https://github.com/dvsku/devue_plugin_template) template to make your own plugin. See [official plugin implementation](https://github.com/dvsku/devue/tree/main/plugins/devue_official/impl) as an example on how to implement it.
