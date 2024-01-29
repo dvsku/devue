@@ -3,6 +3,7 @@
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 #include "glm/mat4x3.hpp"
+#include "models/dv_bounding_box.hpp"
 #include "models/pdo/dv_skeleton.hpp"
 #include "models/pdo/dv_mesh.hpp"
 #include "models/pdo/dv_material.hpp"
@@ -24,7 +25,7 @@ namespace devue::core {
     	std::unordered_map<devue::uuid, dv_mesh>	 meshes;
     	std::unordered_map<devue::uuid, dv_material> materials;
 
-    	float min_y = 0.0f;
+        dv_bounding_box bounding_box;
 
         bool flag_z_up_to_y_up = false;
         bool flag_lh_to_rh     = false;

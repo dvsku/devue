@@ -12,7 +12,7 @@ using namespace devue::plugins;
 ///////////////////////////////////////////////////////////////////////////////
 // INTERNAL
 
-static void set_min_y(dv_model& model);
+static void calculate_bounding_box(dv_model& model);
 
 static bool compare_file_filters(const dv_file_filter& a, const dv_file_filter& b) {
     return a.name < b.name;
@@ -126,7 +126,7 @@ dv_model& dv_sys_model::import(const std::string& path, const std::string& textu
     		}
     	}
 
-    	set_min_y(model);
+        calculate_bounding_box(model);
 
     	models[uuid] = std::move(model);
     	return models[uuid];
@@ -167,12 +167,19 @@ void dv_sys_model::remove_marked_models() {
 ///////////////////////////////////////////////////////////////////////////////
 // INTERNAL
 
-void set_min_y(dv_model& model) {
-    float min_y = 0.0f;
-    for (auto& mesh : model.meshes)
-    	for (auto& vertex : mesh.second.vertices)
-    		if (vertex.position.y < min_y)
-    			min_y = vertex.position.y;
+void calculate_bounding_box(dv_model& model) {
+    model.bounding_box.minimum = { FLT_MAX, FLT_MAX, FLT_MAX };
+    model.bounding_box.maximum = { std::numeric_limits<double>::lowest(), std::numeric_limits<double>::lowest(), std::numeric_limits<double>::lowest() };
 
-    model.min_y = min_y;
+    for (const auto& [mesh_id, mesh] : model.meshes) {
+        for (const auto& vertex : mesh.vertices) {
+            model.bounding_box.minimum.x = min(model.bounding_box.minimum.x, vertex.position.x);
+            model.bounding_box.minimum.y = min(model.bounding_box.minimum.y, vertex.position.y);
+            model.bounding_box.minimum.z = min(model.bounding_box.minimum.z, vertex.position.z);
+
+            model.bounding_box.maximum.x = max(model.bounding_box.maximum.x, vertex.position.x);
+            model.bounding_box.maximum.y = max(model.bounding_box.maximum.y, vertex.position.y);
+            model.bounding_box.maximum.z = max(model.bounding_box.maximum.z, vertex.position.z);
+        }
+    }
 }
