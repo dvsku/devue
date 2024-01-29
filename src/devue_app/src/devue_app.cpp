@@ -7,6 +7,6 @@ using namespace devue::core;
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdShow) {
     dv_util_log::add_source(&std::cout);
 
-    dv_gui gui(1024, 768, "devue");
+    dv_gui gui(1360, 768, "devue");
     gui.run();
 }

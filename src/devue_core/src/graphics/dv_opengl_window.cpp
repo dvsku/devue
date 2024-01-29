@@ -76,6 +76,9 @@ dv_opengl_window::dv_opengl_window(uint32_t width, uint32_t height, const std::s
     glfwSetWindowIconifyCallback(m_native, iconify_callback);
     glfwSetDropCallback(m_native, drop_callback);
 
+    glfwSetWindowMonitor(m_native, NULL, (GetSystemMetrics(SM_CXSCREEN) / 2) - (width / 2),
+        (GetSystemMetrics(SM_CYSCREEN) / 2) - (height / 2), width, height, GLFW_DONT_CARE);
+
     // Init glad
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     	throw std::runtime_error("Failed to init glad.");
