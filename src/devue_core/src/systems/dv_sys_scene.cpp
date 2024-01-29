@@ -20,8 +20,7 @@ dv_scene* dv_sys_scene::create_scene() {
     	m_scenes[uuid] = dv_scene();
     	current_scene = &m_scenes[uuid];
 
-    	m_systems->rendering.prepare_model(current_scene->grid.meshes.back(),
-    									   current_scene->grid.model.meshes[dv_util_uuid::create("grid")]);
+    	m_systems->rendering.prepare_model(current_scene->grid, current_scene->grid.model);
 
     	return current_scene;
     }
