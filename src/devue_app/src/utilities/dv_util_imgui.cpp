@@ -66,3 +66,14 @@ bool dv_util_imgui::begin_item_context_menu(const char* str_id, ImGuiPopupFlags 
 
     return result;
 }
+
+void dv_util_imgui::help_marker(const char* str) {
+    ImGui::TextDisabled("(?)");
+
+    if (ImGui::BeginItemTooltip()) {
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted(str);
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+}

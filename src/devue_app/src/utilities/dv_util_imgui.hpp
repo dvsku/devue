@@ -18,6 +18,8 @@ namespace devue {
         static bool begin_menu(const char* label, bool enabled = true);
         static bool begin_item_context_menu(const char* str_id = nullptr, ImGuiPopupFlags popup_flags = 1);
 
+        static void help_marker(const char* str);
+
     private:
         enum class widget_color : uint16_t {
             collapsable,
