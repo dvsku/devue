@@ -10,7 +10,7 @@ dv_camera::dv_camera() {
     // Call transformations to apply initial values
     translate(0.0f, 0.0f);
     rotate(0.0f, 0.0f);
-    zoom(0.0f);
+    zoom(-30.0f);
 }
 
 glm::mat4 dv_camera::get_view_matrix() {

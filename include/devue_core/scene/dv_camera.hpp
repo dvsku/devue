@@ -35,8 +35,8 @@ namespace devue::core {
         float m_fov			 = 45.0f;
     	float m_aspect_ratio = 1920.0f / 1080.0f;
 
-    	float m_yaw   = -90.0f;
-    	float m_pitch =  26.0f;
+    	float m_yaw   = 90.0f;
+    	float m_pitch = 26.0f;
 
     	float m_min_zoom = 5.0f;
     	float m_max_zoom = 110.0f;
