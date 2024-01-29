@@ -2,7 +2,7 @@
 #include "devue_plugin.hpp"
 
 #define TINYOBJLOADER_IMPLEMENTATION
-#include "lib/tinyobjloader/tiny_obj_loader.h"
+#include "tinyobjloader/include/tiny_obj_loader.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
