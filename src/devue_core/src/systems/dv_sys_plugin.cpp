@@ -114,7 +114,7 @@ void dv_sys_plugin::load_plugin(const std::filesystem::path& path, devue::uuid u
 
     plugins[uuid] = std::move(plugin);
 
-    DV_LOG("Loaded texture plugin `{}` from `{}`.", plugins[uuid].name, plugins[uuid].filename);
+    DV_LOG("Loaded plugin `{}` from `{}`.", plugins[uuid].name, plugins[uuid].filename);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
