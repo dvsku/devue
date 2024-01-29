@@ -11,8 +11,6 @@ namespace devue::core {
 
     	devue::uuid material_uuid;
 
-    	uint32_t vao		= 0U;
-    	uint32_t vbo		= 0U;
     	uint32_t ibo		= 0U;
     	uint64_t face_count = 0U;
     };

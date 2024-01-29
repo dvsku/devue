@@ -17,6 +17,9 @@ namespace devue::core {
     	devue::uuid uuid	   = 0U;
     	devue::uuid model_uuid = 0U;
 
+        uint32_t vao = 0U;
+        uint32_t vbo = 0U;
+
     	///////////////////////////////////////////////////////////////////////
     	// RENDER PROPERTIES
 
