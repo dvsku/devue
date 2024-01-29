@@ -116,8 +116,32 @@ void dv_sys_rendering::release_model(dv_scene_model& smodel) {
 }
 
 void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_lighting& lighting) {
-    glm::mat4 mvp = camera.get_proj_matrix() * camera.get_view_matrix() * smodel.transform.get_transform_matrix();
-    glm::mat3 normal_matrix = smodel.transform.get_normal_matrix();
+    if (!m_systems->model.models.contains(smodel.model_uuid)) return;
+    const dv_model& model = m_systems->model.models[smodel.model_uuid];
+
+    glm::mat4 model_matrix = smodel.transform.get_transform_matrix();
+
+    // Apply model modifications
+    if (model.flag_z_up_to_y_up && model.flag_lh_to_rh) {
+        model_matrix = glm::rotate(model_matrix, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        model_matrix = glm::rotate(model_matrix, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    }
+    else if (model.flag_z_up_to_y_up) {
+        model_matrix = glm::rotate(model_matrix, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    }
+    else if (model.flag_lh_to_rh) {
+        model_matrix = glm::rotate(model_matrix, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    }
+
+    glm::mat3 normal_matrix{
+        glm::normalize(glm::vec3(model_matrix[0])),
+        glm::normalize(glm::vec3(model_matrix[1])),
+        glm::normalize(glm::vec3(model_matrix[2]))
+    };
+
+    normal_matrix = glm::transpose(glm::inverse(normal_matrix));
+
+    glm::mat4 mvp = camera.get_proj_matrix() * camera.get_view_matrix() * model_matrix;
 
     for (dv_scene_mesh& smesh : smodel.meshes) {
         if (!smesh.vao || !smesh.vbo || !smesh.ibo) continue;
