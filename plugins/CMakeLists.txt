@@ -2,6 +2,7 @@
 
 SET(PLUGINS_LIB_DIR		"${CMAKE_SOURCE_DIR}/plugins/lib")
 SET(PLUGINS_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/lib/devue_plugin/include")
+SET(PLUGINS_SOURCE_DIR  "${CMAKE_SOURCE_DIR}/plugins/devue_official")
 
 IF(WIN32)
 	SET(OUTPUT_DIR_LOWER "${OUTPUT_DIR_LOWER}/plugins")
@@ -28,4 +29,7 @@ IF(WIN32)
 
     ADD_SUBDIRECTORY("lib/assimp")
     ADD_SUBDIRECTORY("devue_official")
+
+	# SET FILENAME
+	SET_TARGET_PROPERTIES(devue_plugin_core PROPERTIES OUTPUT_NAME "dv_plg_devue_official")
 ENDIF()

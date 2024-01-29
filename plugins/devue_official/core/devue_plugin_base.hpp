@@ -11,6 +11,11 @@
 #define DV_API extern "C" __declspec(dllexport)
 
 namespace devue::plugins {
+    struct file_type {
+        std::string name       = "";
+        std::string extensions = "";
+    };
+
     class devue_plugin_base : public devue_plugin_interface {
     public:
         std::string name    = "";
@@ -21,12 +26,6 @@ namespace devue::plugins {
     public:
         devue_plugin_base()          = default;
         virtual ~devue_plugin_base() = default;
-
-    protected:
-        struct file_type {
-            std::string name       = "";
-            std::string extensions = "";
-        };
 
     protected:
         virtual void                   impl_init()                                                = 0;

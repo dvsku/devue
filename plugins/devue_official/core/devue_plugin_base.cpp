@@ -51,7 +51,26 @@ devue_plugin_interface::serialized devue_plugin_base::import_model(const char* f
         if (!model.meshes.size())
             return {};
 
-        json["meshes"] = nlohmann::json::array();
+        json["vertices"] = nlohmann::json::array();
+        json["meshes"]   = nlohmann::json::array();
+
+        for (size_t j = 0; j < model.vertices.size(); j++) {
+            json["vertices"][j] = nlohmann::json::object();
+
+            auto& vertex      = model.vertices[j];
+            auto& json_vertex = json["vertices"][j];
+
+            json_vertex["position"]["x"] = vertex.position.x;
+            json_vertex["position"]["y"] = vertex.position.y;
+            json_vertex["position"]["z"] = vertex.position.z;
+
+            json_vertex["normal"]["x"] = vertex.normal.x;
+            json_vertex["normal"]["y"] = vertex.normal.y;
+            json_vertex["normal"]["z"] = vertex.normal.z;
+
+            json_vertex["uv"]["x"] = vertex.uv.x;
+            json_vertex["uv"]["y"] = vertex.uv.y;
+        }
 
         for (size_t i = 0; i < model.meshes.size(); i++) {
             json["meshes"][i] = nlohmann::json::object();
@@ -64,26 +83,6 @@ devue_plugin_interface::serialized devue_plugin_base::import_model(const char* f
             json_mesh["material"] = nlohmann::json::object();
             json_mesh["material"]["name"]            = mesh.material.name;
             json_mesh["material"]["diffuse_texture"] = mesh.material.diffuse_texture;
-
-            json_mesh["vertices"] = nlohmann::json::array();
-
-            for (size_t j = 0; j < mesh.vertices.size(); j++) {
-                json_mesh["vertices"][j] = nlohmann::json::object();
-
-                auto& vertex = mesh.vertices[j];
-                auto& json_vertex = json_mesh["vertices"][j];
-
-                json_vertex["position"]["x"] = vertex.position.x;
-                json_vertex["position"]["y"] = vertex.position.y;
-                json_vertex["position"]["z"] = vertex.position.z;
-
-                json_vertex["normal"]["x"] = vertex.normal.x;
-                json_vertex["normal"]["y"] = vertex.normal.y;
-                json_vertex["normal"]["z"] = vertex.normal.z;
-
-                json_vertex["uv"]["x"] = vertex.uv.x;
-                json_vertex["uv"]["y"] = vertex.uv.y;
-            }
 
             json_mesh["indices"] = nlohmann::json::array();
 

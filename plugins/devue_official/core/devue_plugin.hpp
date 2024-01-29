@@ -1,10 +1,10 @@
 #pragma once
 
 #include "devue_plugin_base.hpp"
-#include "assimp/Importer.hpp"
+#include "devue_plugin_impl.hpp"
 
 namespace devue::plugins {
-    class dv_model_plugin : public devue_plugin_base {
+    class devue_plugin : public devue_plugin_base {
     public:
         virtual void impl_init() final override;
 
@@ -15,7 +15,7 @@ namespace devue::plugins {
         devue_plugin_texture   impl_import_texture(const std::filesystem::path& filepath) final override;
 
     private:
-        Assimp::Importer importer;
+        devue_plugin_impl impl;
     };
 }
 
