@@ -1,6 +1,6 @@
 #pragma once
 
-#include "models/pdo/dv_vertex.hpp"
+#include "glm/vec3.hpp"
 #include "utilities/dv_util_uuid.hpp"
 
 #include <string>
@@ -11,8 +11,6 @@ namespace devue::core {
     	std::string name = "";
 
     	devue::uuid material_uuid{};
-
-    	std::vector<dv_vertex>	  vertices;
     	std::vector<glm::u16vec3> faces;
 
     	dv_mesh()				= default;
