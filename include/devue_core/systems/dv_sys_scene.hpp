@@ -37,5 +37,6 @@ namespace devue::core {
 
     private:
     	void remove_marked_models();
+        void rescale_model(dv_model& model, dv_scene_model& smodel);
     };
 }

@@ -72,8 +72,8 @@ void dv_sys_scene::add_to_scene(dv_model& model) {
     	smodel.uuid		  = uuid;
     	smodel.model_uuid = model.uuid;
 
-    	if (model.min_y < 0.0f)
-    		smodel.transform.position.y = abs(model.min_y);
+        // Scale model to fit in scene
+        rescale_model(model, smodel);
 
     	m_systems->rendering.prepare_model(smodel);
     }
@@ -107,4 +107,12 @@ void dv_sys_scene::remove_marked_models() {
     	}
     }
     catch(...) {}
+}
+
+void dv_sys_scene::rescale_model(dv_model& model, dv_scene_model& smodel) {
+    float scaling = model.bounding_box.maximum.y / 10.0f;
+
+    smodel.transform.scale.x /= scaling;
+    smodel.transform.scale.y /= scaling;
+    smodel.transform.scale.z /= scaling;
 }
