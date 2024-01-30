@@ -35,7 +35,7 @@ namespace devue::core {
         bool is_supported_file_type(const std::string& path);
 
         // Import model asset
-    	dv_model& import(const std::string& path, const std::string& texture_path = "");
+    	bool import(const std::string& path, const std::string& material_path = "");
 
         // Mark model asset for removal
         void remove(dv_model& model);

@@ -1,10 +1,12 @@
 #include "devue_plugin_model.hpp"
 #include "systems/dv_sys_model.hpp"
 #include "systems/dv_systems_bundle.hpp"
+#include "utilities/dv_util_log.hpp"
 #include "utilities/dv_util_string.hpp"
 
 #include <algorithm>
 #include <filesystem>
+#include <sstream>
 
 using namespace devue::core;
 using namespace devue::plugins;
@@ -61,7 +63,7 @@ bool dv_sys_model::is_supported_file_type(const std::string& path) {
     return false;
 }
 
-dv_model& dv_sys_model::import(const std::string& path, const std::string& texture_path) {
+bool dv_sys_model::import(const std::string& path, const std::string& material_path) {
     std::filesystem::path filepath = path;
     std::string ext				   = filepath.extension().string();
     
@@ -69,22 +71,37 @@ dv_model& dv_sys_model::import(const std::string& path, const std::string& textu
     devue::uuid uuid = devue::core::dv_util_uuid::create(path);
 
     if (models.contains(uuid))
-        return models[uuid];
+        return true;
 
     auto cmp_fn = [&](const dv_file_type& type) {
     	return dv_util_string::contains(type.extensions, ext);
     };
 
+    // Flag to check if we tried importing but all importers failed
+    bool tried_importing = false;
+
+    // Error messages for all tried importers that failed
+    // Ignored if one of them succeeded
+    std::stringstream accumulated_errors;
+
     for (auto& [plugin_uuid, plugin] : m_systems->plugin.plugins) {
         if (std::none_of(plugin.supported_model_types.begin(), plugin.supported_model_types.end(), cmp_fn))
             continue;
 
-        devue_plugin_model pmodel;
+        // We have tried importing
+        tried_importing = true;
 
+        devue_plugin_model pmodel;
         try {
             pmodel = plugin.import_model(path);
         }
+        catch (const std::exception& e) {
+            accumulated_errors << DV_FORMAT("\t`{}`: {}", plugin.name, e.what());
+            plugin.cleanup();
+            continue;
+        }
         catch (...) {
+            accumulated_errors << DV_FORMAT("\t`{}`: critical failure", plugin.name);
             plugin.cleanup();
             continue;
         }
@@ -94,7 +111,7 @@ dv_model& dv_sys_model::import(const std::string& path, const std::string& textu
     	dv_model model;
     	model.uuid        = uuid;
     	model.name        = filepath.filename().replace_extension("").string();
-        model.texture_dir = texture_path;
+        model.texture_dir = material_path;
     	
         for (auto& pvertex : pmodel.vertices) {
             dv_vertex vertex;
@@ -129,10 +146,16 @@ dv_model& dv_sys_model::import(const std::string& path, const std::string& textu
         calculate_bounding_box(model);
 
     	models[uuid] = std::move(model);
-    	return models[uuid];
+    	return true;
     }
 
-    throw std::runtime_error("Unsupported model type");
+    std::string errors = accumulated_errors.str();
+    if (tried_importing && !errors.empty()) {
+        DV_LOG("Tried importing model with following importers:\n{}", errors);
+    }
+    
+    DV_LOG("Failed to import `{}` model | No suitable importer found.", filepath.filename().string());
+    return false;
 }
 
 void dv_sys_model::remove(dv_model& model) {
