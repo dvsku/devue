@@ -109,7 +109,11 @@ void dv_sys_scene::remove_marked_models() {
 }
 
 void dv_sys_scene::rescale_model(dv_model& model, dv_scene_model& smodel) {
-    float scaling = model.bounding_box.maximum.y / 10.0f;
+    float scaling = (std::max)({
+        model.bounding_box.maximum.x / 8.0f,
+        model.bounding_box.maximum.y / 8.0f,
+        model.bounding_box.maximum.z / 8.0f
+    });
 
     smodel.transform.scale.x /= scaling;
     smodel.transform.scale.y /= scaling;
