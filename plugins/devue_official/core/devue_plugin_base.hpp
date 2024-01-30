@@ -36,9 +36,11 @@ namespace devue::plugins {
 
     private:
         std::vector<char> m_buffer;
+        std::string       m_error_msg = "";
 
     private:
         serialized get_plugin_info() noexcept final override;
+        serialized get_error_message() noexcept final override;
         serialized import_model(const char* filepath) noexcept final override;
         serialized import_texture(const char* filepath) noexcept final override;
         void cleanup() noexcept final override;

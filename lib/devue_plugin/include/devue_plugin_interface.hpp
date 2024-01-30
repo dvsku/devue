@@ -16,6 +16,7 @@ namespace devue::plugins {
 
     public:
         virtual serialized get_plugin_info() noexcept                    = 0;
+        virtual serialized get_error_message() noexcept                  = 0;
         virtual serialized import_model(const char* filepath) noexcept   = 0;
         virtual serialized import_texture(const char* filepath) noexcept = 0;
         virtual void cleanup() noexcept                                  = 0;

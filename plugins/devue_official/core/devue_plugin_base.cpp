@@ -33,7 +33,27 @@ devue_plugin_interface::serialized devue_plugin_base::get_plugin_info() noexcept
         }
 
         m_buffer.clear();
-        nlohmann::json::to_bjdata(json, m_buffer);
+        nlohmann::json::to_cbor(json, m_buffer);
+    }
+    catch (const std::exception& e) {
+        m_error_msg = e.what();
+        return {};
+    }
+    catch (...) {
+        return {};
+    }
+
+    return { m_buffer.size(), m_buffer.data() };
+}
+
+devue_plugin_interface::serialized devue_plugin_base::get_error_message() noexcept {
+    nlohmann::json json = nlohmann::json::object();
+
+    try {
+        json["msg"] = m_error_msg;
+
+        m_buffer.clear();
+        nlohmann::json::to_cbor(json, m_buffer);
     }
     catch (...) {
         return {};
@@ -94,6 +114,10 @@ devue_plugin_interface::serialized devue_plugin_base::import_model(const char* f
         m_buffer.clear();
         nlohmann::json::to_cbor(json, m_buffer);
     }
+    catch (const std::exception& e) {
+        m_error_msg = e.what();
+        return {};
+    }
     catch (...) {
         return {};
     }
@@ -113,6 +137,10 @@ devue_plugin_interface::serialized devue_plugin_base::import_texture(const char*
 
         m_buffer.clear();
         nlohmann::json::to_cbor(json, m_buffer);
+    }
+    catch (const std::exception& e) {
+        m_error_msg = e.what();
+        return {};
     }
     catch (...) {
         return {};
