@@ -1,11 +1,14 @@
 #include "devue_plugin_impl.hpp"
 #include "devue_plugin.hpp"
+#include "glm/gtx/normal.hpp"
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tinyobjloader/include/tiny_obj_loader.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
+
+#include <algorithm>
 
 using namespace devue::plugins;
 
@@ -30,28 +33,46 @@ std::vector<file_type> devue_plugin_impl::impl_get_texture_types() {
     };
 }
 
-// Implement model importing
 devue_plugin_model devue_plugin_impl::impl_import_model(const std::filesystem::path& filepath) {
-    tinyobj::ObjReader reader;
+    tinyobj::ObjReader       reader;
     tinyobj::ObjReaderConfig reader_config;
-    reader_config.triangulate = true;
 
-    if (!reader.ParseFromFile(filepath.string(), reader_config)) {
-        throw std::runtime_error("");
-    }
+    reader_config.vertex_color = false;
 
-    auto& attrib = reader.GetAttrib();
+    // Triangulate has problems, disable it and require
+    // that models are triangle only
+    reader_config.triangulate = false;
 
-    auto& shapes = reader.GetShapes();
+    if (!reader.ParseFromFile(filepath.string(), reader_config))
+        throw std::runtime_error(reader.Error());
+
+    auto& attrib    = reader.GetAttrib();
+    auto& shapes    = reader.GetShapes();
     auto& materials = reader.GetMaterials();
 
-    devue_plugin_model model;
-    model.meshes.push_back(devue_plugin_mesh());
-    devue_plugin_mesh& mesh = model.meshes.back();
+    for (const auto& shape : shapes) {
+        for (const auto& vert_per_face : shape.mesh.num_face_vertices) {
+            if (vert_per_face != 3) {
+                throw std::runtime_error("Only triangle faces supported.");
+            }
+        }
+    }
 
-    std::unordered_map<devue_plugin_vertex, uint32_t> uniqueVertices{};
+    devue_plugin_model                                model;
+    std::unordered_map<devue_plugin_vertex, uint32_t> unique_vertices{};
 
     for (const auto& shape : shapes) {
+        model.meshes.push_back(devue_plugin_mesh());
+
+        devue_plugin_mesh& mesh = model.meshes.back();
+        mesh.name               = shape.name;
+
+        if (shape.mesh.material_ids[0] >= 0) {
+            auto& material                = materials[shape.mesh.material_ids[0]];
+            mesh.material.name            = material.name;
+            mesh.material.diffuse_texture = material.diffuse_texname;
+        }
+
         for (const auto& index : shape.mesh.indices) {
             devue_plugin_vertex vertex;
 
@@ -74,31 +95,48 @@ devue_plugin_model devue_plugin_impl::impl_import_model(const std::filesystem::p
                     attrib.texcoords[2 * index.texcoord_index + 0],
                     attrib.texcoords[2 * index.texcoord_index + 1]
                 };
-                //vertex.uv = {
-                //    attrib.texcoords[2 * index.texcoord_index + 0],
-                //    1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-                //};
             }
 
-            if (uniqueVertices.count(vertex) == 0) {
-                uniqueVertices[vertex] = static_cast<uint32_t>(model.vertices.size());
+            // Handle duplicate vertices
+
+            if (!unique_vertices.contains(vertex)) {
+                unique_vertices[vertex] = static_cast<uint32_t>(model.vertices.size());
                 model.vertices.push_back(vertex);
             }
 
-            mesh.indices.push_back(uniqueVertices[vertex]);
+            mesh.indices.push_back(unique_vertices[vertex]);
+        }
+    }
 
-            /*mesh.vertices.push_back(vertex);
-            mesh.indices.push_back(mesh.indices.size());*/
+    bool calculate_normals = std::all_of(model.vertices.begin(), model.vertices.end(), [](const devue_plugin_vertex& vertex) {
+        return vertex.normal.x == 0.0f && vertex.normal.y == 0.0f && vertex.normal.z == 0.0f;
+    });
+
+    if (calculate_normals) {
+        for (const auto& mesh : model.meshes) {
+            if ((mesh.indices.size() % 3) != 0) continue;
+
+            for (size_t i = 0; i < mesh.indices.size(); i += 3) {
+                devue_plugin_vertex& v1 = model.vertices[mesh.indices[i + 0]];
+                devue_plugin_vertex& v2 = model.vertices[mesh.indices[i + 1]];
+                devue_plugin_vertex& v3 = model.vertices[mesh.indices[i + 2]];
+
+                glm::vec3 normal = glm::triangleNormal(v1.position, v2.position, v3.position);
+
+                v1.normal += normal;
+                v2.normal += normal;
+                v3.normal += normal;
+            }
         }
 
-        mesh.material.name = materials[shape.mesh.material_ids[0]].name;
-        mesh.material.diffuse_texture = materials[shape.mesh.material_ids[0]].diffuse_texname;
+        for (auto& vertex : model.vertices) {
+            vertex.normal = glm::normalize(vertex.normal);
+        }
     }
-    
+
     return model;
 }
 
-// Implement texture importing
 devue_plugin_texture devue_plugin_impl::impl_import_texture(const std::filesystem::path& filepath) {
     devue_plugin_texture texture;
 
