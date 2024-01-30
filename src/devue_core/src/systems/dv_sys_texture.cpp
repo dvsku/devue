@@ -6,6 +6,7 @@
 #include "glad/glad.h"
 
 #include <filesystem>
+#include <sstream>
 
 using namespace devue::core;
 using namespace devue::plugins;
@@ -75,7 +76,7 @@ void dv_sys_texture::release_textures(dv_scene_material& smaterial) {
 
  dv_scene_texture dv_sys_texture::create_scene_texture(std::filesystem::path& filepath) {
     if (!std::filesystem::exists(filepath))
-        throw dv_exception(DV_FORMAT("`{}` file not found.", filepath.string()));
+        DV_THROW_EXCEPTION("File not found.");
 
     std::string ext = filepath.extension().string();
 
@@ -83,16 +84,31 @@ void dv_sys_texture::release_textures(dv_scene_material& smaterial) {
         return dv_util_string::contains(type.extensions, ext);
     };
 
+    // Flag to check if we tried importing but all importers failed
+    bool tried_importing = false;
+
+    // Error messages for all tried importers that failed
+    // Ignored if one of them succeeded
+    std::stringstream accumulated_errors;
+
     for (auto& [uuid, plugin] : m_systems->plugin.plugins) {
         if (std::none_of(plugin.supported_texture_types.begin(), plugin.supported_texture_types.end(), cmp_fn))
             continue;
 
-        devue_plugin_texture ptexture;
+        // We have tried importing
+        tried_importing = true;
 
+        devue_plugin_texture ptexture;
         try {
             ptexture = plugin.import_texture(filepath.string());
         }
+        catch (const std::exception& e) {
+            accumulated_errors << DV_FORMAT("\t`{}`: {}", plugin.name, e.what());
+            plugin.cleanup();
+            continue;
+        }
         catch (...) {
+            accumulated_errors << DV_FORMAT("\t`{}`: critical failure", plugin.name);
             plugin.cleanup();
             continue;
         }
@@ -119,5 +135,10 @@ void dv_sys_texture::release_textures(dv_scene_material& smaterial) {
         return stexture;
     }
 
-    throw dv_exception("No suitable importer found.");
+    std::string errors = accumulated_errors.str();
+    if (tried_importing && !errors.empty()) {
+        DV_LOG("Tried importing texture with following importers:\n{}", errors);
+    }
+
+    DV_THROW_EXCEPTION("No suitable importer found.");
 }
