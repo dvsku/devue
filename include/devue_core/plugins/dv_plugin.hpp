@@ -34,6 +34,7 @@ namespace devue::core {
     public:
         virtual void prepare();
 
+        std::string                          get_error_message();
         devue::plugins::devue_plugin_model   import_model(const std::string& filepath);
         devue::plugins::devue_plugin_texture import_texture(const std::string& filepath);
 

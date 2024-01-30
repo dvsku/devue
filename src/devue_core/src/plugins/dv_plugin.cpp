@@ -7,11 +7,10 @@ using namespace devue::core;
 
 void dv_plugin::prepare() {
     plugins::devue_plugin_interface::serialized serialized = m_iface->get_plugin_info();
-
     if (!serialized)
-        throw dv_exception("");
+        DV_THROW_EXCEPTION(get_error_message());
 
-    nlohmann::json json = nlohmann::json::from_bjdata(serialized.data, serialized.data + serialized.size);
+    nlohmann::json json = nlohmann::json::from_cbor(serialized.data, serialized.data + serialized.size);
 
     if (json.contains("name") && json["name"].is_string())
         name = json["name"];
@@ -55,22 +54,30 @@ void dv_plugin::prepare() {
         throw dv_exception("");
 }
 
+std::string dv_plugin::get_error_message() {
+    plugins::devue_plugin_interface::serialized serialized;
+    serialized = m_iface->get_error_message();
+
+    if (!serialized)
+        return "Unknown error.";
+
+    nlohmann::json json = nlohmann::json::from_cbor(serialized.data, serialized.data + serialized.size);
+
+    if (!json.contains("msg"))
+        return "Unknown error.";
+        
+    return json["msg"];
+}
+
 plugins::devue_plugin_model dv_plugin::import_model(const std::string& filepath) {
     plugins::devue_plugin_model                 model;
     plugins::devue_plugin_interface::serialized serialized;
 
     serialized = m_iface->import_model(filepath.c_str());
-
     if (!serialized)
-        throw;
+        DV_THROW_EXCEPTION(get_error_message());
 
     nlohmann::json json = nlohmann::json::from_cbor(serialized.data, serialized.data + serialized.size);
-
-    if (!json.contains("vertices") || json["vertices"].empty())
-        return plugins::devue_plugin_model();
-
-    if (!json.contains("meshes") || json["meshes"].empty())
-        return plugins::devue_plugin_model();
 
     for (auto& json_vertex : json["vertices"]) {
         plugins::devue_plugin_vertex vertex{};
@@ -150,9 +157,8 @@ plugins::devue_plugin_texture dv_plugin::import_texture(const std::string& filep
     plugins::devue_plugin_interface::serialized serialized;
 
     serialized = m_iface->import_texture(filepath.c_str());
-
     if (!serialized)
-        throw;
+        DV_THROW_EXCEPTION(get_error_message());
 
     nlohmann::json json = nlohmann::json::from_cbor(serialized.data, serialized.data + serialized.size);
 
