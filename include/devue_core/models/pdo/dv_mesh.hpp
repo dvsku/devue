@@ -11,7 +11,7 @@ namespace devue::core {
     	std::string name = "";
 
     	devue::uuid material_uuid{};
-    	std::vector<glm::u16vec3> faces;
+    	std::vector<glm::u32vec3> faces;
 
     	dv_mesh()				= default;
     	dv_mesh(const dv_mesh&) = default;

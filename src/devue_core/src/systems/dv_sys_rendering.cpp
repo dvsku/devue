@@ -97,7 +97,7 @@ void dv_sys_rendering::prepare_model(dv_scene_mesh& smesh, dv_mesh& mesh, bool i
 
     // Set index data
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                    smesh.face_count * sizeof(glm::u16vec3),
+                    smesh.face_count * sizeof(glm::u32vec3),
                     &mesh.faces[0],
                     GL_STATIC_DRAW);
 }
@@ -181,7 +181,7 @@ void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_ligh
             glBindTexture(GL_TEXTURE_2D, diffuse_texture->texture_id);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, smesh.ibo);
-        glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_SHORT, 0);
+        glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_INT, 0);
 
         if (wireframe) {
             // Set wire colors
@@ -197,7 +197,7 @@ void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_ligh
             glPolygonOffset(-0.5, -0.5);
 
             // Draw wireframe
-            glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_SHORT, 0);
+            glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_INT, 0);
 
             // Disable offset
             glDisable(GL_POLYGON_OFFSET_FILL);
@@ -226,7 +226,7 @@ void dv_sys_rendering::render(dv_scene_grid& sgrid, dv_camera& camera, dv_lighti
         if (!smesh.ibo) continue;
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, smesh.ibo);
-        glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_SHORT, 0);
+        glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_INT, 0);
     }
 }
 
