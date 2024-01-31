@@ -19,6 +19,10 @@ bool dv_sys_command::prepare(dv_components* components) {
         return components->modal_import.render();
     }));
 
+    commands.emplace(dv_commands::flag_show_modal_plugins, dv_util_command([components] {
+        return components->modal_plugins.render();
+    }));
+
     return true;
 }
 
