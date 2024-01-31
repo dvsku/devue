@@ -150,15 +150,16 @@ intptr_t dv_opengl_window::wndproc_callback(dv_opengl_window* wnd, handle_t hand
             break;
         }
         case WM_NCHITTEST: {
-            POINTS mouse_pos        = MAKEPOINTS(lparam);
-            POINT  client_mouse_pos = { mouse_pos.x, mouse_pos.y };
+            POINTS       mouse_pos        = MAKEPOINTS(lparam);
+            POINT        client_mouse_pos = { mouse_pos.x, mouse_pos.y };
+            ImGuiWindow* modal            = ImGui::GetTopMostAndVisiblePopupModal();
             
             ScreenToClient(hwnd, &client_mouse_pos);
 
             if (wnd->m_hover_maximize)
                 return HTMAXBUTTON;
 
-            if (!wnd->m_skip_titlebar_hit && client_mouse_pos.y > 0 && client_mouse_pos.y <= wnd->m_custom_titlebar_height)
+            if (!wnd->m_skip_titlebar_hit && !modal && client_mouse_pos.y > 0 && client_mouse_pos.y <= wnd->m_custom_titlebar_height)
                 return HTCAPTION;
 
             break;
