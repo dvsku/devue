@@ -2,6 +2,8 @@
 #include "exceptions/dv_exception.hpp"
 #include "json/include/json.hpp"
 
+#include <regex>
+
 using namespace devue;
 using namespace devue::core;
 
@@ -18,8 +20,13 @@ void dv_plugin::prepare() {
     if (json.contains("author") && json["author"].is_string())
         author = json["author"];
 
-    if (json.contains("website") && json["website"].is_string())
+    if (json.contains("website") && json["website"].is_string()) {
+        std::regex r(R"(^((https?:)(\/\/\/?)([\w]*(?::[\w]*)?@)?([\d\w\.-]+)(?::(\d+))?)?([\/\\\w\.()-]*)?(?:([?][^#]*)?(#.*)?)*)");
+        
         website = json["website"];
+        if (!std::regex_match(website, r))
+            website = std::string("");
+    }
 
     if (json.contains("version") && json["version"].is_string())
         version = json["version"];
