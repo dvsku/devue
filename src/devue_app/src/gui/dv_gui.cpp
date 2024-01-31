@@ -207,6 +207,17 @@ void dv_gui::on_gui_update() {
                         ImGui::EndMenu();
                     }
 
+                    if (dv_util_imgui::begin_menu("Plugins")) {
+                        ImGui::MenuItem("Reload##MenuItem", 0, false, false);
+
+                        ImGui::Separator();
+
+                        bool& is_executable = m_sytems.command.is_executable(dv_commands::flag_show_modal_plugins);
+                        ImGui::MenuItem("View plugins##MenuItem", "", &is_executable);
+
+                        ImGui::EndMenu();
+                    }
+
                     ImGui::PopID();
 
                     ImGui::EndMenuBar();
