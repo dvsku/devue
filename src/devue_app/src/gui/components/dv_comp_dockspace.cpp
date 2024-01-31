@@ -20,6 +20,7 @@ bool dv_comp_dockspace::render() {
     	ImGuiID left_sidebar_dock = 0;
     	ImGuiID left_sidebar_dock_down = 0;
     	ImGuiID right_sidebar_dock = 0;
+        ImGuiID right_sidebar_dock_down = 0;
     	ImGuiID scene_dock = 0;
     	ImGuiID scene_dock_down = 0;
 
@@ -32,6 +33,9 @@ bool dv_comp_dockspace::render() {
     	right_sidebar_dock = 
     		ImGui::DockBuilderSplitNode(scene_dock, ImGuiDir_Right, 0.1765f, nullptr, &scene_dock);
 
+        right_sidebar_dock_down =
+            ImGui::DockBuilderSplitNode(right_sidebar_dock, ImGuiDir_Down, 0.5f, nullptr, &right_sidebar_dock);
+
     	scene_dock_down = 
     		ImGui::DockBuilderSplitNode(scene_dock, ImGuiDir_Down, 0.20f, nullptr, &scene_dock);
 
@@ -40,6 +44,7 @@ bool dv_comp_dockspace::render() {
     	ImGui::DockBuilderDockWindow("Properties##Window", right_sidebar_dock);
     	ImGui::DockBuilderDockWindow("Console##Window", scene_dock_down);
     	ImGui::DockBuilderDockWindow("Scene##Window", scene_dock);
+        ImGui::DockBuilderDockWindow("Meshes##Window", right_sidebar_dock_down);
 
     	node = ImGui::DockBuilderGetNode(dockspace_id);
     	node->LocalFlags |= ImGuiDockNodeFlags_DockSpace |

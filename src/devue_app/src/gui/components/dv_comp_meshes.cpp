@@ -7,6 +7,9 @@ dv_comp_meshes::dv_comp_meshes(dv_systems* systems, dv_components* components)
     : dv_comp(systems, components) {}
 
 bool dv_comp_meshes::render() {
+    ImGui::Begin("Meshes##Window");
+
+    ImGui::End();
 
     return DV_COMMAND_REPEAT;
 }

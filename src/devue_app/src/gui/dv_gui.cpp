@@ -272,6 +272,7 @@ void dv_gui::on_gui_update() {
     m_components.assets.render();
     m_components.scene.render(m_scene_render_target.get());
     m_components.properties.render();
+    m_components.meshes.render();
 
     m_sytems.command.execute();
 
