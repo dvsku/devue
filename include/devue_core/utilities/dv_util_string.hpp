@@ -55,6 +55,18 @@ namespace devue::core {
     		return str.substr(start, end - start);
     	}
 
+        static std::string replace(const std::string& source, const std::string& what, const std::string& with) {
+            std::string replaced = source;
+            
+            size_t startPos = 0;
+            while ((startPos = replaced.find(what, startPos)) != std::string::npos) {
+                replaced.replace(startPos, what.length(), with);
+                startPos += with.length();
+            }
+
+            return replaced;
+        }
+
     	static void replace(std::string& source, const std::string& what, const std::string& with) {
     		size_t startPos = 0;
     		while ((startPos = source.find(what, startPos)) != std::string::npos) {
