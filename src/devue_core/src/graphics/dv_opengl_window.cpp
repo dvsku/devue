@@ -9,6 +9,7 @@
 #include "glfw/glfw3.h"
 #include "glfw/glfw3native.h"
 #include "imgui.h"
+#include "imgui_internal.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
@@ -186,6 +187,9 @@ intptr_t dv_opengl_window::wndproc_callback(dv_opengl_window* wnd, handle_t hand
         case WM_NCLBUTTONDOWN: {
             if (wparam == HTMAXBUTTON)
                 return 0;
+
+            if (wparam == HTCAPTION)
+                ImGui::ClosePopupsExceptModals();
 
             break;
         }
