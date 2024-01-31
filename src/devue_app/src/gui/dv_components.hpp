@@ -4,6 +4,7 @@
 #include "gui/components/dv_comp_console.hpp"
 #include "gui/components/dv_comp_dockspace.hpp"
 #include "gui/components/dv_comp_hierarchy.hpp"
+#include "gui/components/dv_comp_meshes.hpp"
 #include "gui/components/dv_comp_properties.hpp"
 #include "gui/components/dv_comp_scene.hpp"
 #include "gui/modals/dv_modal_import.hpp"
@@ -18,6 +19,7 @@ namespace devue {
     	dv_comp_hierarchy  hierarchy;
     	dv_comp_properties properties;
     	dv_comp_scene	   scene;
+        dv_comp_meshes     meshes;
 
         dv_modal_import  modal_import;
         dv_modal_plugins modal_plugins;

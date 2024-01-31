@@ -14,6 +14,7 @@ ADD_EXECUTABLE(devue
     "src/gui/components/dv_comp_properties.cpp"
     "src/gui/components/dv_comp_console.cpp"
     "src/gui/components/dv_comp_dockspace.cpp"
+	"src/gui/components/dv_comp_meshes.cpp"
 	"src/gui/modals/dv_modal_import.cpp"
 	"src/gui/modals/dv_modal_plugins.cpp"
     "src/gui/dv_components.cpp"
