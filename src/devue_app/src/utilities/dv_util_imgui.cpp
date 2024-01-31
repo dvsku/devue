@@ -63,7 +63,27 @@ bool dv_util_imgui::begin_item_context_menu(const char* str_id, ImGuiPopupFlags 
     ImGui::PushStyleColor(ImGuiCol_PopupBg, 0xFF2E2E2E);
 
     ImGui::SetNextWindowSize({ 225.0f, 0.0f });
-    bool result = ImGui::BeginPopupContextItem(str_id, popup_flags);
+
+    ImGuiContext& g     = *GImGui;
+    ImGuiWindow* window = g.CurrentWindow;
+
+    if (window->SkipItems)
+        return false;
+
+    ImGuiID id = str_id ? window->GetID(str_id) : g.LastItemData.ID;
+    IM_ASSERT(id != 0);
+
+    int mouse_button = (popup_flags & ImGuiPopupFlags_MouseButtonMask_);
+    if (ImGui::IsMouseReleased(mouse_button) && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup))
+        ImGui::OpenPopupEx(id, popup_flags);
+
+    ImGuiWindowFlags flags = 0;
+    flags |= ImGuiWindowFlags_AlwaysAutoResize;
+    flags |= ImGuiWindowFlags_NoMove;
+    flags |= ImGuiWindowFlags_NoTitleBar;
+    flags |= ImGuiWindowFlags_NoSavedSettings;
+
+    bool result = ImGui::BeginPopupEx(id, flags);
 
     ImGui::PopStyleVar(1);
     ImGui::PopStyleColor(1);
