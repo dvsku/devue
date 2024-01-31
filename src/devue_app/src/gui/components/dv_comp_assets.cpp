@@ -32,6 +32,10 @@ bool dv_comp_assets::render() {
 
 void dv_comp_assets::render_context_menu(dv_model& model) {
     if (dv_util_imgui::begin_item_context_menu()) {
+        if (ImGui::IsWindowAppearing()) {
+            m_systems->properties.set_inspected(model);
+        }
+
         ImGui::PushID("ContextMenu");
 
         if (dv_util_imgui::selectable("Add to scene", false, 
