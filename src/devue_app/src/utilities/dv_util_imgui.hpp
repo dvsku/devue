@@ -1,5 +1,6 @@
 #pragma once
 
+#define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui.h"
 #include "imgui_internal.h"
 
@@ -20,6 +21,8 @@ namespace devue {
 
         static void help_marker(const char* str);
 
+        static bool link(const char* str);
+
     private:
         enum class widget_color : uint16_t {
             collapsable,
@@ -28,7 +31,10 @@ namespace devue {
             selectable,
             selectable_hovered,
             selectable_activated,
-            selectable_selected
+            selectable_selected,
+            link,
+            link_hovered,
+            link_activated
         };
 
     private:

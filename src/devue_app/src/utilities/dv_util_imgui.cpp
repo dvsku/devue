@@ -11,6 +11,10 @@ void dv_util_imgui::init() {
     m_colors[widget_color::selectable_hovered]    = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
     m_colors[widget_color::selectable_activated]  = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
     m_colors[widget_color::selectable_selected]   = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
+
+    m_colors[widget_color::link]                  = ImVec4(0.38824f, 0.32157f, 0.79608f, 1.00f);
+    m_colors[widget_color::link_hovered]          = ImLerp(m_colors[widget_color::link], ImVec4(1.0f, 1.0f, 1.0f, 1.00f), 0.1f);
+    m_colors[widget_color::link_activated]        = ImLerp(m_colors[widget_color::link], ImVec4(0.0f, 0.0f, 0.0f, 1.00f), 0.2f);
 }
 
 bool dv_util_imgui::collapsable(const char* label, ImGuiTreeNodeFlags flags) {
@@ -76,4 +80,54 @@ void dv_util_imgui::help_marker(const char* str) {
         ImGui::PopTextWrapPos();
         ImGui::EndTooltip();
     }
+}
+
+bool dv_util_imgui::link(const char* str) {
+    ImGuiButtonFlags flags  = 0;
+    ImGuiWindow*     window = ImGui::GetCurrentWindow();
+    
+    if (window->SkipItems)
+        return false;
+
+    ImGuiContext&     g     = *GImGui;
+    const ImGuiStyle& style = g.Style;
+    const ImGuiID id        = window->GetID(str);
+    const float wrap_w      = ImGui::GetContentRegionAvail().x;
+    const ImVec2 label_size = ImGui::CalcTextSize(str, NULL, true, wrap_w);
+
+    ImVec2 pos  = window->DC.CursorPos;
+    ImVec2 size = ImGui::CalcItemSize({0.0f, 0.0f}, label_size.x, label_size.y);
+
+    const ImRect bb(pos, pos + size);
+    ImGui::ItemSize(size);
+
+    if (!ImGui::ItemAdd(bb, id))
+        return false;
+
+    bool hovered, held;
+    bool pressed = ImGui::ButtonBehavior(bb, id, &hovered, &held, flags);
+
+    const ImU32 col = 0;
+    ImGui::RenderNavHighlight(bb, id);
+    ImGui::RenderFrame(bb.Min, bb.Max, col, true, style.FrameRounding);
+
+    if (g.LogEnabled)
+        ImGui::LogSetNextTextDecoration("[", "]");
+
+    if (held || pressed)
+        ImGui::PushStyleColor(ImGuiCol_Text, m_colors[widget_color::link_activated]);
+    else if (hovered)
+        ImGui::PushStyleColor(ImGuiCol_Text, m_colors[widget_color::link_hovered]);
+    else
+        ImGui::PushStyleColor(ImGuiCol_Text, m_colors[widget_color::link]);
+
+    ImGui::RenderTextWrapped(bb.Min, str, NULL, wrap_w);
+
+    ImGui::PopStyleColor(1);
+
+    if (hovered || pressed || held)
+        ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+
+    IMGUI_TEST_ENGINE_ITEM_INFO(id, label, g.LastItemData.StatusFlags);
+    return pressed;
 }
