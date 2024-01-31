@@ -79,6 +79,10 @@ bool dv_comp_hierarchy::render() {
 
 void dv_comp_hierarchy::render_scene_model_context_menu(dv_scene_model& smodel) {
     if (dv_util_imgui::begin_item_context_menu()) {
+        if (ImGui::IsWindowAppearing()) {
+            m_systems->properties.set_inspected(smodel);
+        }
+
         ImGui::PushID("ContextMenu");
 
         if (ImGui::Selectable("Remove from scene", false, 
