@@ -72,7 +72,6 @@ devue_plugin_interface::serialized devue_plugin_base::import_model(const char* f
             return {};
 
         json["vertices"] = nlohmann::json::array();
-        json["meshes"]   = nlohmann::json::array();
 
         for (size_t j = 0; j < model.vertices.size(); j++) {
             json["vertices"][j] = nlohmann::json::object();
@@ -92,23 +91,34 @@ devue_plugin_interface::serialized devue_plugin_base::import_model(const char* f
             json_vertex["uv"]["y"] = vertex.uv.y;
         }
 
+        json["meshes"] = nlohmann::json::array();
+
         for (size_t i = 0; i < model.meshes.size(); i++) {
             json["meshes"][i] = nlohmann::json::object();
 
             auto& mesh      = model.meshes[i];
             auto& json_mesh = json["meshes"][i];
 
-            json_mesh["name"] = mesh.name;
-
-            json_mesh["material"] = nlohmann::json::object();
-            json_mesh["material"]["name"]            = mesh.material.name;
-            json_mesh["material"]["diffuse_texture"] = mesh.material.diffuse_texture;
+            json_mesh["name"]           = mesh.name;
+            json_mesh["material_index"] = mesh.material_index;
 
             json_mesh["indices"] = nlohmann::json::array();
 
             for (size_t j = 0; j < mesh.indices.size(); j++) {
                 json_mesh["indices"][j] = mesh.indices[j];
             }
+        }
+
+        json["materials"] = nlohmann::json::array();
+
+        for (size_t i = 0; i < model.materials.size(); i++) {
+            json["materials"][i] = nlohmann::json::object();
+
+            auto& material      = model.materials[i];
+            auto& json_material = json["materials"][i];
+
+            json_material["name"]            = material.name;
+            json_material["diffuse_texture"] = material.diffuse_texture;
         }
 
         m_buffer.clear();
