@@ -6182,8 +6182,8 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
     {
         // Framed header expand a little outside the default padding, to the edge of InnerClipRect
         // (FIXME: May remove this at some point and make InnerClipRect align with WindowPadding.x instead of WindowPadding.x*0.5f)
-        frame_bb.Min.x -= IM_TRUNC(window->WindowPadding.x * 0.5f - 1.0f);
-        frame_bb.Max.x += IM_TRUNC(window->WindowPadding.x * 0.5f);
+        frame_bb.Min.x -= IM_TRUNC(window->WindowPadding.x);
+        frame_bb.Max.x += IM_TRUNC(window->WindowPadding.x);
     }
 
     const float text_offset_x = g.FontSize + (display_frame ? padding.x * 3 : padding.x * 2);           // Collapsing arrow width + Spacing
