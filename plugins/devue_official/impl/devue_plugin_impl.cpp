@@ -61,17 +61,18 @@ devue_plugin_model devue_plugin_impl::impl_import_model(const std::filesystem::p
     devue_plugin_model                                model;
     std::unordered_map<devue_plugin_vertex, uint32_t> unique_vertices{};
 
+    for (const auto& material : materials) {
+        model.materials.push_back(devue_plugin_material());
+        model.materials.back().name            = material.name;
+        model.materials.back().diffuse_texture = material.diffuse_texname;
+    }
+
     for (const auto& shape : shapes) {
         model.meshes.push_back(devue_plugin_mesh());
 
         devue_plugin_mesh& mesh = model.meshes.back();
         mesh.name               = shape.name;
-
-        if (shape.mesh.material_ids[0] >= 0) {
-            auto& material                = materials[shape.mesh.material_ids[0]];
-            mesh.material.name            = material.name;
-            mesh.material.diffuse_texture = material.diffuse_texname;
-        }
+        mesh.material_index     = shape.mesh.material_ids[0];
 
         for (const auto& index : shape.mesh.indices) {
             devue_plugin_vertex vertex;
