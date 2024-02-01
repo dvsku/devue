@@ -12,7 +12,7 @@ namespace devue {
         static void init();
 
     public:
-        static bool collapsable(const char* label, ImGuiTreeNodeFlags flags = 0);
+        static bool collapsible(const char* label, ImGuiTreeNodeFlags flags = 0);
 
         static bool selectable(const char* label, bool selected = false, ImGuiSelectableFlags flags = 0, const ImVec2& size = ImVec2(0, 0));
 
@@ -27,9 +27,9 @@ namespace devue {
 
     private:
         enum class widget_color : uint16_t {
-            collapsable,
-            collapsable_hovered,
-            collapsable_activated,
+            collapsible,
+            collapsible_hovered,
+            collapsible_activated,
             selectable,
             selectable_hovered,
             selectable_activated,

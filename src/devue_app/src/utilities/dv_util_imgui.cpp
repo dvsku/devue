@@ -3,9 +3,9 @@
 using namespace devue;
 
 void dv_util_imgui::init() {
-    m_colors[widget_color::collapsable]           = ImVec4(0.29020f, 0.24314f, 0.61176f, 1.00f);
-    m_colors[widget_color::collapsable_hovered]   = ImLerp(m_colors[widget_color::collapsable], ImVec4(1.0f, 1.0f, 1.0f, 1.00f), 0.1f);
-    m_colors[widget_color::collapsable_activated] = ImLerp(m_colors[widget_color::collapsable], ImVec4(0.0f, 0.0f, 0.0f, 1.00f), 0.2f);
+    m_colors[widget_color::collapsible]           = ImVec4(0.29020f, 0.24314f, 0.61176f, 1.00f);
+    m_colors[widget_color::collapsible_hovered]   = ImLerp(m_colors[widget_color::collapsible], ImVec4(1.0f, 1.0f, 1.0f, 1.00f), 0.1f);
+    m_colors[widget_color::collapsible_activated] = ImLerp(m_colors[widget_color::collapsible], ImVec4(0.0f, 0.0f, 0.0f, 1.00f), 0.2f);
 
     m_colors[widget_color::selectable]            = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
     m_colors[widget_color::selectable_hovered]    = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
@@ -23,10 +23,10 @@ void dv_util_imgui::init() {
     
 }
 
-bool dv_util_imgui::collapsable(const char* label, ImGuiTreeNodeFlags flags) {
-    ImGui::PushStyleColor(ImGuiCol_Header,        m_colors[widget_color::collapsable]);
-    ImGui::PushStyleColor(ImGuiCol_HeaderHovered, m_colors[widget_color::collapsable_hovered]);
-    ImGui::PushStyleColor(ImGuiCol_HeaderActive,  m_colors[widget_color::collapsable_activated]);
+bool dv_util_imgui::collapsible(const char* label, ImGuiTreeNodeFlags flags) {
+    ImGui::PushStyleColor(ImGuiCol_Header,        m_colors[widget_color::collapsible]);
+    ImGui::PushStyleColor(ImGuiCol_HeaderHovered, m_colors[widget_color::collapsible_hovered]);
+    ImGui::PushStyleColor(ImGuiCol_HeaderActive,  m_colors[widget_color::collapsible_activated]);
 
     bool result = ImGui::CollapsingHeader(label, flags);
 

@@ -28,7 +28,7 @@ bool dv_comp_hierarchy::render() {
     ImGui::PushID("Hierarchy");
 
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-    if (dv_util_imgui::collapsable("Cameras##Cameras")) {
+    if (dv_util_imgui::collapsible("Cameras##Cameras")) {
         is_selected = m_systems->properties.is_inspected(scene->camera);
     	if (dv_util_imgui::selectable("Camera 1##Camera1", is_selected)) {
             m_systems->properties.set_inspected(scene->camera);
@@ -36,7 +36,7 @@ bool dv_comp_hierarchy::render() {
     }
 
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-    if (dv_util_imgui::collapsable("Lighting##Lighting")) {
+    if (dv_util_imgui::collapsible("Lighting##Lighting")) {
         is_selected = m_systems->properties.is_inspected(scene->lighting.ambient_light);
     	if (dv_util_imgui::selectable("Ambient Light##AmbientLight1", is_selected)) {
             m_systems->properties.set_inspected(scene->lighting.ambient_light);
@@ -49,7 +49,7 @@ bool dv_comp_hierarchy::render() {
     }
 
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-    if (dv_util_imgui::collapsable("Objects##Objects")) {
+    if (dv_util_imgui::collapsible("Objects##Objects")) {
     	if (m_systems->scene.current_scene) {
     		for (auto& kvp : m_systems->scene.current_scene->models) {
     			dv_scene_model& smodel = kvp.second;
