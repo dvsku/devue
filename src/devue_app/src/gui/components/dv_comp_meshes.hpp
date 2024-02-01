@@ -18,5 +18,8 @@ namespace devue {
         void render_scene_model();
 
         void render_mesh_list(core::dv_model& model);
+
+        void render_mesh(core::dv_mesh& mesh);
+        void render_scene_mesh(core::dv_scene_mesh& smesh, core::dv_mesh& mesh);
     };
 }
