@@ -15,6 +15,12 @@ void dv_util_imgui::init() {
     m_colors[widget_color::link]                  = ImVec4(0.38824f, 0.32157f, 0.79608f, 1.00f);
     m_colors[widget_color::link_hovered]          = ImLerp(m_colors[widget_color::link], ImVec4(1.0f, 1.0f, 1.0f, 1.00f), 0.1f);
     m_colors[widget_color::link_activated]        = ImLerp(m_colors[widget_color::link], ImVec4(0.0f, 0.0f, 0.0f, 1.00f), 0.2f);
+
+    m_colors[widget_color::icon_button]           = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+    m_colors[widget_color::icon_button_hovered]   = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
+    m_colors[widget_color::icon_button_activated] = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
+    m_colors[widget_color::icon_button_text]      = ImVec4(0.77255f, 0.77255f, 0.77255f, 1.00f);
+    
 }
 
 bool dv_util_imgui::collapsable(const char* label, ImGuiTreeNodeFlags flags) {
@@ -150,4 +156,17 @@ bool dv_util_imgui::link(const char* str) {
 
     IMGUI_TEST_ENGINE_ITEM_INFO(id, label, g.LastItemData.StatusFlags);
     return pressed;
+}
+
+bool dv_util_imgui::icon_button(const char* label, const ImVec2& size) {
+    ImGui::PushStyleColor(ImGuiCol_Button,        m_colors[widget_color::icon_button]);
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, m_colors[widget_color::icon_button_hovered]);
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive,  m_colors[widget_color::icon_button_activated]);
+    ImGui::PushStyleColor(ImGuiCol_Text,          m_colors[widget_color::icon_button_text]);
+
+    bool result = ImGui::Button(label, size);
+
+    ImGui::PopStyleColor(4);
+
+    return result;
 }

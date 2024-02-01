@@ -23,6 +23,8 @@ namespace devue {
 
         static bool link(const char* str);
 
+        static bool icon_button(const char* label, const ImVec2& size = ImVec2(0, 0));
+
     private:
         enum class widget_color : uint16_t {
             collapsable,
@@ -34,7 +36,11 @@ namespace devue {
             selectable_selected,
             link,
             link_hovered,
-            link_activated
+            link_activated,
+            icon_button,
+            icon_button_hovered,
+            icon_button_activated,
+            icon_button_text
         };
 
     private:
