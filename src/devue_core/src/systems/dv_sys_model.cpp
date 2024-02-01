@@ -130,9 +130,10 @@ bool dv_sys_model::import(const std::string& path, const std::string& material_p
     		material.diffuse_texture = pmesh.material.diffuse_texture;
 
     		model.meshes[mesh_uuid] = dv_mesh();
-    		dv_mesh& mesh		= model.meshes[mesh_uuid];
-    		mesh.name			= pmesh.name;
-    		mesh.material_uuid	= material_uuid;
+            dv_mesh& mesh      = model.meshes[mesh_uuid];
+            mesh.name          = pmesh.name;
+            mesh.uuid          = mesh_uuid;
+            mesh.material_uuid = material_uuid;
     		
     		for (size_t i = 0; i < pmesh.indices.size(); i += 3) {
     			mesh.faces.push_back({

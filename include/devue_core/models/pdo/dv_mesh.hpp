@@ -10,6 +10,7 @@ namespace devue::core {
     struct dv_mesh {
     	std::string name = "";
 
+        devue::uuid uuid;
     	devue::uuid material_uuid{};
     	std::vector<glm::u32vec3> faces;
 
