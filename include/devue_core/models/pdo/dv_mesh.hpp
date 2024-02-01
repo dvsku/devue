@@ -8,10 +8,10 @@
 
 namespace devue::core {
     struct dv_mesh {
-    	std::string name = "";
+    	std::string name          = "";
+        devue::uuid uuid          = 0U;
+    	devue::uuid material_uuid = 0U;
 
-        devue::uuid uuid;
-    	devue::uuid material_uuid{};
     	std::vector<glm::u32vec3> faces;
 
     	dv_mesh()				= default;

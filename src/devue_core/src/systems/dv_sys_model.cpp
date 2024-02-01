@@ -118,22 +118,31 @@ bool dv_sys_model::import(const std::string& path, const std::string& material_p
             vertex.position = pvertex.position;
             vertex.normal   = pvertex.normal;
             vertex.uv       = pvertex.uv;
+
             model.vertices.push_back(vertex);
+        }
+
+        for (size_t i = 0; i < pmodel.materials.size(); i++) {
+            auto& pmaterial = pmodel.materials[i];
+
+            devue::uuid uuid      = dv_util_uuid::create(DV_FORMAT("mat_{}_{}", model.name, i));
+            model.materials[uuid] = dv_material();
+
+            dv_material& material    = model.materials[uuid];
+            material.name            = pmaterial.name;
+            material.diffuse_texture = pmaterial.diffuse_texture;
         }
 
     	for (auto& pmesh : pmodel.meshes) {
     		devue::uuid mesh_uuid	  = dv_util_uuid::create(DV_FORMAT("{}_{}", path, pmesh.name));
-    		devue::uuid material_uuid = dv_util_uuid::create(DV_FORMAT("{}_{}", mesh_uuid, pmesh.material.name));
-
-    		model.materials[material_uuid] = dv_material();
-    		dv_material& material	 = model.materials[material_uuid];
-    		material.diffuse_texture = pmesh.material.diffuse_texture;
+    		devue::uuid material_uuid = dv_util_uuid::create(DV_FORMAT("mat_{}_{}", model.name, pmesh.material_index));  
 
     		model.meshes[mesh_uuid] = dv_mesh();
+
             dv_mesh& mesh      = model.meshes[mesh_uuid];
             mesh.name          = pmesh.name;
             mesh.uuid          = mesh_uuid;
-            mesh.material_uuid = material_uuid;
+            mesh.material_uuid = model.materials.contains(material_uuid) ? material_uuid : 0U;
     		
     		for (size_t i = 0; i < pmesh.indices.size(); i += 3) {
     			mesh.faces.push_back({
