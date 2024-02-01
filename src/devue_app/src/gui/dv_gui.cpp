@@ -325,10 +325,11 @@ void dv_gui::set_theme() {
     ImGuiStyle& style  = ImGui::GetStyle();
     ImVec4*     colors = style.Colors;
 
-    style.TabRounding          = 0.0f;
-    style.TabBarBorderSize     = 2.0f;
-    style.DockingSeparatorSize = 1.0f;
-    style.WindowBorderSize     = 0.0f;
+    style.TabRounding              = 0.0f;
+    style.TabBarBorderSize         = 2.0f;
+    style.DockingSeparatorSize     = 1.0f;
+    style.WindowBorderSize         = 0.0f;
+    style.WindowMenuButtonPosition = ImGuiDir_Right;
 
     colors[ImGuiCol_WindowBg]             = ImVec4(0.14118f, 0.14118f, 0.14118f, 1.00f);
     colors[ImGuiCol_ChildBg]              = ImVec4(0.14118f, 0.14118f, 0.14118f, 1.00f);
