@@ -9,6 +9,7 @@ namespace devue::core {
     struct dv_scene_mesh {
     	std::string name = "";
 
+        devue::uuid mesh_uuid;
     	devue::uuid material_uuid;
 
     	uint32_t ibo		= 0U;

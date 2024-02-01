@@ -86,6 +86,7 @@ void dv_sys_rendering::prepare_model(dv_scene_model& smodel, dv_model& model) {
 
 void dv_sys_rendering::prepare_model(dv_scene_mesh& smesh, dv_mesh& mesh, bool is_static) {
     smesh.name          = mesh.name;
+    smesh.mesh_uuid     = mesh.uuid;
     smesh.material_uuid = mesh.material_uuid;
     smesh.face_count    = mesh.faces.size();
 
