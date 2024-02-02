@@ -28,8 +28,6 @@ void dv_sys_rendering::prepare() {
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
 }
 
 void dv_sys_rendering::prepare_model(dv_scene_model& smodel) {
