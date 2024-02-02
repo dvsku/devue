@@ -222,12 +222,16 @@ void dv_sys_rendering::render(dv_scene_grid& sgrid, dv_camera& camera, dv_lighti
     glBindVertexArray(sgrid.vao);
     glBindBuffer(GL_ARRAY_BUFFER, sgrid.vbo);
 
+    glEnable(GL_BLEND);
+
     for (dv_scene_mesh& smesh : sgrid.meshes) {
         if (!smesh.ibo) continue;
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, smesh.ibo);
         glDrawElements(GL_TRIANGLES, (GLsizei)smesh.face_count * 3, GL_UNSIGNED_INT, 0);
     }
+
+    glDisable(GL_BLEND);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
