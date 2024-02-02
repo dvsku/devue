@@ -189,6 +189,9 @@ plugins::devue_plugin_texture dv_plugin::import_texture(const std::string& filep
     if (json.contains("height") && json["height"].is_number())
         texture.height = json["height"];
 
+    if (json.contains("components") && json["components"].is_number())
+        texture.components = json["components"];
+
     if (json.contains("data") && json["data"].is_binary())
         texture.data = std::move(json["data"].get_binary());
 
