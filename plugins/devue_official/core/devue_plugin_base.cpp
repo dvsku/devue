@@ -141,9 +141,10 @@ devue_plugin_interface::serialized devue_plugin_base::import_texture(const char*
     try {
         devue_plugin_texture texture = impl_import_texture(filepath);
 
-        json["width"]  = texture.width;
-        json["height"] = texture.height;
-        json["data"]   = nlohmann::json::binary(std::move(texture.data));
+        json["width"]      = texture.width;
+        json["height"]     = texture.height;
+        json["components"] = texture.components;
+        json["data"]       = nlohmann::json::binary(std::move(texture.data));
 
         m_buffer.clear();
         nlohmann::json::to_cbor(json, m_buffer);
