@@ -159,6 +159,8 @@ void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_ligh
     glBindVertexArray(smodel.vao);
     glBindBuffer(GL_ARRAY_BUFFER, smodel.vbo);
 
+    glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+
     for (dv_scene_mesh& smesh : smodel.meshes) {
         if (!smesh.ibo) continue;
 
@@ -206,6 +208,8 @@ void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_ligh
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
     }
+
+    glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
 }
 
 void dv_sys_rendering::render(dv_scene_grid& sgrid, dv_camera& camera, dv_lighting& lighting) {
