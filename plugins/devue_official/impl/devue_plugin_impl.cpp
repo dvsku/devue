@@ -154,6 +154,7 @@ devue_plugin_texture devue_plugin_impl::impl_import_texture(const std::filesyste
 
     size_t size = (size_t)texture.width * texture.height * channels;
     texture.data.insert(texture.data.begin(), texture_data, texture_data + size);
+    texture.components = channels;
 
     stbi_image_free(texture_data);
 
