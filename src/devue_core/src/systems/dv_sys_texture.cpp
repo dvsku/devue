@@ -115,8 +115,10 @@ void dv_sys_texture::release_textures(dv_scene_material& smaterial) {
 
         plugin.cleanup();
 
-        if (!ptexture.height || !ptexture.width || ptexture.data.empty()) 
-            throw;
+        if (!ptexture.height || !ptexture.width || !ptexture.components || ptexture.data.empty()) {
+            accumulated_errors << DV_FORMAT("\t`{}`: Incomplete texture data.", plugin.name);
+            continue;
+        }
 
         dv_scene_texture stexture;
 
@@ -128,9 +130,20 @@ void dv_sys_texture::release_textures(dv_scene_material& smaterial) {
         glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+     
+        uint32_t format = 0U;
+        switch (ptexture.components) {
+            case 3: format = GL_RGB;  break;
+            case 4: format = GL_RGBA; break;
+            
+            default: {
+                accumulated_errors << DV_FORMAT("\t`{}`: Unsupported texture format.", plugin.name);
+                continue;
+            }
+        }
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, ptexture.width, ptexture.height, 
-                     0, GL_RGB, GL_UNSIGNED_BYTE, ptexture.data.data());
+                     0, format, GL_UNSIGNED_BYTE, ptexture.data.data());
 
         return stexture;
     }
