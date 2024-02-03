@@ -87,6 +87,8 @@ void dv_sys_plugin::prepare_plugins() {
 void dv_sys_plugin::release_plugins() {
     for (auto& [uuid, plugin] : plugins)
         release_plugin(plugin);
+
+    plugins.clear();
 }
 
 void dv_sys_plugin::release_plugin(dv_plugin& plugin) {
