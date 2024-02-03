@@ -29,7 +29,7 @@ namespace devue {
         void set_theme();
 
     private:
-    	dv_systems m_sytems;
+    	dv_systems    m_systems;
     	dv_components m_components;
     	
     	std::shared_ptr<core::dv_render_target> m_scene_render_target = nullptr;

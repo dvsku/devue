@@ -30,7 +30,7 @@ static std::string _get_imgui_ver() {
 // PUBLIC
 
 dv_gui::dv_gui(uint32_t width, uint32_t height, const std::string& title)
-    : dv_opengl_window(width, height, title), m_components(&m_sytems) 
+    : dv_opengl_window(width, height, title), m_components(&m_systems) 
 {
     m_scene_render_target = std::make_shared<dv_multisample_frame_buffer>(width, height);
 }
@@ -68,7 +68,7 @@ bool dv_gui::prepare() {
 
     // Create shaders
     try {
-    	m_sytems.rendering.prepare();
+    	m_systems.rendering.prepare();
     }
     catch (const std::exception& e) {
     	DV_LOG("Failed to prepare rendering system. | {}", e.what());
@@ -76,14 +76,14 @@ bool dv_gui::prepare() {
     }
 
     try {
-        m_sytems.plugin.prepare();
+        m_systems.plugin.prepare();
     }
     catch (const std::exception& e) {
         DV_LOG("Failed to prepare plugin system. | {}", e.what());
         return false;
     }
     
-    if (!m_sytems.command.prepare(&m_components)) {
+    if (!m_systems.command.prepare(&m_components)) {
         DV_LOG("Failed to prepare command system.");
         return false;
     }
@@ -96,10 +96,10 @@ bool dv_gui::prepare() {
 
     m_components.checkerboard_uuid = checkerboard_uuid;
 
-    m_sytems.command.set_execute(dv_commands::flag_show_console);
+    m_systems.command.set_execute(dv_commands::flag_show_console);
 
     // Create a scene
-    auto scene = m_sytems.scene.create_scene();
+    auto scene = m_systems.scene.create_scene();
     if (!scene)
     	return false;
 
@@ -117,10 +117,10 @@ void dv_gui::on_before_update() {
 }
 
 void dv_gui::on_update() {
-    m_sytems.scene.render_current_scene(m_scene_render_target.get());
+    m_systems.scene.render_current_scene(m_scene_render_target.get());
     
     // This has to be called after scene is done rendering
-    m_sytems.model.remove_marked_models();
+    m_systems.model.remove_marked_models();
 }
 
 void dv_gui::on_after_update() {}
@@ -194,7 +194,7 @@ void dv_gui::on_gui_update() {
 
                     if (dv_util_imgui::begin_menu("File")) {
                         if (ImGui::MenuItem("Import##MenuItem")) {
-                            m_sytems.command.set_execute(dv_commands::flag_show_modal_import);
+                            m_systems.command.set_execute(dv_commands::flag_show_modal_import);
                         }
 
                         ImGui::Separator();
@@ -211,10 +211,10 @@ void dv_gui::on_gui_update() {
                     ImGui::PushID("ViewMenu");
 
                     if (dv_util_imgui::begin_menu("View")) {
-                        bool* is_executable = &m_sytems.command.is_executable(dv_commands::flag_show_console);
+                        bool* is_executable = &m_systems.command.is_executable(dv_commands::flag_show_console);
                         ImGui::MenuItem("Console##MenuItem", "", is_executable);
 
-                        is_executable = &m_sytems.command.is_executable(dv_commands::flag_show_texture);
+                        is_executable = &m_systems.command.is_executable(dv_commands::flag_show_texture);
                         ImGui::MenuItem("Texture##MenuItem", "", is_executable);
 
                         ImGui::EndMenu();
@@ -225,7 +225,7 @@ void dv_gui::on_gui_update() {
 
                         ImGui::Separator();
 
-                        bool& is_executable = m_sytems.command.is_executable(dv_commands::flag_show_modal_plugins);
+                        bool& is_executable = m_systems.command.is_executable(dv_commands::flag_show_modal_plugins);
                         ImGui::MenuItem("View plugins##MenuItem", "", &is_executable);
 
                         ImGui::EndMenu();
@@ -287,7 +287,7 @@ void dv_gui::on_gui_update() {
     m_components.properties.render();
     m_components.meshes.render();
 
-    m_sytems.command.execute();
+    m_systems.command.execute();
 
     ImGui::PopStyleVar();
 
@@ -300,13 +300,13 @@ void dv_gui::on_resize(int width, int height) {
     if (m_scene_render_target)
     	m_scene_render_target->resize(width, height);
 
-    if (m_sytems.scene.current_scene)
-    	m_sytems.scene.current_scene->camera.set_aspect_ratio(static_cast<float>(width), static_cast<float>(height));
+    if (m_systems.scene.current_scene)
+    	m_systems.scene.current_scene->camera.set_aspect_ratio(static_cast<float>(width), static_cast<float>(height));
 }
 
 void dv_gui::on_scroll(double dx, double dy) {
-    if (m_components.scene.is_hovered && m_sytems.scene.current_scene)
-    	m_sytems.scene.current_scene->camera.zoom(static_cast<float>(dy));
+    if (m_components.scene.is_hovered && m_systems.scene.current_scene)
+    	m_systems.scene.current_scene->camera.zoom(static_cast<float>(dy));
 }
 
 void dv_gui::on_mouse_button(int btn, int action, int modifier) {
@@ -314,23 +314,23 @@ void dv_gui::on_mouse_button(int btn, int action, int modifier) {
 }
 
 void dv_gui::on_mouse_move(double dx, double dy) {
-    if (m_components.scene.is_hovered && m_sytems.scene.current_scene) {
+    if (m_components.scene.is_hovered && m_systems.scene.current_scene) {
     	if (glfwGetMouseButton(glfwGetCurrentContext(), GLFW_MOUSE_BUTTON_RIGHT)) {
-    		m_sytems.scene.current_scene->camera.rotate(static_cast<float>(dx), static_cast<float>(dy));
+    		m_systems.scene.current_scene->camera.rotate(static_cast<float>(dx), static_cast<float>(dy));
     	}
 
     	if (glfwGetMouseButton(glfwGetCurrentContext(), GLFW_MOUSE_BUTTON_LEFT)) {
-    		m_sytems.scene.current_scene->camera.translate(static_cast<float>(dx), static_cast<float>(dy));
+    		m_systems.scene.current_scene->camera.translate(static_cast<float>(dx), static_cast<float>(dy));
     	}
     }
 }
 
 void dv_gui::on_drop(int count, const char* paths[]) {
     for (int i = 0; i < count; i++) {
-        if (!m_sytems.model.is_supported_file_type(paths[i])) continue;
+        if (!m_systems.model.is_supported_file_type(paths[i])) continue;
 
         std::string dir = std::filesystem::path(paths[i]).remove_filename().string();
-        m_sytems.model.import(paths[i], dir);
+        m_systems.model.import(paths[i], dir);
     }
 }
 
@@ -399,12 +399,12 @@ devue::uuid dv_gui::create_checkerboard_texture() {
     devue::uuid uuid = dv_util_uuid::create("checkerboard");
 
     try {
-        if (m_sytems.texture.textures.contains(uuid))
+        if (m_systems.texture.textures.contains(uuid))
             return 0U;
 
-        m_sytems.texture.textures[uuid] = {
+        m_systems.texture.textures[uuid] = {
             1U,
-            m_sytems.texture.create_scene_texture(ptexture)
+            m_systems.texture.create_scene_texture(ptexture)
         };
     }
     catch (...) {
