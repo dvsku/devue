@@ -8,8 +8,6 @@
 namespace devue {
     class dv_comp_texture : public dv_comp {
     public:
-
-    public:
         dv_comp_texture(dv_systems* systems, dv_components* components);
 
     public:
@@ -18,7 +16,7 @@ namespace devue {
         void set_texture(uuid uuid, const std::string& name);
 
     private:
-        uuid        m_texture_uuid = 0U;
+        devue::uuid m_texture_uuid = 0U;
         std::string m_texture_name = "";
     };
 }

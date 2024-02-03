@@ -1,4 +1,5 @@
 #include "gui/components/dv_comp_texture.hpp"
+#include "gui/dv_components.hpp"
 #include "systems/dv_systems_bundle.hpp"
 #include "utilities/dv_util_string.hpp"
 
@@ -15,9 +16,10 @@ bool dv_comp_texture::render() {
 
     if (ImGui::Begin(name.c_str(), is_executable)) {
         if (m_texture_uuid) {
-            const core::dv_scene_texture* texture = m_systems->texture.get_texture(m_texture_uuid);
+            const core::dv_scene_texture* checkerboard = m_systems->texture.get_texture(m_components->checkerboard_uuid);
+            const core::dv_scene_texture* texture      = m_systems->texture.get_texture(m_texture_uuid);
 
-            if (texture) {
+            if (texture && checkerboard) {
                 auto avail = ImGui::GetContentRegionAvail();
 
                 float scale = (std::min)(avail.x / static_cast<float>(texture->width),
@@ -26,7 +28,16 @@ bool dv_comp_texture::render() {
                 float width  = static_cast<float>(texture->width)  * scale;
                 float height = static_cast<float>(texture->height) * scale;
 
-                ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (avail.x - width) / 2.0f);
+                ImVec2 pos = {
+                    ImGui::GetCursorPosX() + (avail.x - width) / 2.0f,
+                    ImGui::GetCursorPosY()
+                };
+                
+                ImGui::SetCursorPos(pos);
+                ImGui::Image((void*)(intptr_t)checkerboard->texture_id, { width, height }, ImVec2(0.0f, 0.0f), ImVec2(width / 10.0f, height / 10.0f));
+
+
+                ImGui::SetCursorPos(pos);
                 ImGui::Image((void*)(intptr_t)texture->texture_id, { width, height }, ImVec2(0.0f, 0.0f), ImVec2(1.0f, 1.0f));
             }
             else {
