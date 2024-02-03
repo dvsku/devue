@@ -225,6 +225,8 @@ bool dv_opengl_window::prepare() {
     return true;
 }
 
+void dv_opengl_window::release() {}
+
 void dv_opengl_window::on_before_update() {}
 
 void dv_opengl_window::on_after_update() {}
@@ -309,6 +311,8 @@ void dv_opengl_window::loop() {
     	glfwSwapBuffers(m_native);
     	glfwPollEvents();
     }
+
+    release();
 }
 
 void dv_opengl_window::resize_callback(GLFWwindow* window, int width, int height) {

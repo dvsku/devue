@@ -31,6 +31,7 @@ namespace devue::core {
 
     protected:
     	virtual bool prepare();
+        virtual void release();
 
     	virtual void on_before_update();
     	virtual void on_update() = 0;
