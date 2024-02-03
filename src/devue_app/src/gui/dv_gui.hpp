@@ -33,5 +33,8 @@ namespace devue {
     	dv_components m_components;
     	
     	std::shared_ptr<core::dv_render_target> m_scene_render_target = nullptr;
+
+    private:
+        devue::uuid create_checkerboard_texture();
     };
 }

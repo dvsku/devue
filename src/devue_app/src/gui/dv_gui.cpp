@@ -8,6 +8,7 @@
 #include "utilities/dv_util_imgui.hpp"
 #include "gui/fonts/font_fontawesome_solid.hpp"
 #include "gui/fonts/font_average_mono.hpp"
+#include "devue_plugin_texture.hpp"
 
 using namespace devue;
 using namespace devue::core;
@@ -87,6 +88,14 @@ bool dv_gui::prepare() {
         return false;
     }
     
+    devue::uuid checkerboard_uuid = create_checkerboard_texture();
+    if (!checkerboard_uuid) {
+        DV_LOG("Failed to create checkerboard texture.");
+        return false;
+    }
+
+    m_components.checkerboard_uuid = checkerboard_uuid;
+
     m_sytems.command.set_execute(dv_commands::flag_show_console);
 
     // Create a scene
@@ -372,4 +381,35 @@ void dv_gui::set_theme() {
     colors[ImGuiCol_ScrollbarGrab]        = ImVec4(0.29020f, 0.24314f, 0.61176f, 1.00f);
     colors[ImGuiCol_ScrollbarGrabHovered] = ImLerp(colors[ImGuiCol_ScrollbarGrab], ImVec4(1.0f, 1.0f, 1.0f, 1.00f), 0.1f);
     colors[ImGuiCol_ScrollbarGrabActive]  = ImLerp(colors[ImGuiCol_ScrollbarGrab], ImVec4(0.0f, 0.0f, 0.0f, 1.00f), 0.2f);
+}
+
+devue::uuid dv_gui::create_checkerboard_texture() {
+    plugins::devue_plugin_texture ptexture;
+    ptexture.width      = 4;
+    ptexture.height     = 4;
+    ptexture.components = 3;
+
+    ptexture.data = {
+        0xAA, 0xAA, 0xAA,  0xAA, 0xAA, 0xAA,  0x00, 0x00, 0x00,  0x00, 0x00, 0x00,
+        0xAA, 0xAA, 0xAA,  0xAA, 0xAA, 0xAA,  0x00, 0x00, 0x00,  0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00,  0x00, 0x00, 0x00,  0xAA, 0xAA, 0xAA,  0xAA, 0xAA, 0xAA,
+        0x00, 0x00, 0x00,  0x00, 0x00, 0x00,  0xAA, 0xAA, 0xAA,  0xAA, 0xAA, 0xAA,
+    };
+
+    devue::uuid uuid = dv_util_uuid::create("checkerboard");
+
+    try {
+        if (m_sytems.texture.textures.contains(uuid))
+            return 0U;
+
+        m_sytems.texture.textures[uuid] = {
+            1U,
+            m_sytems.texture.create_scene_texture(ptexture)
+        };
+    }
+    catch (...) {
+        return 0U;
+    }
+
+    return uuid;
 }
