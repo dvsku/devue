@@ -18,12 +18,8 @@ dv_sys_texture::dv_sys_texture(dv_systems_bundle* systems)
     : m_systems(systems) {}
 
 const dv_scene_texture* dv_sys_texture::get_texture(devue::uuid uuid) {
-    if (!m_textures.contains(uuid)) return nullptr;
-    return &m_textures[uuid].second;
-}
-
-size_t dv_sys_texture::count() const {
-    return m_textures.size();
+    if (!textures.contains(uuid)) return nullptr;
+    return &textures[uuid].second;
 }
 
 void dv_sys_texture::prepare_material_textures(dv_model& model, 
@@ -34,11 +30,11 @@ void dv_sys_texture::prepare_material_textures(dv_model& model,
         devue::uuid uuid = dv_util_uuid::create(texture.string());
     
         try {
-            if (m_textures.contains(uuid)) {
-                m_textures[uuid].first++;
+            if (textures.contains(uuid)) {
+                textures[uuid].first++;
             }
             else {
-                m_textures[uuid] = {
+                textures[uuid] = {
                     1U,
                     create_scene_texture(texture)
                 };
@@ -58,15 +54,15 @@ void dv_sys_texture::prepare_material_textures(dv_model& model,
 void dv_sys_texture::release_textures(dv_scene_material& smaterial) {
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    if (m_textures.contains(smaterial.diffuse_texture_uuid)) {
-        auto& [ref, texture] = m_textures[smaterial.diffuse_texture_uuid];
+    if (textures.contains(smaterial.diffuse_texture_uuid)) {
+        auto& [ref, texture] = textures[smaterial.diffuse_texture_uuid];
 
         if (ref > 1) {
             ref--;
         }
         else {
             glDeleteTextures(1, &texture.texture_id);
-            m_textures.erase(smaterial.diffuse_texture_uuid);
+            textures.erase(smaterial.diffuse_texture_uuid);
         }
     }
 }
