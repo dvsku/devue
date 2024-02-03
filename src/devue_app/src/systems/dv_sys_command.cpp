@@ -15,6 +15,10 @@ bool dv_sys_command::prepare(dv_components* components) {
         return components->console.render();
     }));
 
+    commands.emplace(dv_commands::flag_show_texture, dv_util_command([components] {
+        return components->texture.render();
+    }));
+
     commands.emplace(dv_commands::flag_show_modal_import, dv_util_command([components] {
         return components->modal_import.render();
     }));

@@ -10,6 +10,7 @@ namespace devue {
 
     enum class dv_commands : uint16_t {
         flag_show_console,
+        flag_show_texture,
         flag_show_modal_import,
         flag_show_modal_plugins
     };
