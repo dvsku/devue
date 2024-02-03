@@ -78,7 +78,7 @@ bool dv_comp_dockspace::render() {
     			m_systems->model.models.size(),
     			m_systems->scene.count(),
     			m_systems->material.count(),
-                m_systems->texture.count());
+                m_systems->texture.textures.size());
 
     ImGui::EndChild();
 
