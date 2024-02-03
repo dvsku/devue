@@ -26,6 +26,8 @@ namespace devue {
         dv_modal_import  modal_import;
         dv_modal_plugins modal_plugins;
 
+        devue::uuid checkerboard_uuid = 0U;
+
     	dv_components() = delete;
     	dv_components(dv_systems* systems);
     };
