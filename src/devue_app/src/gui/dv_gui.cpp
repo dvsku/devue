@@ -112,6 +112,24 @@ bool dv_gui::prepare() {
     return true;
 }
 
+void dv_gui::release() {
+    // Release plugins
+    m_systems.plugin.release();
+
+    // Release systems that allocate anything in OpenGL
+
+    // Release scenes
+    m_systems.scene.release();
+
+    // Release textures
+    m_systems.texture.release();
+
+    // Release frame buffer
+    m_scene_render_target.reset();
+
+    // Rest can be cleaned up automatically
+}
+
 void dv_gui::on_before_update() {
     dv_util_diag::update();
 }

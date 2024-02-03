@@ -13,6 +13,8 @@ namespace devue {
 
     private:
     	bool prepare()				override final;
+        void release()              override final;
+
     	void on_before_update()		override final;
     	void on_update()			override final;
     	void on_after_update()		override final;
