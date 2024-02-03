@@ -98,13 +98,13 @@ bool dv_gui::prepare() {
 
     m_systems.command.set_execute(dv_commands::flag_show_console);
 
-    // Create a scene
-    auto scene = m_systems.scene.create_scene();
-    if (!scene)
-    	return false;
+    if (!m_systems.scene.prepare()) {
+        DV_LOG("Failed to create scene.");
+        return false;
+    }
 
-    scene->lighting.ambient_light.intensity		= 0.2f;
-    scene->lighting.directional_light.intensity = 0.55f;
+    m_systems.scene.current_scene->lighting.ambient_light.intensity     = 0.2f;
+    m_systems.scene.current_scene->lighting.directional_light.intensity = 0.55f;
 
     dv_util_diag::init();
 
