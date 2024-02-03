@@ -132,6 +132,7 @@ void dv_gui::on_gui_update() {
     flags |= ImGuiWindowFlags_NoMove;
     flags |= ImGuiWindowFlags_NoDocking;
     flags |= ImGuiWindowFlags_NoCollapse;
+    flags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
 
     ImGui::SetNextWindowPos(viewport->WorkPos);
     ImGui::SetNextWindowSize(viewport->WorkSize);
