@@ -145,6 +145,10 @@ void dv_sys_texture::release_textures(dv_scene_material& smaterial) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, ptexture.width, ptexture.height, 
                      0, format, GL_UNSIGNED_BYTE, ptexture.data.data());
 
+        stexture.width      = ptexture.width;
+        stexture.height     = ptexture.height;
+        stexture.components = ptexture.components;
+
         return stexture;
     }
 
