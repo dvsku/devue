@@ -201,8 +201,11 @@ void dv_gui::on_gui_update() {
                     ImGui::PushID("ViewMenu");
 
                     if (dv_util_imgui::begin_menu("View")) {
-                        bool& is_executable = m_sytems.command.is_executable(dv_commands::flag_show_console);
-                        ImGui::MenuItem("Console##MenuItem", "", &is_executable);
+                        bool* is_executable = &m_sytems.command.is_executable(dv_commands::flag_show_console);
+                        ImGui::MenuItem("Console##MenuItem", "", is_executable);
+
+                        is_executable = &m_sytems.command.is_executable(dv_commands::flag_show_texture);
+                        ImGui::MenuItem("Texture##MenuItem", "", is_executable);
 
                         ImGui::EndMenu();
                     }
