@@ -45,6 +45,7 @@ bool dv_comp_dockspace::render() {
     	ImGui::DockBuilderDockWindow("Console##Window", scene_dock_down);
     	ImGui::DockBuilderDockWindow("Scene##Window", scene_dock);
         ImGui::DockBuilderDockWindow("Meshes##Window", right_sidebar_dock_down);
+        ImGui::DockBuilderDockWindow("###TextureWindow", scene_dock);
 
     	node = ImGui::DockBuilderGetNode(dockspace_id);
     	node->LocalFlags |= ImGuiDockNodeFlags_DockSpace |
