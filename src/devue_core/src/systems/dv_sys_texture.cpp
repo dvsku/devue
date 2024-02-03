@@ -71,10 +71,40 @@ void dv_sys_texture::release_textures(dv_scene_material& smaterial) {
     }
 }
 
+dv_scene_texture dv_sys_texture::create_scene_texture(plugins::devue_plugin_texture ptexture) {
+    dv_scene_texture stexture;
+
+    glGenTextures(1, &stexture.texture_id);
+    glBindTexture(GL_TEXTURE_2D, stexture.texture_id);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    uint32_t format = 0U;
+    switch (ptexture.components) {
+        case 3: format = GL_RGB;  break;
+        case 4: format = GL_RGBA; break;
+
+        default: DV_THROW_EXCEPTION("Unsupported texture format.");
+    }
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, ptexture.width, ptexture.height,
+        0, format, GL_UNSIGNED_BYTE, ptexture.data.data());
+
+    stexture.width = ptexture.width;
+    stexture.height = ptexture.height;
+    stexture.components = ptexture.components;
+
+    return stexture;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 
- dv_scene_texture dv_sys_texture::create_scene_texture(std::filesystem::path& filepath) {
+dv_scene_texture dv_sys_texture::create_scene_texture(std::filesystem::path& filepath) {
     if (!std::filesystem::exists(filepath))
         DV_THROW_EXCEPTION("File not found.");
 
@@ -120,36 +150,18 @@ void dv_sys_texture::release_textures(dv_scene_material& smaterial) {
             continue;
         }
 
-        dv_scene_texture stexture;
-
-        glGenTextures(1, &stexture.texture_id);
-        glBindTexture(GL_TEXTURE_2D, stexture.texture_id);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-     
-        uint32_t format = 0U;
-        switch (ptexture.components) {
-            case 3: format = GL_RGB;  break;
-            case 4: format = GL_RGBA; break;
-            
-            default: {
-                accumulated_errors << DV_FORMAT("\t`{}`: Unsupported texture format.", plugin.name);
-                continue;
-            }
+        try {
+            dv_scene_texture stexture = create_scene_texture(ptexture);
+            return stexture;
         }
-
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, ptexture.width, ptexture.height, 
-                     0, format, GL_UNSIGNED_BYTE, ptexture.data.data());
-
-        stexture.width      = ptexture.width;
-        stexture.height     = ptexture.height;
-        stexture.components = ptexture.components;
-
-        return stexture;
+        catch (const std::exception& e) {
+            accumulated_errors << DV_FORMAT("\t`{}`: {}", plugin.name, e.what());
+            continue;
+        }
+        catch (...) {
+            accumulated_errors << DV_FORMAT("\t`{}`: critical failure", plugin.name);
+            continue;
+        }
     }
 
     std::string errors = accumulated_errors.str();
@@ -159,3 +171,4 @@ void dv_sys_texture::release_textures(dv_scene_material& smaterial) {
 
     DV_THROW_EXCEPTION("No suitable importer found.");
 }
+

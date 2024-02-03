@@ -3,6 +3,7 @@
 #include "models/pdo/dv_model.hpp"
 #include "scene/model/dv_scene_material.hpp"
 #include "scene/model/dv_scene_texture.hpp"
+#include "devue_plugin_texture.hpp"
 #include "utilities/dv_util_uuid.hpp"
 
 #include <utility>
@@ -28,6 +29,8 @@ namespace devue::core {
 
         void prepare_material_textures(dv_model& model, dv_material& material, dv_scene_material& smaterial);
         void release_textures(dv_scene_material& smaterial);
+
+        dv_scene_texture create_scene_texture(plugins::devue_plugin_texture ptexture);
 
     private:
         dv_systems_bundle* m_systems;
