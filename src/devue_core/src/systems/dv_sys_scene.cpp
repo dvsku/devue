@@ -8,6 +8,29 @@ using namespace devue::core;
 dv_sys_scene::dv_sys_scene(dv_systems_bundle* systems) 
     : m_systems(systems) {}
 
+bool dv_sys_scene::prepare() {
+    return create_scene();
+}
+
+void dv_sys_scene::release() {
+    current_scene = nullptr;
+
+    for (auto& [scene_id, scene] : m_scenes) {
+        current_scene = &scene;
+
+        for (auto& [smodel_id, smodel] : scene.models) {
+            remove_from_scene(smodel);
+        }
+
+        remove_marked_models();
+
+        m_systems->rendering.release_model(scene.grid);
+    }
+
+    current_scene = nullptr;
+    m_scenes.clear();
+}
+
 size_t dv_sys_scene::count() const {
     if (!current_scene) return 0;
     return current_scene->models.size();
