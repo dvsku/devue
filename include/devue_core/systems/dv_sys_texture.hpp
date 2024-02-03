@@ -27,12 +27,16 @@ namespace devue::core {
         dv_sys_texture& operator=(dv_sys_texture&&)      = default;
 
     public:
+        bool prepare();
+        void release();
+
         const dv_scene_texture* get_texture(devue::uuid uuid);
 
         void prepare_material_textures(dv_model& model, dv_material& material, dv_scene_material& smaterial);
-        void release_textures(dv_scene_material& smaterial);
+        void release_material_textures(dv_scene_material& smaterial);
 
         dv_scene_texture create_scene_texture(plugins::devue_plugin_texture ptexture);
+        void release_texture(dv_scene_texture& texture);
 
     private:
         dv_systems_bundle* m_systems;

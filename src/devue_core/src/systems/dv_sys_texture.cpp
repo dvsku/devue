@@ -17,6 +17,19 @@ using namespace devue::plugins;
 dv_sys_texture::dv_sys_texture(dv_systems_bundle* systems) 
     : m_systems(systems) {}
 
+bool dv_sys_texture::prepare() {
+    return true;
+}
+
+void dv_sys_texture::release() {
+    for (auto& [uuid, texture] : textures) {
+        release_texture(texture.second);
+        texture.first = 0U;
+    }
+
+    textures.clear();
+}
+
 const dv_scene_texture* dv_sys_texture::get_texture(devue::uuid uuid) {
     if (!textures.contains(uuid)) return nullptr;
     return &textures[uuid].second;
@@ -51,9 +64,7 @@ void dv_sys_texture::prepare_material_textures(dv_model& model,
     }
 }
 
-void dv_sys_texture::release_textures(dv_scene_material& smaterial) {
-    glBindTexture(GL_TEXTURE_2D, 0);
-
+void dv_sys_texture::release_material_textures(dv_scene_material& smaterial) {
     if (textures.contains(smaterial.diffuse_texture_uuid)) {
         auto& [ref, texture] = textures[smaterial.diffuse_texture_uuid];
 
@@ -61,7 +72,7 @@ void dv_sys_texture::release_textures(dv_scene_material& smaterial) {
             ref--;
         }
         else {
-            glDeleteTextures(1, &texture.texture_id);
+            release_texture(texture);
             textures.erase(smaterial.diffuse_texture_uuid);
         }
     }
@@ -95,6 +106,13 @@ dv_scene_texture dv_sys_texture::create_scene_texture(plugins::devue_plugin_text
     stexture.components = ptexture.components;
 
     return stexture;
+}
+
+void dv_sys_texture::release_texture(dv_scene_texture& texture) {
+    if (!texture.texture_id) return;
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDeleteTextures(1, &texture.texture_id);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
