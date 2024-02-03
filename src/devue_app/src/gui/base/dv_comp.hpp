@@ -14,9 +14,12 @@ namespace devue {
     	dv_comp(dv_systems* systems, dv_components* components);
     	
     	virtual bool render() = 0;
+        void focus();
 
     protected:
     	dv_systems*    m_systems    = nullptr;
     	dv_components* m_components = nullptr;
+
+        bool m_requested_focus = false;
     };
 }
