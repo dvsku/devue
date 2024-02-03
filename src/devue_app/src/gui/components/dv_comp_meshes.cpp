@@ -60,7 +60,13 @@ void dv_comp_meshes::render_model() {
     core::dv_model& model = m_systems->model.models[uuid];
 
     if (m_current_mesh_id && model.meshes.contains(m_current_mesh_id)) {
-        return render_mesh(model.meshes[m_current_mesh_id]);
+        dv_mesh& mesh = model.meshes[m_current_mesh_id];
+
+        core::dv_material* material = nullptr;
+        if (model.materials.contains(mesh.material_uuid))
+            material = &model.materials[mesh.material_uuid];
+
+        return render_mesh(nullptr, mesh, material);
     }
     else {
         return render_mesh_list(model);
@@ -80,10 +86,19 @@ void dv_comp_meshes::render_scene_model() {
     if (m_current_mesh_id && model.meshes.contains(m_current_mesh_id)) {
         core::dv_mesh& mesh = model.meshes[m_current_mesh_id];
 
-        for (auto& smesh : smodel.meshes) {
-            if (smesh.mesh_uuid == m_current_mesh_id)
-                return render_scene_mesh(smesh, mesh);
+        core::dv_scene_mesh* smesh = nullptr;
+        for (auto& sm : smodel.meshes) {
+            if (sm.mesh_uuid == m_current_mesh_id) {
+                smesh = &sm;
+                break;
+            }
         }
+
+        core::dv_material* material = nullptr;
+        if (model.materials.contains(mesh.material_uuid))
+            material = &model.materials[mesh.material_uuid];
+
+        return render_mesh(smesh, mesh, material);
     }
 
     render_mesh_list(model);
@@ -101,20 +116,43 @@ void dv_comp_meshes::render_mesh_list(core::dv_model& model) {
     ImGui::PopStyleVar(1);
 }
 
-void dv_comp_meshes::render_mesh(core::dv_mesh& mesh) {
+void dv_comp_meshes::render_mesh(core::dv_scene_mesh* smesh, core::dv_mesh& mesh, core::dv_material* material) {
     ImGui::Indent(4.0f);
     {
+        const float indent = 8.0f;
 
+        ImGui::SeparatorText("General");
+        ImGui::Text("Faces: %d", mesh.faces.size());
+
+        if (material) {
+            const dv_scene_material* smaterial = nullptr;
+            const dv_scene_texture*  stexture  = nullptr;
+
+            if (smesh && smesh->material_uuid)
+                smaterial = m_systems->material.get_material(smesh->material_uuid);
+
+            ImGui::SeparatorText("Material");
+            
+            ImGui::TextWrapped("Name: %s", !material->name.empty() ? material->name.c_str() : "No name");
+            ImGui::Dummy({ 0.0f, 3.0f });
+
+            if (smaterial && smaterial->diffuse_texture_uuid)
+                stexture = m_systems->texture.get_texture(smaterial->diffuse_texture_uuid);
+
+            if (stexture && stexture->texture_id) {
+                ImGui::Image((void*)(intptr_t)stexture->texture_id, { 45.0f, 45.0f }, ImVec2(0.0f, 0.0f), ImVec2(1.0f, 1.0f));
+
+                if (ImGui::IsItemClicked()) {
+                    m_components->texture.set_texture(smaterial->diffuse_texture_uuid, material->diffuse_texture);
+                    m_systems->command.set_execute(dv_commands::flag_show_texture);
+                    m_components->texture.focus();
+                }
+
+                ImGui::SameLine(0.0f, 8.0f);
+            }
+
+            ImGui::TextWrapped("Diffuse texture:\n  %s", !material->diffuse_texture.empty() ? material->diffuse_texture.c_str() : "No texture");
+        }
     }
     ImGui::Unindent(4.0f);
-}
-
-void dv_comp_meshes::render_scene_mesh(core::dv_scene_mesh& smesh, core::dv_mesh& mesh) {
-    ImGui::Indent(4.0f);
-    {
-
-    }
-    ImGui::Unindent(4.0f);
-
-    render_mesh(mesh);
 }
