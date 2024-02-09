@@ -50,6 +50,9 @@ void dv_sys_plugin::reload_plugins() {
 // PRIVATE
 
 void dv_sys_plugin::prepare_plugins() {
+    if (!std::filesystem::exists("./plugins/") || !std::filesystem::is_directory("./plugins/"))
+        return;
+
     for (const auto& entry : std::filesystem::directory_iterator("./plugins/")) {
         // Make sure it's a file
         if (!std::filesystem::is_regular_file(entry))
