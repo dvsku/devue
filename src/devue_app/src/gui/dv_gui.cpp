@@ -249,6 +249,13 @@ void dv_gui::on_gui_update() {
                         ImGui::EndMenu();
                     }
 
+                    if (dv_util_imgui::begin_menu("Help")) {
+                        bool* is_executable = &m_systems.command.is_executable(dv_commands::flag_show_modal_about);
+                        ImGui::MenuItem("About##MenuItem", "", is_executable);
+
+                        ImGui::EndMenu();
+                    }
+
                     ImGui::PopID();
 
                     ImGui::EndMenuBar();
