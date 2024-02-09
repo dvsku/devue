@@ -13,19 +13,6 @@
 using namespace devue;
 using namespace devue::core;
 
-static std::string _get_imgui_ver() {
-    std::string str = std::string(ImGui::GetVersion());
-
-#ifdef IMGUI_HAS_DOCK
-    str += " docking";
-#endif
-#ifdef IMGUI_HAS_VIEWPORT
-    str += " multi-viewport";
-#endif
-
-    return str;
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC
 
