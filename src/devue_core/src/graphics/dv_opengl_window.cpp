@@ -29,7 +29,7 @@ static LRESULT CALLBACK redirect_callback(HWND hWnd, UINT uMsg, WPARAM wParam, L
     return dv_opengl_window::wndproc_callback(open_gl_wnd, hWnd, uMsg, wParam, lParam);
 }
 
-static std::string _get_imgui_ver() {
+static std::string get_imgui_version() {
     std::string str = std::string(ImGui::GetVersion());
 
 #ifdef IMGUI_HAS_DOCK
@@ -108,9 +108,11 @@ void dv_opengl_window::run() {
     ImGui_ImplGlfw_InitForOpenGL(m_native, true);
     ImGui_ImplOpenGL3_Init();
 
-    DV_LOG("OpenGL version:   {}"  , (char*)glGetString(GL_VERSION));
-    DV_LOG("OpenGL renderer:  {}"  , (char*)glGetString(GL_RENDERER));
-    DV_LOG("ImGUI version:    {}\n", _get_imgui_ver());
+#ifndef NDEBUG
+    DV_LOG("OpenGL version:   {}", (char*)glGetString(GL_VERSION));
+    DV_LOG("OpenGL renderer:  {}", (char*)glGetString(GL_RENDERER));
+    DV_LOG("ImGUI version:    {}", get_imgui_version());
+#endif
 
     // Cancel running if prepare failed
     if (!prepare()) return;
