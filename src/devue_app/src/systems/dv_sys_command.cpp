@@ -27,6 +27,10 @@ bool dv_sys_command::prepare(dv_components* components) {
         return components->modal_plugins.render();
     }));
 
+    commands.emplace(dv_commands::flag_show_modal_about, dv_util_command([components] {
+        return components->modal_about.render();
+    }));
+
     return true;
 }
 

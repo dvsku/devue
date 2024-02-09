@@ -12,7 +12,8 @@ namespace devue {
         flag_show_console,
         flag_show_texture,
         flag_show_modal_import,
-        flag_show_modal_plugins
+        flag_show_modal_plugins,
+        flag_show_modal_about
     };
 
     class dv_sys_command {
