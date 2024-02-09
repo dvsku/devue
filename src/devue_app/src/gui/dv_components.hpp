@@ -10,6 +10,7 @@
 #include "gui/components/dv_comp_texture.hpp"
 #include "gui/modals/dv_modal_import.hpp"
 #include "gui/modals/dv_modal_plugins.hpp"
+#include "gui/modals/dv_modal_about.hpp"
 #include "systems/dv_systems.hpp"
 
 namespace devue {
@@ -25,6 +26,7 @@ namespace devue {
 
         dv_modal_import  modal_import;
         dv_modal_plugins modal_plugins;
+        dv_modal_about   modal_about;
 
         devue::uuid checkerboard_uuid = 0U;
 

@@ -18,6 +18,7 @@ ADD_EXECUTABLE(devue
 	"src/gui/components/dv_comp_texture.cpp"
 	"src/gui/modals/dv_modal_import.cpp"
 	"src/gui/modals/dv_modal_plugins.cpp"
+	"src/gui/modals/dv_modal_about.cpp"
     "src/gui/dv_components.cpp"
     "src/systems/dv_sys_command.cpp"
 	"src/systems/dv_sys_properties.cpp"
