@@ -338,7 +338,7 @@ void dv_gui::on_mouse_move(double dx, double dy) {
 
 void dv_gui::on_drop(int count, const char* paths[]) {
     for (int i = 0; i < count; i++) {
-        if (!m_systems.model.is_supported_file_type(paths[i])) continue;
+        if (!m_systems.plugin.is_supported_model_type(paths[i])) continue;
 
         std::string dir = std::filesystem::path(paths[i]).remove_filename().string();
         m_systems.model.import(paths[i], dir);
