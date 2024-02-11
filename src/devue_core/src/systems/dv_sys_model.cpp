@@ -10,58 +10,18 @@
 
 using namespace devue::core;
 using namespace devue::plugins;
+using namespace dvsku;
 
 ///////////////////////////////////////////////////////////////////////////////
 // INTERNAL
 
 static void calculate_bounding_box(dv_model& model);
 
-static bool compare_file_filters(const dv_file_filter& a, const dv_file_filter& b) {
-    return a.name < b.name;
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC
 
 dv_sys_model::dv_sys_model(dv_systems_bundle* systems) 
     : m_systems(systems) {}
-
-const std::vector<dv_file_filter>& dv_sys_model::get_supported_file_types() const {
-    return m_supported_file_types;
-}
-
-void dv_sys_model::update_supported_file_types() {
-    for (auto& [uuid, plugin] : m_systems->plugin.plugins) {
-        for (auto& file_type : plugin.supported_model_types) {
-            m_supported_file_types.emplace_back(dv_file_filter(file_type));
-        }
-    }
-
-    std::sort(m_supported_file_types.begin(), m_supported_file_types.end(), compare_file_filters);
-
-    m_supported_file_types.push_back({ L"All files (*.*)\0", L"*.*\0" });
-}
-
-bool dv_sys_model::is_supported_file_type(const std::string& path) {
-    std::filesystem::path filepath = path;
-
-    if (!std::filesystem::is_regular_file(filepath))
-        return false;
-
-    std::string ext = filepath.extension().string();
-
-    auto cmp_fn = [&](const dv_file_type& type) {
-        return dv_util_string::contains(type.extensions, ext);
-    };
-
-    for (auto& [plugin_uuid, plugin] : m_systems->plugin.plugins) {
-        if (std::none_of(plugin.supported_model_types.begin(), plugin.supported_model_types.end(), cmp_fn))
-            continue;
-        return true;
-    }
-
-    return false;
-}
 
 bool dv_sys_model::import(const std::string& path, const std::string& material_path) {
     std::filesystem::path filepath = path;

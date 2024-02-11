@@ -1,6 +1,5 @@
 #pragma once
 
-#include "misc/dv_file_filter.hpp"
 #include "models/pdo/dv_model.hpp"
 #include "utilities/dv_util_uuid.hpp"
 
@@ -24,16 +23,6 @@ namespace devue::core {
         dv_sys_model& operator=(dv_sys_model&&)      = delete;
 
     public:
-        // Get windows open dialog file filters for all supported model formats
-        const std::vector<dv_file_filter>& get_supported_file_types() const;
-
-        // Update windows open dialog file filters for all supported model formats
-        // Supported file formats are pulled from plugins
-        void update_supported_file_types();
-
-        // Check if file type is supported
-        bool is_supported_file_type(const std::string& path);
-
         // Import model asset
     	bool import(const std::string& path, const std::string& material_path = "");
 
@@ -44,7 +33,7 @@ namespace devue::core {
         void remove_marked_models();
 
     private:
-        dv_systems_bundle*          m_systems;
-    	std::vector<dv_file_filter> m_supported_file_types;
+        dv_systems_bundle* m_systems;
+
     };
 }
