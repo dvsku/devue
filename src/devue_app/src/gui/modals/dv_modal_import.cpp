@@ -10,6 +10,19 @@ using namespace devue;
 dv_modal_import::dv_modal_import(dv_systems* systems) 
     : m_systems(systems) {}
 
+void dv_modal_import::set_file_path(const std::string& path) {
+    m_file_path = path;
+
+    if (!m_keep_materials) {
+        m_materials_path.clear();
+        m_materials_path.append(std::filesystem::path(m_file_path).remove_filename().string());
+    }
+}
+
+void dv_modal_import::set_materials_path(const std::string& path) {
+    m_materials_path = path;
+}
+
 bool dv_modal_import::render() {
     bool status = DV_COMMAND_REPEAT;
 
@@ -28,24 +41,27 @@ bool dv_modal_import::render() {
 
         ImGui::SameLine();
         if (ImGui::Button("Select##File", ImVec2(120, 0))) {
-            dvsku::dv_util_dialog::open_file("Import model", m_file_path, m_systems->plugin.get_model_file_types());
+            auto selected = dvsku::dv_util_dialog::open_file("Import model", m_file_path, m_systems->plugin.get_model_file_types());
 
             // By default set texture folder to be the same
             // as the file
-            if (!m_file_path.empty()) {
-                m_textures_path.clear();
-                m_textures_path.append(std::filesystem::path(m_file_path).remove_filename().string());
-            }
+            if (!selected.empty())
+                set_file_path(selected[0]);
         }
 
-        ImGui::Text("Textures");
+        ImGui::Text("Materials folder");
         ImGui::SetNextItemWidth(350.0f);
-        ImGui::InputText("##Textures", &m_textures_path);
+        ImGui::InputText("##Materials", &m_materials_path);
 
         ImGui::SameLine();
-        if (ImGui::Button("Select##Textures", ImVec2(120, 0))) {
+        if (ImGui::Button("Select##Materials", ImVec2(120, 0))) {
+            std::string dir = dvsku::dv_util_dialog::select_dir("Select material folder", m_materials_path);
 
+            if (!dir.empty())
+                set_materials_path(dir);
         }
+
+        ImGui::Checkbox("Remember materials folder##RMF", &m_keep_materials);
 
         ImVec2 size = ImGui::GetContentRegionAvail();
         ImGui::SetCursorPosX(size.x - (120 * 2) - 2.0f);
@@ -57,7 +73,7 @@ bool dv_modal_import::render() {
             ImGui::BeginDisabled();
 
         if (ImGui::Button("OK", ImVec2(120, 0))) {
-            m_systems->model.import(m_file_path, m_textures_path);
+            m_systems->model.import(m_file_path, m_materials_path);
             reset();
             ImGui::CloseCurrentPopup();
             status = DV_COMMAND_FINISHED;
@@ -84,6 +100,8 @@ bool dv_modal_import::render() {
 }
 
 void dv_modal_import::reset() {
-    m_file_path     = "";
-    m_textures_path = "";
+    m_file_path = "";
+
+    if (!m_keep_materials)
+        m_materials_path = "";
 }
