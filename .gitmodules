@@ -1,4 +1,0 @@
-[submodule "lib/plugin_core"]
-	path = lib/plugin_core
-	url = https://github.com/dvsku/devue_plugin_core.git
-	branch = master
