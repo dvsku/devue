@@ -1,23 +1,24 @@
-#include "gui/dv_gui.hpp"
+#include "devue_plugin_texture.hpp"
+#include "dv_gui_opengl/utilities/dv_util_log.hpp"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-#include "imgui.h"
+#include "gui/dv_gui.hpp"
+#include "gui/fonts/font_average_mono.hpp"
+#include "gui/fonts/font_fontawesome_solid.hpp"
+#include "imgui/imgui.h"
 #include "rendering/dv_multisample_frame_buffer.hpp"
 #include "utilities/dv_util_diag.hpp"
-#include "utilities/dv_util_log.hpp"
 #include "utilities/dv_util_imgui.hpp"
-#include "gui/fonts/font_fontawesome_solid.hpp"
-#include "gui/fonts/font_average_mono.hpp"
-#include "devue_plugin_texture.hpp"
 
 using namespace devue;
 using namespace devue::core;
+using namespace dvsku;
 
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC
 
 dv_gui::dv_gui(uint32_t width, uint32_t height, const std::string& title)
-    : dv_opengl_window(width, height, title), m_components(&m_systems) 
+    : dv_window(width, height, title), m_components(&m_systems) 
 {
     m_scene_render_target = std::make_shared<dv_multisample_frame_buffer>(width, height);
 }
@@ -33,14 +34,12 @@ bool dv_gui::prepare() {
 
     dv_util_imgui::init();
 
-    m_custom_titlebar_height = 25;
-
-    ImGuiIO& io = ImGui::GetIO();
-
     ImFontConfig config;
     config.FontDataOwnedByAtlas = false;
     config.RasterizerMultiply   = 1.2f;
     config.SizePixels           = 13.0f;
+
+    ImGuiIO& io = ImGui::GetIO();
 
     // Add default font
     io.Fonts->AddFontFromMemoryTTF(AVERAGE_MONO, (int)AVERAGE_MONO_LEN, 13.0f, &config);
