@@ -340,8 +340,13 @@ void dv_gui::on_drop(int count, const char* paths[]) {
     for (int i = 0; i < count; i++) {
         if (!m_systems.plugin.is_supported_model_type(paths[i])) continue;
 
-        std::string dir = std::filesystem::path(paths[i]).remove_filename().string();
-        m_systems.model.import(paths[i], dir);
+        std::string filename = paths[i];
+
+        if (!filename.empty()) {
+            m_components.modal_import.set_file_path(filename);
+            m_systems.command.set_execute(dv_commands::flag_show_modal_import);
+            break;
+        }
     }
 }
 
