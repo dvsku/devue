@@ -1,6 +1,6 @@
 #include "gui/modals/dv_modal_about.hpp"
-#include "imgui.h"
-#include "imgui_internal.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_internal.h"
 #include "utilities/dv_util_imgui.hpp"
 #include "devue_app.hpp"
 

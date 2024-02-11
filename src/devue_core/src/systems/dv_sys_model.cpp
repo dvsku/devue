@@ -1,7 +1,7 @@
 #include "devue_plugin_model.hpp"
 #include "systems/dv_sys_model.hpp"
 #include "systems/dv_systems_bundle.hpp"
-#include "utilities/dv_util_log.hpp"
+#include "dv_gui_opengl/utilities/dv_util_log.hpp"
 #include "utilities/dv_util_string.hpp"
 
 #include <algorithm>

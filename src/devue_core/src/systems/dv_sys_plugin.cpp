@@ -1,7 +1,7 @@
 #include "systems/dv_sys_plugin.hpp"
 #include "systems/dv_systems_bundle.hpp"
 #include "exceptions/dv_exception.hpp"
-#include "utilities/dv_util_log.hpp"
+#include "dv_gui_opengl/utilities/dv_util_log.hpp"
 
 #include <windows.h>
 #include <filesystem>
