@@ -135,7 +135,7 @@ void dv_gui::on_gui_before_update() {
 }
 
 void dv_gui::on_gui_update() {
-    m_skip_titlebar_hit     = ImGui::IsAnyItemHovered();
+    m_title_bar_hit_test    = ImGui::IsAnyItemHovered();
     ImGuiViewport* viewport = ImGui::GetMainViewport();
 
     ImGuiWindowFlags flags = 0;
@@ -272,7 +272,7 @@ void dv_gui::on_gui_update() {
                 ImGui::Button(ICON_FA_WINDOW_RESTORE"##RestoreButton", { 30.0f, titlebar_size.y });
             }
 
-            m_hover_maximize = ImGui::IsItemHovered();
+            m_maximize_hovered = ImGui::IsItemHovered();
 
             ImGui::SameLine(0.0f, 0.0f);
             ImGui::SetCursorPosY(min.y - titlebar_padding.y);
@@ -343,6 +343,14 @@ void dv_gui::on_drop(int count, const char* paths[]) {
         std::string dir = std::filesystem::path(paths[i]).remove_filename().string();
         m_systems.model.import(paths[i], dir);
     }
+}
+
+bool dv_gui::is_title_bar(int32_t x, int32_t y) {
+    return !m_title_bar_hit_test && y > 0 && y <= 25;
+}
+
+bool dv_gui::is_maximize_button(int32_t x, int32_t y) {
+    return m_maximize_hovered;
 }
 
 void dv_gui::set_theme() {
