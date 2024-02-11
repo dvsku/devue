@@ -18,6 +18,8 @@
 </div>
 </br>
 
+<img src="https://github.com/dvsku/devue/blob/main/.github/readme/screenshot_1.png?raw=true" />
+
 ## About
 devue is a 3D model viewing software with plugin support.</br>It was made while working on a personal project trying to reverse engineer an unknown model format and needing a way to quickly see changes.
 Since then I've started learning OpenGL and expanded it further. It is meant to be extendable via model and texture plugins.
@@ -27,7 +29,7 @@ Since then I've started learning OpenGL and expanded it further. It is meant to 
 .obj
 
 #### Natively supported textures
-.jpg .png .bmp
+.jpg .png .bmp .dds (DTX5)
 
 ## Plugins
 **Use 3rd party plugins at your own risk. I don't guarantee the safety of any plugin that is not included with devue release.**
