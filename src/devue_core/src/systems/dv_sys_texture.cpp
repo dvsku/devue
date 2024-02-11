@@ -2,7 +2,7 @@
 #include "systems/dv_systems_bundle.hpp"
 #include "exceptions/dv_exception.hpp"
 #include "utilities/dv_util_string.hpp"
-#include "utilities/dv_util_log.hpp"
+#include "dv_gui_opengl/utilities/dv_util_log.hpp"
 #include "glad/glad.h"
 
 #include <filesystem>

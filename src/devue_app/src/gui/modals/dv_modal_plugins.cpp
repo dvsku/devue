@@ -1,6 +1,6 @@
 #include "gui/modals/dv_modal_plugins.hpp"
-#include "imgui.h"
-#include "imgui_internal.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_internal.h"
 #include "systems/dv_systems_bundle.hpp"
 #include "utilities/dv_util_string.hpp"
 #include "utilities/dv_util_imgui.hpp"
