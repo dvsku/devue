@@ -28,11 +28,17 @@ bool dv_modal_import::render() {
 
     ImGui::OpenPopup("Import##Popup");
 
-    // Always center this window when appearing
-    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    ImVec2 pos = ImGui::GetMainViewport()->GetCenter();
 
-    if (ImGui::BeginPopupModal("Import##Popup", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+    ImVec2 size = {
+        0.0f,
+        ImMin(185.0f, ImGui::GetMainViewport()->Size.y * 0.85f)
+    };
+
+    ImGui::SetNextWindowPos(pos, ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+    ImGui::SetNextWindowSize(size, ImGuiCond_Always);
+
+    if (ImGui::BeginPopupModal("Import##Popup", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_HorizontalScrollbar)) {
         ImGui::PushID("ImportModal");
 
         ImGui::Text("File");
