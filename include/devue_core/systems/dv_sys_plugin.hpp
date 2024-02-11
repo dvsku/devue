@@ -29,6 +29,11 @@ namespace devue::core {
 
         void reload_plugins();
 
+        std::vector<std::string> get_model_file_types();
+        std::vector<std::string> get_texture_file_types();
+
+        bool is_supported_model_type(const std::string& path);
+
     private:
         dv_systems_bundle* m_systems;
 

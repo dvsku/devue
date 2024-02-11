@@ -2,6 +2,7 @@
 #include "systems/dv_systems_bundle.hpp"
 #include "exceptions/dv_exception.hpp"
 #include "dv_gui_opengl/utilities/dv_util_log.hpp"
+#include "utilities/dv_util_string.hpp"
 
 #include <windows.h>
 #include <filesystem>
@@ -10,7 +11,7 @@ using namespace devue;
 using namespace devue::core;
 
 ///////////////////////////////////////////////////////////////////////////////
-// INTERNAL FORWARD
+// INTERNAL
 
 struct plugin_handle {
     HMODULE handle                         = nullptr;
@@ -19,6 +20,10 @@ struct plugin_handle {
 
 static plugin_handle create_handle(const char* path);
 static void release_handle(HMODULE handle);
+
+static bool compare_file_types(const dv_file_type& a, const dv_file_type& b) {
+    return a.name < b.name;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC
@@ -32,18 +37,82 @@ dv_sys_plugin::~dv_sys_plugin() {
 
 void dv_sys_plugin::prepare() {
     prepare_plugins();
-    m_systems->model.update_supported_file_types();
 }
 
 void dv_sys_plugin::release() {
     release_plugins();
-    m_systems->model.update_supported_file_types();
 }
 
 void dv_sys_plugin::reload_plugins() {
     release_plugins();
     prepare_plugins();
-    m_systems->model.update_supported_file_types();
+}
+
+std::vector<std::string> dv_sys_plugin::get_model_file_types() {
+    std::vector<dv_file_type> file_types;
+    std::vector<std::string>  file_types_converted;
+
+    for (auto& [uuid, plugin] : plugins) {
+        for (auto& file_type : plugin.supported_model_types) {
+            file_types.push_back(file_type);
+        }
+    }
+
+    std::sort(file_types.begin(), file_types.end(), compare_file_types);
+
+    for (auto& file_type : file_types) {
+        file_types_converted.push_back(DV_FORMAT("{} ({})", file_type.name, file_type.extensions));
+        file_types_converted.push_back(file_type.extensions);
+    }
+
+    file_types_converted.push_back("All Files (*.*)");
+    file_types_converted.push_back("*.*");
+
+    return file_types_converted;
+}
+
+std::vector<std::string> dv_sys_plugin::get_texture_file_types() {
+    std::vector<dv_file_type> file_types;
+    std::vector<std::string>  file_types_converted;
+
+    for (auto& [uuid, plugin] : plugins) {
+        for (auto& file_type : plugin.supported_texture_types) {
+            file_types.push_back(file_type);
+        }
+    }
+
+    std::sort(file_types.begin(), file_types.end(), compare_file_types);
+
+    for (auto& file_type : file_types) {
+        file_types_converted.push_back(DV_FORMAT("{} ({})", file_type.name, file_type.extensions));
+        file_types_converted.push_back(file_type.extensions);
+    }
+
+    file_types_converted.push_back("All Files (*.*)");
+    file_types_converted.push_back("*.*");
+
+    return file_types_converted;
+}
+
+bool dv_sys_plugin::is_supported_model_type(const std::string& path) {
+    std::filesystem::path filepath = path;
+
+    if (!std::filesystem::is_regular_file(filepath))
+        return false;
+
+    std::string ext = filepath.extension().string();
+
+    auto cmp_fn = [&](const dv_file_type& type) {
+        return dv_util_string::contains(type.extensions, ext);
+    };
+
+    for (auto& [plugin_uuid, plugin] : plugins) {
+        if (std::none_of(plugin.supported_model_types.begin(), plugin.supported_model_types.end(), cmp_fn))
+            continue;
+        return true;
+    }
+
+    return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
