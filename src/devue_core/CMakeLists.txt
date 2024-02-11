@@ -23,7 +23,6 @@ ADD_LIBRARY(devue_core STATIC
 	"src/rendering/dv_shader.cpp"
 	"src/rendering/dv_render_target.cpp"
 	"src/rendering/dv_multisample_frame_buffer.cpp"
-	"src/misc/dv_file_filter.cpp"
 	"src/scene/dv_scene.cpp"
 	"src/scene/dv_camera.cpp"
 	"src/scene/dv_scene_grid.cpp"
