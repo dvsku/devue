@@ -3,7 +3,7 @@
 #include "imgui/misc/cpp/imgui_stdlib.h"
 #include "dv_modal_import.hpp"
 #include "gui/modals/dv_modal_import.hpp"
-#include "utilities/dv_util_dialog.hpp"
+#include "dv_gui_opengl/utilities/dv_util_dialog.hpp"
 
 using namespace devue;
 
@@ -28,7 +28,7 @@ bool dv_modal_import::render() {
 
         ImGui::SameLine();
         if (ImGui::Button("Select##File", ImVec2(120, 0))) {
-            dv_util_dialog::open_file_dialog(m_file_path, m_systems->model.get_supported_file_types());
+            dvsku::dv_util_dialog::open_file("Import model", m_file_path, m_systems->plugin.get_model_file_types());
 
             // By default set texture folder to be the same
             // as the file
