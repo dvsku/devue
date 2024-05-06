@@ -79,7 +79,7 @@ bool dv_app::prepare() {
 
     m_components.checkerboard_uuid = checkerboard_uuid;
 
-    m_systems.command.set_execute(dv_commands::flag_show_console);
+    m_systems.command.set_to_execute(dv_commands::flag_show_console);
 
     if (!m_systems.scene.prepare()) {
         DV_LOG_ERRO("", "Failed to create scene.");
@@ -197,7 +197,7 @@ void dv_app::on_gui_update() {
 
                     if (dv_util_imgui::begin_menu("File")) {
                         if (ImGui::MenuItem("Import##MenuItem")) {
-                            m_systems.command.set_execute(dv_commands::flag_show_modal_import);
+                            m_systems.command.set_to_execute(dv_commands::flag_show_modal_import);
                         }
 
                         ImGui::Separator();
@@ -214,10 +214,10 @@ void dv_app::on_gui_update() {
                     ImGui::PushID("ViewMenu");
 
                     if (dv_util_imgui::begin_menu("View")) {
-                        bool* is_executable = &m_systems.command.is_executable(dv_commands::flag_show_console);
+                        bool* is_executable = &m_systems.command.is_set_to_execute(dv_commands::flag_show_console);
                         ImGui::MenuItem("Console##MenuItem", "", is_executable);
 
-                        is_executable = &m_systems.command.is_executable(dv_commands::flag_show_texture);
+                        is_executable = &m_systems.command.is_set_to_execute(dv_commands::flag_show_texture);
                         ImGui::MenuItem("Texture##MenuItem", "", is_executable);
 
                         ImGui::EndMenu();
@@ -228,14 +228,14 @@ void dv_app::on_gui_update() {
 
                         ImGui::Separator();
 
-                        bool& is_executable = m_systems.command.is_executable(dv_commands::flag_show_modal_plugins);
-                        ImGui::MenuItem("View plugins##MenuItem", "", &is_executable);
+                        bool* is_executable = &m_systems.command.is_set_to_execute(dv_commands::flag_show_modal_plugins);
+                        ImGui::MenuItem("View plugins##MenuItem", "", is_executable);
 
                         ImGui::EndMenu();
                     }
 
                     if (dv_util_imgui::begin_menu("Help")) {
-                        bool* is_executable = &m_systems.command.is_executable(dv_commands::flag_show_modal_about);
+                        bool* is_executable = &m_systems.command.is_set_to_execute(dv_commands::flag_show_modal_about);
                         ImGui::MenuItem("About##MenuItem", "", is_executable);
 
                         ImGui::EndMenu();
@@ -300,7 +300,7 @@ void dv_app::on_gui_update() {
     m_components.properties.render();
     m_components.meshes.render();
 
-    m_systems.command.execute();
+    m_systems.command.execute_all();
 
     ImGui::PopStyleVar();
 
@@ -346,7 +346,7 @@ void dv_app::on_drop(int count, const char* paths[]) {
 
         if (!filename.empty()) {
             m_components.modal_import.set_file_path(filename);
-            m_systems.command.set_execute(dv_commands::flag_show_modal_import);
+            m_systems.command.set_to_execute(dv_commands::flag_show_modal_import);
             break;
         }
     }

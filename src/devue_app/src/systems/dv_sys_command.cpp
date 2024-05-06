@@ -11,44 +11,25 @@ dv_sys_command::dv_sys_command(dv_systems* systems)
 bool dv_sys_command::prepare(dv_components* components) {
     if (!m_systems || !components) return false;
 
-    commands.emplace(dv_commands::flag_show_console, dv_util_command([components] {
+    set_command(dv_commands::flag_show_console, dvsku::dv_command([components] {
         return components->console.render();
     }));
 
-    commands.emplace(dv_commands::flag_show_texture, dv_util_command([components] {
+    set_command(dv_commands::flag_show_texture, dvsku::dv_command([components] {
         return components->texture.render();
     }));
 
-    commands.emplace(dv_commands::flag_show_modal_import, dv_util_command([components] {
+    set_command(dv_commands::flag_show_modal_import, dvsku::dv_command([components] {
         return components->modal_import.render();
     }));
 
-    commands.emplace(dv_commands::flag_show_modal_plugins, dv_util_command([components] {
+    set_command(dv_commands::flag_show_modal_plugins, dvsku::dv_command([components] {
         return components->modal_plugins.render();
     }));
 
-    commands.emplace(dv_commands::flag_show_modal_about, dv_util_command([components] {
+    set_command(dv_commands::flag_show_modal_about, dvsku::dv_command([components] {
         return components->modal_about.render();
     }));
 
     return true;
-}
-
-bool& dv_sys_command::is_executable(dv_commands command) {
-    if (!commands.contains(command))
-        throw core::dv_exception("Command not found.");
-    
-    return commands[command].executable;
-}
-
-void dv_sys_command::set_execute(dv_commands command) {
-    if (!commands.contains(command))
-        throw core::dv_exception("Command not found.");
-
-    commands[command].executable = true;
-}
-
-void dv_sys_command::execute() {
-    for (auto& [type, command] : commands)
-        command.execute();
 }

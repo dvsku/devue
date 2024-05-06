@@ -1,7 +1,6 @@
 #pragma once
 
-#include "utilities/dv_util_command.hpp"
-
+#include <dv_gui_opengl/dv_gui_opengl.hpp>
 #include <map>
 
 namespace devue {
@@ -16,10 +15,7 @@ namespace devue {
         flag_show_modal_about
     };
 
-    class dv_sys_command {
-    public:
-        std::map<dv_commands, dv_util_command> commands;
-
+    class dv_sys_command : public dvsku::dv_sys_command<dv_commands> {
     public:
         dv_sys_command() = delete;
         dv_sys_command(dv_systems* systems);
@@ -33,15 +29,6 @@ namespace devue {
     public:
         // Prepare GUI commands
         bool prepare(dv_components* components);
-
-        // Get if command is executable
-        bool& is_executable(dv_commands command);
-
-        // Set command to execute
-        void set_execute(dv_commands command);
-
-        // Execute all executable commands
-        void execute();
 
     private:
         dv_systems* m_systems = nullptr;
