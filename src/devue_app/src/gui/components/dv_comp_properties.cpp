@@ -7,7 +7,7 @@ using namespace devue;
 dv_comp_properties::dv_comp_properties(dv_systems* systems, dv_components* components) 
     : dv_comp(systems, components) {}
 
-bool dv_comp_properties::render() {
+void dv_comp_properties::render() {
     ImGui::Begin("Properties##Window");
 
     switch (m_systems->properties.get_inspected().inspected_type) {
@@ -20,8 +20,6 @@ bool dv_comp_properties::render() {
     }
 
     ImGui::End();
-
-    return true;
 }
 
 void dv_comp_properties::render_model() {

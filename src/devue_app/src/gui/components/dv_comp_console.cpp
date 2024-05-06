@@ -13,15 +13,14 @@ dv_comp_console::~dv_comp_console() {
     dvsku::dv_util_log::remove_source("gui_console");
 }
 
-bool dv_comp_console::render() {
-    bool& is_executable = m_systems->command.is_executable(dv_commands::flag_show_console);
+dvsku::dv_command_state dv_comp_console::render() {
+    bool* visible = &m_systems->command.is_set_to_execute(dv_commands::flag_show_console);
 
-    ImGui::Begin("Console##Window", &is_executable, ImGuiWindowFlags_HorizontalScrollbar);
-    {
+    if(ImGui::Begin("Console##Window", visible, ImGuiWindowFlags_HorizontalScrollbar)) {
         auto view = m_text.view();
         ImGui::TextUnformatted(view.data(), view.data() + view.length());
     }    
     ImGui::End();
 
-    return DV_COMMAND_REPEAT;
+    return dvsku::dv_command_state::repeat;
 }

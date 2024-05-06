@@ -8,7 +8,7 @@ using namespace devue::core;
 dv_comp_meshes::dv_comp_meshes(dv_systems* systems, dv_components* components)
     : dv_comp(systems, components) {}
 
-bool dv_comp_meshes::render() {
+void dv_comp_meshes::render() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.0f, 0.0f });
     ImGui::Begin("Meshes##Window");
     
@@ -48,8 +48,6 @@ bool dv_comp_meshes::render() {
 
     ImGui::End();
     ImGui::PopStyleVar(1);
-
-    return DV_COMMAND_REPEAT;
 }
 
 void dv_comp_meshes::render_model() {
@@ -143,7 +141,7 @@ void dv_comp_meshes::render_mesh(core::dv_scene_mesh* smesh, core::dv_mesh& mesh
 
                 if (ImGui::IsItemClicked()) {
                     m_components->texture.set_texture(smaterial->diffuse_texture_uuid, material->diffuse_texture);
-                    m_systems->command.set_execute(dv_commands::flag_show_texture);
+                    m_systems->command.set_to_execute(dv_commands::flag_show_texture);
                     m_components->texture.focus();
                 }
 

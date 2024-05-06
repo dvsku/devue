@@ -6,7 +6,7 @@ using namespace devue;
 dv_comp_dockspace::dv_comp_dockspace(dv_systems* systems, dv_components* components) 
     : dv_comp(systems, components) {}
 
-bool dv_comp_dockspace::render() {
+void dv_comp_dockspace::render() {
     ImGuiViewport* viewport = ImGui::GetMainViewport();
     ImGuiID dockspace_id	= ImGui::GetID("DockSpace");
 
@@ -83,6 +83,4 @@ bool dv_comp_dockspace::render() {
     ImGui::EndChild();
 
     ImGui::PopStyleColor();
-
-    return true;
 }

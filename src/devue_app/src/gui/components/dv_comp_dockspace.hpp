@@ -3,9 +3,12 @@
 #include "gui/base/dv_comp.hpp"
 
 namespace devue {
-    struct dv_comp_dockspace : public dv_comp {
+    class dv_comp_dockspace : public dv_comp {
+    public:
+        dv_comp_dockspace() = delete;
     	dv_comp_dockspace(dv_systems* systems, dv_components* components);
 
-        bool render() final override;
+    public:
+        void render();
     };
 }

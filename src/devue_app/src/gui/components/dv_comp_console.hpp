@@ -5,11 +5,14 @@
 #include <sstream>
 
 namespace devue {
-    struct dv_comp_console : public dv_comp {
+    class dv_comp_console : public dv_comp {
+    public:
+        dv_comp_console() = delete;
     	dv_comp_console(dv_systems* systems, dv_components* components);
         ~dv_comp_console();
-
-        bool render() final override;
+    
+    public:
+        dvsku::dv_command_state render();
 
     private:
         std::stringstream m_text;

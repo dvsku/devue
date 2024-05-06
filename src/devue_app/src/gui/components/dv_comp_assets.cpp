@@ -8,7 +8,7 @@ using namespace devue::core;
 dv_comp_assets::dv_comp_assets(dv_systems* systems, dv_components* components)
     : dv_comp(systems, components) {}
 
-bool dv_comp_assets::render() {
+void dv_comp_assets::render() {
     ImGui::Begin("Assets##Window");
 
     for (auto& [uuid, model] : m_systems->model.models) {
@@ -25,8 +25,6 @@ bool dv_comp_assets::render() {
     }
 
     ImGui::End();
-
-    return DV_COMMAND_REPEAT;
 }
 
 void dv_comp_assets::render_context_menu(dv_model& model) {

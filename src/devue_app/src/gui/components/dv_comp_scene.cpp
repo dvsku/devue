@@ -7,7 +7,7 @@ using namespace devue;
 dv_comp_scene::dv_comp_scene(dv_systems* systems, dv_components* components) 
     : dv_comp(systems, components) {}
 
-bool dv_comp_scene::render(core::dv_render_target* render_target) {
+void dv_comp_scene::render(core::dv_render_target* render_target) {
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoCollapse
     	| ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 
@@ -66,10 +66,8 @@ bool dv_comp_scene::render(core::dv_render_target* render_target) {
     ImGui::End();
 
     ImGui::PopStyleVar();
-
-    return true;
 }
 
-bool dv_comp_scene::render() {
-    return true;
+void dv_comp_scene::render() {
+
 }

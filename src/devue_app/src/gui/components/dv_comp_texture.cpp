@@ -7,13 +7,13 @@ using namespace devue;
 dv_comp_texture::dv_comp_texture(dv_systems* systems, dv_components* components) 
     : dv_comp(systems, components) {}
 
-bool dv_comp_texture::render() {
-    bool* is_executable = &m_systems->command.is_executable(dv_commands::flag_show_texture);
+dvsku::dv_command_state dv_comp_texture::render() {
+    bool* visible = &m_systems->command.is_set_to_execute(dv_commands::flag_show_texture);
 
     std::string name = m_texture_name.empty() ? 
         "Texture###TextureWindow" : DV_FORMAT("Texture - {}###TextureWindow", m_texture_name);
 
-    if (ImGui::Begin(name.c_str(), is_executable)) {
+    if (ImGui::Begin(name.c_str(), visible)) {
         if (m_texture_uuid) {
             const core::dv_scene_texture* checkerboard = m_systems->texture.get_texture(m_components->checkerboard_uuid);
             const core::dv_scene_texture* texture      = m_systems->texture.get_texture(m_texture_uuid);
@@ -47,7 +47,7 @@ bool dv_comp_texture::render() {
     }
     ImGui::End();
 
-    if (*is_executable && m_requested_focus) {
+    if (*visible && m_requested_focus) {
         ImGuiWindow* window = ImGui::FindWindowByName("###TextureWindow");
         if (window && window->DockNode && window->DockNode->TabBar)
             window->DockNode->TabBar->NextSelectedTabId = window->TabId;
@@ -55,7 +55,7 @@ bool dv_comp_texture::render() {
         m_requested_focus = false;
     }
 
-    return DV_COMMAND_REPEAT;
+    return dvsku::dv_command_state::repeat;
 }
 
 void dv_comp_texture::set_texture(dvsku::uuid uuid, const std::string& name) {

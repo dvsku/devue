@@ -8,11 +8,12 @@ namespace devue {
         dv_modal_import() = delete;
         dv_modal_import(dv_systems* systems, dv_components* components);
 
+    public:
         void set_file_path(const std::string& path);
         void set_materials_path(const std::string& path);
 
     public:
-        bool render();
+        dvsku::dv_command_state render();
 
     private:
         bool        m_keep_materials = false;

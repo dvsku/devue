@@ -19,8 +19,8 @@ void dv_modal_import::set_materials_path(const std::string& path) {
     m_materials_path = path;
 }
 
-bool dv_modal_import::render() {
-    bool status = DV_COMMAND_REPEAT;
+dvsku::dv_command_state dv_modal_import::render() {
+    dvsku::dv_command_state status = dvsku::dv_command_state::repeat;
 
     ImGui::OpenPopup("Import##Popup");
 
@@ -78,7 +78,7 @@ bool dv_modal_import::render() {
             m_systems->model.import(m_file_path, m_materials_path);
             reset();
             ImGui::CloseCurrentPopup();
-            status = DV_COMMAND_FINISHED;
+            status = dvsku::dv_command_state::finished;
         }
 
         if (is_path_empty)
@@ -90,7 +90,7 @@ bool dv_modal_import::render() {
         if (ImGui::Button("Cancel", ImVec2(120, 0))) {
             reset();
             ImGui::CloseCurrentPopup();
-            status = DV_COMMAND_FINISHED;
+            status = dvsku::dv_command_state::finished;
         }
 
         ImGui::PopID();

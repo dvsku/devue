@@ -5,10 +5,13 @@
 #include "scene/model/dv_scene_model.hpp"
 
 namespace devue {
-    struct dv_comp_meshes : public dv_comp {
+    class dv_comp_meshes : public dv_comp {
+    public:
+        dv_comp_meshes() = delete;
         dv_comp_meshes(dv_systems* systems, dv_components* components);
 
-        bool render() final override;
+    public:
+        void render();
 
     private:
         dvsku::uuid m_current_mesh_id = 0U;

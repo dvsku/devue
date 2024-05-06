@@ -4,14 +4,18 @@
 #include "rendering/dv_render_target.hpp"
 
 namespace devue {
-    struct dv_comp_scene : public dv_comp {
+    class dv_comp_scene : public dv_comp {
+    public:
     	bool is_hovered = false;
 
+    public:
+        dv_comp_scene() = delete;
     	dv_comp_scene(dv_systems* systems, dv_components* components);
 
-        bool render(core::dv_render_target* render_target = nullptr);
+    public:
+        void render(core::dv_render_target* render_target = nullptr);
 
     private:
-        bool render() final override;
+        void render();
     };
 }

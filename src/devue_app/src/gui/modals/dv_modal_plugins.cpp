@@ -9,8 +9,8 @@ using namespace devue;
 dv_modal_plugins::dv_modal_plugins(dv_systems* systems, dv_components* components)
     : dv_comp(systems, components) {}
 
-bool dv_modal_plugins::render() {
-    bool& visible = m_systems->command.is_executable(dv_commands::flag_show_modal_plugins);
+dvsku::dv_command_state dv_modal_plugins::render() {
+    bool* visible = &m_systems->command.is_set_to_execute(dv_commands::flag_show_modal_plugins);
 
     ImVec2 pos = ImGui::GetMainViewport()->GetCenter();
 
@@ -23,7 +23,7 @@ bool dv_modal_plugins::render() {
     ImGui::SetNextWindowSize(size, ImGuiCond_Always);
 
     ImGui::OpenPopup("Plugins##Modal");
-    if (ImGui::BeginPopupModal("Plugins##Modal", &visible, ImGuiWindowFlags_AlwaysAutoResize)) {
+    if (ImGui::BeginPopupModal("Plugins##Modal", visible, ImGuiWindowFlags_AlwaysAutoResize)) {
         if (ImGui::IsWindowAppearing()) {
             m_current_plugin_id = 0U;
         }
@@ -155,5 +155,5 @@ bool dv_modal_plugins::render() {
         ImGui::EndPopup();
     }
 
-    return DV_COMMAND_REPEAT;
+    return dvsku::dv_command_state::repeat;
 }

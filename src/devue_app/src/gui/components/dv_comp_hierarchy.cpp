@@ -8,13 +8,13 @@ using namespace devue::core;
 dv_comp_hierarchy::dv_comp_hierarchy(dv_systems* systems, dv_components* components) 
     : dv_comp(systems, components) {}
 
-bool dv_comp_hierarchy::render() {
+void dv_comp_hierarchy::render() {
     // Just create the window if there's no
     // active scene
     if (!m_systems->scene.current_scene) {
     	ImGui::Begin("Hierarchy##Window");
     	ImGui::End();
-    	return true;
+    	return;
     }
 
     bool            is_selected = false;
@@ -72,8 +72,6 @@ bool dv_comp_hierarchy::render() {
     ImGui::End();
 
     ImGui::PopStyleVar();
-
-    return true;
 }
 
 void dv_comp_hierarchy::render_scene_model_context_menu(dv_scene_model& smodel) {

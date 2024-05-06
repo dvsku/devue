@@ -14,7 +14,6 @@ namespace devue {
     	dv_comp() = delete;
     	dv_comp(dv_systems* systems, dv_components* components);
     	
-    	virtual bool render() = 0;
         void focus();
 
     protected:
