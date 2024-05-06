@@ -2,7 +2,7 @@
 
 #include "glm/vec3.hpp"
 
-#include <dv_gui_opengl/dv_gui_opengl.hpp>
+#include <dv_utilities.hpp>
 #include <string>
 #include <vector>
 

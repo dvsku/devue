@@ -4,7 +4,7 @@
 #include "scene/model/dv_scene_model.hpp"
 #include "scene/model/dv_scene_material.hpp"
 
-#include <dv_gui_opengl/dv_gui_opengl.hpp>
+#include <dv_utilities.hpp>
 #include <unordered_map>
 
 namespace devue::core {

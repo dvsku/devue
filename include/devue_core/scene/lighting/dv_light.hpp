@@ -2,7 +2,7 @@
 
 #include "glm/glm.hpp"
 
-#include <dv_gui_opengl/dv_gui_opengl.hpp>
+#include <dv_utilities.hpp>
 
 namespace devue::core {
     struct dv_light {

@@ -5,7 +5,7 @@
 #include "scene/dv_camera.hpp"
 #include "scene/dv_scene_grid.hpp"
 
-#include <dv_gui_opengl/dv_gui_opengl.hpp>
+#include <dv_utilities.hpp>
 #include <unordered_map>
 
 namespace devue::core {

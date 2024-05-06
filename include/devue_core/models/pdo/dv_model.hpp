@@ -6,7 +6,7 @@
 #include "models/pdo/dv_material.hpp"
 #include "models/pdo/dv_vertex.hpp"
 
-#include <dv_gui_opengl/dv_gui_opengl.hpp>
+#include <dv_utilities.hpp>
 #include <string>
 #include <filesystem>
 #include <vector>

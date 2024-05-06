@@ -2,7 +2,7 @@
 
 #include "models/pdo/dv_model.hpp"
 
-#include <dv_gui_opengl/dv_gui_opengl.hpp>
+#include <dv_utilities.hpp>
 #include <unordered_map>
 
 namespace devue::core {

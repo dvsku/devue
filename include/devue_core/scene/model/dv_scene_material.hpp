@@ -1,6 +1,6 @@
 #pragma once
 
-#include <dv_gui_opengl/dv_gui_opengl.hpp>
+#include <dv_utilities.hpp>
 
 namespace devue::core {
     struct dv_scene_material {

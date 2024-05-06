@@ -2,7 +2,7 @@
 
 #include "plugins/dv_plugin.hpp"
 
-#include <dv_gui_opengl/dv_gui_opengl.hpp>
+#include <dv_utilities.hpp>
 #include <unordered_map>
 #include <filesystem>
 

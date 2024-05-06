@@ -5,7 +5,7 @@
 #include "scene/model/dv_scene_texture.hpp"
 #include "devue_plugin_texture.hpp"
 
-#include <dv_gui_opengl/dv_gui_opengl.hpp>
+#include <dv_utilities.hpp>
 #include <utility>
 #include <unordered_map>
 
