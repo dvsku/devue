@@ -3,4 +3,7 @@
 using namespace devue;
 
 dv_systems::dv_systems() 
-    : core::dv_systems_bundle(), command(this), properties(this) {}
+    : core::dv_systems_bundle(),
+      command(this),
+      properties(this)
+{}
