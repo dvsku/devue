@@ -6,9 +6,13 @@ SET(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 ###############################################################################
 # dv_gui_opengl
 
+SET(DV_GUI_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+SET(DV_GUI_BUILD_OPENGL2  OFF CACHE BOOL "" FORCE)
+SET(DV_GUI_BUILD_OPENGL3   ON CACHE BOOL "" FORCE)
+
 FetchContent_Declare(
     dv_gui_opengl
-    URL https://github.com/dvsku/dv_gui_opengl/archive/40ef47351d689a2e885198a390b338a6ecb7b099.zip
+    URL https://github.com/dvsku/dv_gui_opengl/archive/d8a0c3459843a86e6f09a05df67fe8526b6d883c.zip
 )
 
 FetchContent_MakeAvailable(dv_gui_opengl)
