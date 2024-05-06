@@ -1,10 +1,11 @@
 #pragma once
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
-#include "imgui/misc/cpp/imgui_stdlib.h"
-
 #include "systems/dv_systems.hpp"
+
+#include <dv_gui_opengl/dv_gui_opengl.hpp>
+#include <imgui/imgui.h>
+#include <imgui/imgui_internal.h>
+#include <imgui/misc/cpp/imgui_stdlib.h>
 
 namespace devue {
     struct dv_components;

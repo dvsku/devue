@@ -2,7 +2,6 @@
 
 #include "gui/base/dv_comp.hpp"
 
-#include <dv_gui_opengl/dv_gui_opengl.hpp>
 #include <string>
 
 namespace devue {

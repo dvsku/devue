@@ -13,8 +13,6 @@
 #include "gui/modals/dv_modal_about.hpp"
 #include "systems/dv_systems.hpp"
 
-#include <dv_gui_opengl/dv_gui_opengl.hpp>
-
 namespace devue {
     struct dv_components {
     	dv_comp_assets	   assets;

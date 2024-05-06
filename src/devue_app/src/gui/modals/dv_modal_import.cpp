@@ -1,13 +1,10 @@
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
-#include "imgui/misc/cpp/imgui_stdlib.h"
 #include "dv_modal_import.hpp"
 #include "gui/modals/dv_modal_import.hpp"
 
 using namespace devue;
 
-dv_modal_import::dv_modal_import(dv_systems* systems) 
-    : m_systems(systems) {}
+dv_modal_import::dv_modal_import(dv_systems* systems, dv_components* components)
+    : dv_comp(systems, components) {}
 
 void dv_modal_import::set_file_path(const std::string& path) {
     m_file_path = path;

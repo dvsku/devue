@@ -1,17 +1,14 @@
 #pragma once
 
-#include "systems/dv_systems.hpp"
+#include "gui/base/dv_comp.hpp"
 
 namespace devue {
-    class dv_modal_about {
+    class dv_modal_about : public dv_comp {
     public:
         dv_modal_about() = delete;
-        dv_modal_about(dv_systems* systems);
+        dv_modal_about(dv_systems* systems, dv_components* components);
 
     public:
         bool render();
-
-    private:
-        dv_systems* m_systems = nullptr;
     };
 }

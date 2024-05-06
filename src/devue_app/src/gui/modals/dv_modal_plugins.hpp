@@ -1,22 +1,19 @@
 #pragma once
 
-#include "systems/dv_systems.hpp"
-
-#include <dv_gui_opengl/dv_gui_opengl.hpp>
+#include "gui/base/dv_comp.hpp"
 
 namespace devue {
-    class dv_modal_plugins {
+    class dv_modal_plugins : public dv_comp {
     public:
         dv_modal_plugins() = delete;
-        dv_modal_plugins(dv_systems* systems);
+        dv_modal_plugins(dv_systems* systems, dv_components* components);
 
     public:
         bool render();
 
     private:
-        dv_systems* m_systems                 = nullptr;
         dvsku::uuid m_current_plugin_id       = 0U;
         std::string m_supported_model_types   = "";
-        std::string m_supported_texture_types = "";  
+        std::string m_supported_texture_types = "";
     };
 }

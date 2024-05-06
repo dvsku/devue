@@ -1,6 +1,4 @@
 #include "gui/modals/dv_modal_plugins.hpp"
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
 #include "systems/dv_systems_bundle.hpp"
 #include "utilities/dv_util_imgui.hpp"
 
@@ -8,8 +6,8 @@
 
 using namespace devue;
 
-dv_modal_plugins::dv_modal_plugins(dv_systems* systems) 
-    : m_systems(systems) {}
+dv_modal_plugins::dv_modal_plugins(dv_systems* systems, dv_components* components)
+    : dv_comp(systems, components) {}
 
 bool dv_modal_plugins::render() {
     bool& visible = m_systems->command.is_executable(dv_commands::flag_show_modal_plugins);

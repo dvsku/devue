@@ -1,13 +1,12 @@
 #include "gui/modals/dv_modal_about.hpp"
-#include "imgui/imgui.h"
-#include "imgui/imgui_internal.h"
+#include "gui/dv_components.hpp"
 #include "utilities/dv_util_imgui.hpp"
 #include "devue_app.hpp"
 
 using namespace devue;
 
-dv_modal_about::dv_modal_about(dv_systems* systems) 
-    : m_systems(systems) {}
+dv_modal_about::dv_modal_about(dv_systems* systems, dv_components* components)
+    : dv_comp(systems, components) {}
 
 bool dv_modal_about::render() {
     bool& visible = m_systems->command.is_executable(dv_commands::flag_show_modal_about);
