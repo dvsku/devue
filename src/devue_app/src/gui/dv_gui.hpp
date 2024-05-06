@@ -29,9 +29,6 @@ namespace devue {
     	void on_mouse_move(double dx, double dy)				override final;
         void on_drop(int count, const char* paths[])            override final;
 
-        bool is_title_bar(int32_t x, int32_t y)       override final;
-        bool is_maximize_button(int32_t x, int32_t y) override final;
-
         void set_theme();
 
     private:
@@ -44,6 +41,6 @@ namespace devue {
         bool m_title_bar_hit_test = false;
 
     private:
-        devue::uuid create_checkerboard_texture();
+        dvsku::uuid create_checkerboard_texture();
     };
 }

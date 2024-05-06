@@ -2,8 +2,8 @@
 
 #include "scene/model/dv_scene_mesh.hpp"
 #include "scene/model/dv_transform.hpp"
-#include "utilities/dv_util_uuid.hpp"
 
+#include <dv_gui_opengl/dv_gui_opengl.hpp>
 #include <string>
 #include <vector>
 
@@ -14,8 +14,8 @@ namespace devue::core {
 
     	std::string name = "";
 
-    	devue::uuid uuid	   = 0U;
-    	devue::uuid model_uuid = 0U;
+    	dvsku::uuid uuid	   = 0U;
+    	dvsku::uuid model_uuid = 0U;
 
         uint32_t vao = 0U;
         uint32_t vbo = 0U;

@@ -1,8 +1,6 @@
 #include "systems/dv_sys_texture.hpp"
 #include "systems/dv_systems_bundle.hpp"
 #include "exceptions/dv_exception.hpp"
-#include "utilities/dv_util_string.hpp"
-#include "dv_gui_opengl/utilities/dv_util_log.hpp"
 #include "glad/glad.h"
 
 #include <filesystem>
@@ -30,7 +28,7 @@ void dv_sys_texture::release() {
     textures.clear();
 }
 
-const dv_scene_texture* dv_sys_texture::get_texture(devue::uuid uuid) {
+const dv_scene_texture* dv_sys_texture::get_texture(dvsku::uuid uuid) {
     if (!textures.contains(uuid)) return nullptr;
     return &textures[uuid].second;
 }
@@ -40,7 +38,7 @@ void dv_sys_texture::prepare_material_textures(dv_model& model,
 {
     if (!material.diffuse_texture.empty()) {
         std::filesystem::path texture = std::filesystem::path(model.texture_dir).append(material.diffuse_texture);
-        devue::uuid uuid = dv_util_uuid::create(texture.string());
+        dvsku::uuid uuid = dvsku::dv_util_uuid::create(texture.string());
     
         try {
             if (textures.contains(uuid)) {
@@ -56,10 +54,10 @@ void dv_sys_texture::prepare_material_textures(dv_model& model,
             smaterial.diffuse_texture_uuid = uuid;
         }
         catch (const std::exception& e) {
-            DV_LOG("Failed to create `{}` diffuse texture `{}`. | {}", model.name, material.diffuse_texture, e.what());
+            DV_LOG_ERRO("", "Failed to create `{}` diffuse texture `{}`. | {}", model.name, material.diffuse_texture, e.what());
         }
         catch (...) {
-            DV_LOG("Failed to create `{}` diffuse texture `{}`.", model.name, material.diffuse_texture);
+            DV_LOG_ERRO("", "Failed to create `{}` diffuse texture `{}`.", model.name, material.diffuse_texture);
         }
     }
 }
@@ -125,7 +123,7 @@ dv_scene_texture dv_sys_texture::create_scene_texture(std::filesystem::path& fil
     std::string ext = filepath.extension().string();
 
     auto cmp_fn = [&](const dv_file_type& type) {
-        return dv_util_string::contains(type.extensions, ext);
+        return dvsku::dv_util_string::contains(type.extensions, ext);
     };
 
     // Flag to check if we tried importing but all importers failed
@@ -180,7 +178,7 @@ dv_scene_texture dv_sys_texture::create_scene_texture(std::filesystem::path& fil
 
     std::string errors = accumulated_errors.str();
     if (tried_importing && !errors.empty()) {
-        DV_LOG("Tried importing texture with following importers:\n{}", errors);
+        DV_LOG_ERRO("", "Tried importing texture with following importers:\n{}", errors);
     }
 
     DV_THROW_EXCEPTION("No suitable importer found.");

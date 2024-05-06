@@ -1,8 +1,8 @@
 #pragma once
 
 #include "gui/base/dv_comp.hpp"
-#include "utilities/dv_util_uuid.hpp"
 
+#include <dv_gui_opengl/dv_gui_opengl.hpp>
 #include <string>
 
 namespace devue {
@@ -13,10 +13,10 @@ namespace devue {
     public:
         bool render() final override;
 
-        void set_texture(uuid uuid, const std::string& name);
+        void set_texture(dvsku::uuid uuid, const std::string& name);
 
     private:
-        devue::uuid m_texture_uuid = 0U;
+        dvsku::uuid m_texture_uuid = 0U;
         std::string m_texture_name = "";
     };
 }

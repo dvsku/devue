@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utilities/dv_util_uuid.hpp"
+#include <dv_gui_opengl/dv_gui_opengl.hpp>
 
 #include <cstdint>
 #include <string>
@@ -9,8 +9,8 @@ namespace devue::core {
     struct dv_scene_mesh {
     	std::string name = "";
 
-        devue::uuid mesh_uuid;
-    	devue::uuid material_uuid;
+        dvsku::uuid mesh_uuid;
+    	dvsku::uuid material_uuid;
 
     	uint32_t ibo		= 0U;
     	uint64_t face_count = 0U;

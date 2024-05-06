@@ -3,7 +3,6 @@
 #include "scene/dv_scene.hpp"
 #include "models/pdo/dv_model.hpp"
 #include "rendering/dv_render_target.hpp"
-#include "utilities/dv_util_uuid.hpp"
 
 #include <unordered_map>
 
@@ -39,7 +38,7 @@ namespace devue::core {
 
     private:
     	dv_systems_bundle* m_systems = nullptr;
-    	std::unordered_map<devue::uuid, dv_scene> m_scenes;
+    	std::unordered_map<dvsku::uuid, dv_scene> m_scenes;
 
     private:
     	void remove_marked_models();

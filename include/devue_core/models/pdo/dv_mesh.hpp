@@ -1,16 +1,16 @@
 #pragma once
 
 #include "glm/vec3.hpp"
-#include "utilities/dv_util_uuid.hpp"
 
+#include <dv_gui_opengl/dv_gui_opengl.hpp>
 #include <string>
 #include <vector>
 
 namespace devue::core {
     struct dv_mesh {
     	std::string name          = "";
-        devue::uuid uuid          = 0U;
-    	devue::uuid material_uuid = 0U;
+        dvsku::uuid uuid          = 0U;
+    	dvsku::uuid material_uuid = 0U;
 
     	std::vector<glm::u32vec3> faces;
 

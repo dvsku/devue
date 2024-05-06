@@ -1,6 +1,5 @@
 #include "gui/components/dv_comp_hierarchy.hpp"
 #include "gui/dv_components.hpp"
-#include "utilities/dv_util_string.hpp"
 #include "utilities/dv_util_imgui.hpp"
 
 using namespace devue;
@@ -54,10 +53,10 @@ bool dv_comp_hierarchy::render() {
     		for (auto& kvp : m_systems->scene.current_scene->models) {
     			dv_scene_model& smodel = kvp.second;
 
-    			ImGui::PushID(DV_FORMAT_C("{}", smodel.uuid));
+    			ImGui::PushID(DV_FORMAT("{}", smodel.uuid).c_str());
 
                 is_selected = m_systems->properties.is_inspected(smodel);
-    			if (dv_util_imgui::selectable(DV_FORMAT_C("{}##Object", smodel.name), is_selected)) {
+    			if (dv_util_imgui::selectable(DV_FORMAT("{}##Object", smodel.name).c_str(), is_selected)) {
                     m_systems->properties.set_inspected(smodel);
     			}
 

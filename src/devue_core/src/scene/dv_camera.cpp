@@ -3,6 +3,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 using namespace devue::core;
+using namespace dvsku;
 
 dv_camera::dv_camera() {
     uuid = dv_util_uuid::create();

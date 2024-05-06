@@ -1,5 +1,4 @@
 #include "scene/dv_scene_grid.hpp"
-#include "utilities/dv_util_uuid.hpp"
 
 using namespace devue::core;
 
@@ -20,5 +19,5 @@ dv_scene_grid::dv_scene_grid() {
     mesh.faces.push_back({ 0, 1, 2 });
     mesh.faces.push_back({ 2, 3, 0 });
 
-    model.meshes[dv_util_uuid::create("grid")] = mesh;
+    model.meshes[dvsku::dv_util_uuid::create("grid")] = mesh;
 }

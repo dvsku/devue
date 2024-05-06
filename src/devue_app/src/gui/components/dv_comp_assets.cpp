@@ -1,6 +1,5 @@
 #include "gui/components/dv_comp_assets.hpp"
 #include "gui/dv_components.hpp"
-#include "utilities/dv_util_string.hpp"
 #include "utilities/dv_util_imgui.hpp"
 
 using namespace devue;
@@ -13,10 +12,10 @@ bool dv_comp_assets::render() {
     ImGui::Begin("Assets##Window");
 
     for (auto& [uuid, model] : m_systems->model.models) {
-    	ImGui::PushID(DV_FORMAT_C("{}", model.uuid));
+    	ImGui::PushID(DV_FORMAT("{}", model.uuid).c_str());
 
         bool is_selected = m_systems->properties.is_inspected(model);
-    	if (dv_util_imgui::selectable(DV_FORMAT_C("{}##Asset", model.name), is_selected)) {
+    	if (dv_util_imgui::selectable(DV_FORMAT("{}##Asset", model.name).c_str(), is_selected)) {
             m_systems->properties.set_inspected(model);
     	}
 

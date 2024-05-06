@@ -1,11 +1,12 @@
 #pragma once
 
 #include "glm/glm.hpp"
-#include "utilities/dv_util_uuid.hpp"
+
+#include <dv_gui_opengl/dv_gui_opengl.hpp>
 
 namespace devue::core {
     struct dv_light {
-    	devue::uuid uuid = 0U;
+    	dvsku::uuid uuid = 0U;
 
     	glm::vec3 color = { 1.0f, 1.0f, 1.0f };
     	float intensity = 1.0f;
@@ -13,7 +14,7 @@ namespace devue::core {
     	bool is_enabled = true;
 
     	dv_light() {
-    		uuid = dv_util_uuid::create();
+    		uuid = dvsku::dv_util_uuid::create();
     	}
 
     	virtual glm::vec3 get_light_color() {

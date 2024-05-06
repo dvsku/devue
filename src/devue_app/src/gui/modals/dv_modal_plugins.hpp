@@ -2,6 +2,8 @@
 
 #include "systems/dv_systems.hpp"
 
+#include <dv_gui_opengl/dv_gui_opengl.hpp>
+
 namespace devue {
     class dv_modal_plugins {
     public:
@@ -13,7 +15,7 @@ namespace devue {
 
     private:
         dv_systems* m_systems                 = nullptr;
-        uuid m_current_plugin_id              = 0U;
+        dvsku::uuid m_current_plugin_id       = 0U;
         std::string m_supported_model_types   = "";
         std::string m_supported_texture_types = "";  
     };

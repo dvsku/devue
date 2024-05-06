@@ -4,8 +4,8 @@
 #include "scene/model/dv_scene_material.hpp"
 #include "scene/model/dv_scene_texture.hpp"
 #include "devue_plugin_texture.hpp"
-#include "utilities/dv_util_uuid.hpp"
 
+#include <dv_gui_opengl/dv_gui_opengl.hpp>
 #include <utility>
 #include <unordered_map>
 
@@ -14,7 +14,7 @@ namespace devue::core {
 
     class dv_sys_texture {
     public:
-        std::unordered_map<devue::uuid, std::pair<uint16_t, dv_scene_texture>> textures;
+        std::unordered_map<dvsku::uuid, std::pair<uint16_t, dv_scene_texture>> textures;
 
     public:
         dv_sys_texture() = delete;
@@ -30,7 +30,7 @@ namespace devue::core {
         bool prepare();
         void release();
 
-        const dv_scene_texture* get_texture(devue::uuid uuid);
+        const dv_scene_texture* get_texture(dvsku::uuid uuid);
 
         void prepare_material_textures(dv_model& model, dv_material& material, dv_scene_material& smaterial);
         void release_material_textures(dv_scene_material& smaterial);

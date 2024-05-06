@@ -3,7 +3,6 @@
 #include "imgui/misc/cpp/imgui_stdlib.h"
 #include "dv_modal_import.hpp"
 #include "gui/modals/dv_modal_import.hpp"
-#include "dv_gui_opengl/utilities/dv_util_dialog.hpp"
 
 using namespace devue;
 
@@ -52,7 +51,7 @@ bool dv_modal_import::render() {
             // By default set texture folder to be the same
             // as the file
             if (!selected.empty())
-                set_file_path(selected[0]);
+                set_file_path(selected);
         }
 
         ImGui::Text("Materials folder");

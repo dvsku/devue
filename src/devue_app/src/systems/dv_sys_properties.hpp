@@ -1,7 +1,6 @@
 #pragma once
 
-#include "utilities/dv_util_uuid.hpp"
-
+#include <dv_gui_opengl/dv_gui_opengl.hpp>
 #include <unordered_map>
 #include <typeindex>
 
@@ -19,7 +18,7 @@ namespace devue {
         };
 
         inspectable::type inspected_type = inspectable::type::none;
-        devue::uuid       inspected_id   = 0U;
+        dvsku::uuid       inspected_id   = 0U;
     };
 
     class dv_sys_properties {
@@ -59,6 +58,6 @@ namespace devue {
         std::unordered_map<std::type_index, inspectable::type> m_supported_types;
 
     private:
-        void inspect(inspectable::type type = inspectable::type::none, devue::uuid id = 0U);
+        void inspect(inspectable::type type = inspectable::type::none, dvsku::uuid id = 0U);
     };
 }

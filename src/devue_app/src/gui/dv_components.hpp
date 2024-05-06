@@ -13,6 +13,8 @@
 #include "gui/modals/dv_modal_about.hpp"
 #include "systems/dv_systems.hpp"
 
+#include <dv_gui_opengl/dv_gui_opengl.hpp>
+
 namespace devue {
     struct dv_components {
     	dv_comp_assets	   assets;
@@ -28,7 +30,7 @@ namespace devue {
         dv_modal_plugins modal_plugins;
         dv_modal_about   modal_about;
 
-        devue::uuid checkerboard_uuid = 0U;
+        dvsku::uuid checkerboard_uuid = 0U;
 
     	dv_components() = delete;
     	dv_components(dv_systems* systems);

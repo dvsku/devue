@@ -1,8 +1,8 @@
 #pragma once
 
 #include "models/pdo/dv_model.hpp"
-#include "utilities/dv_util_uuid.hpp"
 
+#include <dv_gui_opengl/dv_gui_opengl.hpp>
 #include <unordered_map>
 
 namespace devue::core {
@@ -10,7 +10,7 @@ namespace devue::core {
 
     class dv_sys_model {
     public:
-    	std::unordered_map<devue::uuid, dv_model> models;
+    	std::unordered_map<dvsku::uuid, dv_model> models;
 
     public:
         dv_sys_model() = delete;

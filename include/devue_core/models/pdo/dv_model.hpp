@@ -5,8 +5,8 @@
 #include "models/pdo/dv_mesh.hpp"
 #include "models/pdo/dv_material.hpp"
 #include "models/pdo/dv_vertex.hpp"
-#include "utilities/dv_util_uuid.hpp"
 
+#include <dv_gui_opengl/dv_gui_opengl.hpp>
 #include <string>
 #include <filesystem>
 #include <vector>
@@ -14,15 +14,15 @@
 
 namespace devue::core {
     struct dv_model {
-    	devue::uuid uuid = 0U;
+    	dvsku::uuid uuid = 0U;
 
     	std::string name				  = "";
     	std::filesystem::path texture_dir = "";
     	
     	dv_skeleton                                  skeleton;
         std::vector<dv_vertex>	                     vertices;
-    	std::unordered_map<devue::uuid, dv_mesh>     meshes;
-    	std::unordered_map<devue::uuid, dv_material> materials;
+    	std::unordered_map<dvsku::uuid, dv_mesh>     meshes;
+    	std::unordered_map<dvsku::uuid, dv_material> materials;
 
         dv_bounding_box bounding_box;
 

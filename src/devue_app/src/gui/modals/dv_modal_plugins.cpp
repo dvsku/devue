@@ -2,7 +2,6 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
 #include "systems/dv_systems_bundle.hpp"
-#include "utilities/dv_util_string.hpp"
 #include "utilities/dv_util_imgui.hpp"
 
 #include <sstream>
@@ -50,7 +49,7 @@ bool dv_modal_plugins::render() {
                         for (size_t i = 0; i < plugin.supported_model_types.size(); i++) {
                             ss << plugin.supported_model_types[i].name << " ";
                             ss << "(";
-                            ss << core::dv_util_string::replace(plugin.supported_model_types[i].extensions, ";", " ");
+                            ss << dvsku::dv_util_string::replace(plugin.supported_model_types[i].extensions, ";", " ");
                             ss << ")";
 
                             if (i != plugin.supported_model_types.size() - 1)
@@ -63,7 +62,7 @@ bool dv_modal_plugins::render() {
                         for (size_t i = 0; i < plugin.supported_texture_types.size(); i++) {
                             ss << plugin.supported_texture_types[i].name << " ";
                             ss << "(";
-                            ss << core::dv_util_string::replace(plugin.supported_texture_types[i].extensions, ";", " ");
+                            ss << dvsku::dv_util_string::replace(plugin.supported_texture_types[i].extensions, ";", " ");
                             ss << ")";
 
                             if (i != plugin.supported_texture_types.size() - 1)

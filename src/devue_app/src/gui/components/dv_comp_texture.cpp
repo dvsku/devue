@@ -1,7 +1,6 @@
 #include "gui/components/dv_comp_texture.hpp"
 #include "gui/dv_components.hpp"
 #include "systems/dv_systems_bundle.hpp"
-#include "utilities/dv_util_string.hpp"
 
 using namespace devue;
 
@@ -59,7 +58,7 @@ bool dv_comp_texture::render() {
     return DV_COMMAND_REPEAT;
 }
 
-void dv_comp_texture::set_texture(uuid uuid, const std::string& name) {
+void dv_comp_texture::set_texture(dvsku::uuid uuid, const std::string& name) {
     m_texture_uuid = uuid;
     m_texture_name = name;
 }

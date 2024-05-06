@@ -1,9 +1,9 @@
 #pragma once
 
-#include "utilities/dv_util_uuid.hpp"
+#include <dv_gui_opengl/dv_gui_opengl.hpp>
 
 namespace devue::core {
     struct dv_scene_material {
-    	devue::uuid diffuse_texture_uuid = 0U;
+    	dvsku::uuid diffuse_texture_uuid = 0U;
     };
 }

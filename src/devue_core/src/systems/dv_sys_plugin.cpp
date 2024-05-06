@@ -1,8 +1,6 @@
 #include "systems/dv_sys_plugin.hpp"
 #include "systems/dv_systems_bundle.hpp"
 #include "exceptions/dv_exception.hpp"
-#include "dv_gui_opengl/utilities/dv_util_log.hpp"
-#include "utilities/dv_util_string.hpp"
 
 #include <windows.h>
 #include <filesystem>
@@ -103,7 +101,7 @@ bool dv_sys_plugin::is_supported_model_type(const std::string& path) {
     std::string ext = filepath.extension().string();
 
     auto cmp_fn = [&](const dv_file_type& type) {
-        return dv_util_string::contains(type.extensions, ext);
+        return dvsku::dv_util_string::contains(type.extensions, ext);
     };
 
     for (auto& [plugin_uuid, plugin] : plugins) {
@@ -137,7 +135,7 @@ void dv_sys_plugin::prepare_plugins() {
         if (!filepath.filename().string().starts_with("dv_plg_"))
             continue;
 
-        devue::uuid uuid = dv_util_uuid::create(filepath.string());
+        dvsku::uuid uuid = dvsku::dv_util_uuid::create(filepath.string());
 
         if (plugins.contains(uuid))
             continue;
@@ -146,11 +144,11 @@ void dv_sys_plugin::prepare_plugins() {
             load_plugin(filepath, uuid);
         }
         catch (const std::exception& e) {
-            DV_LOG("Failed to load `{}` plugin. | {}", filepath.filename().string(), e.what());
+            DV_LOG_ERRO("", "Failed to load `{}` plugin. | {}", filepath.filename().string(), e.what());
             continue;
         }
         catch (...) {
-            DV_LOG("Failed to load `{}` plugin.", filepath.filename().string());
+            DV_LOG_ERRO("", "Failed to load `{}` plugin.", filepath.filename().string());
             continue;
         }
     }
@@ -173,10 +171,10 @@ void dv_sys_plugin::release_plugin(dv_plugin& plugin) {
     plugin.m_handle = nullptr;
     plugin.m_iface  = nullptr;
 
-    DV_LOG("Released plugin `{}`", plugin.filename);
+    DV_LOG_INFO("", "Released plugin `{}`", plugin.filename);
 }
 
-void dv_sys_plugin::load_plugin(const std::filesystem::path& path, devue::uuid uuid) {
+void dv_sys_plugin::load_plugin(const std::filesystem::path& path, dvsku::uuid uuid) {
     auto phandle = create_handle(path.string().c_str());
 
     dv_plugin plugin;
@@ -188,7 +186,7 @@ void dv_sys_plugin::load_plugin(const std::filesystem::path& path, devue::uuid u
 
     plugins[uuid] = std::move(plugin);
 
-    DV_LOG("Loaded plugin `{}` from `{}`.", plugins[uuid].name, plugins[uuid].filename);
+    DV_LOG_INFO("", "Loaded plugin `{}` from `{}`.", plugins[uuid].name, plugins[uuid].filename);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

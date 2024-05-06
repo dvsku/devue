@@ -4,6 +4,8 @@
 #include "models/pdo/dv_model.hpp"
 #include "scene/model/dv_scene_model.hpp"
 
+#include <dv_gui_opengl/dv_gui_opengl.hpp>
+
 namespace devue {
     struct dv_comp_meshes : public dv_comp {
         dv_comp_meshes(dv_systems* systems, dv_components* components);
@@ -11,7 +13,7 @@ namespace devue {
         bool render() final override;
 
     private:
-        uuid m_current_mesh_id = 0U;
+        dvsku::uuid m_current_mesh_id = 0U;
 
     private:
         void render_model();

@@ -1,6 +1,5 @@
 #include "gui/dv_gui.hpp"
 #include "devue_plugin_texture.hpp"
-#include "dv_gui_opengl/utilities/dv_util_log.hpp"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "gui/fonts/font_average_mono.hpp"
@@ -57,7 +56,7 @@ bool dv_gui::prepare() {
     	m_systems.rendering.prepare();
     }
     catch (const std::exception& e) {
-    	DV_LOG("Failed to prepare rendering system. | {}", e.what());
+        DV_LOG_ERRO("", "Failed to prepare rendering system. | {}", e.what());
     	return false;
     }
 
@@ -65,18 +64,18 @@ bool dv_gui::prepare() {
         m_systems.plugin.prepare();
     }
     catch (const std::exception& e) {
-        DV_LOG("Failed to prepare plugin system. | {}", e.what());
+        DV_LOG_ERRO("", "Failed to prepare plugin system. | {}", e.what());
         return false;
     }
     
     if (!m_systems.command.prepare(&m_components)) {
-        DV_LOG("Failed to prepare command system.");
+        DV_LOG_ERRO("", "Failed to prepare command system.");
         return false;
     }
     
-    devue::uuid checkerboard_uuid = create_checkerboard_texture();
+    dvsku::uuid checkerboard_uuid = create_checkerboard_texture();
     if (!checkerboard_uuid) {
-        DV_LOG("Failed to create checkerboard texture.");
+        DV_LOG_ERRO("", "Failed to create checkerboard texture.");
         return false;
     }
 
@@ -85,7 +84,7 @@ bool dv_gui::prepare() {
     m_systems.command.set_execute(dv_commands::flag_show_console);
 
     if (!m_systems.scene.prepare()) {
-        DV_LOG("Failed to create scene.");
+        DV_LOG_ERRO("", "Failed to create scene.");
         return false;
     }
 
@@ -94,7 +93,8 @@ bool dv_gui::prepare() {
 
     dv_util_diag::init();
 
-    glfwMaximizeWindow(m_native);
+    maximize_or_restore();
+
     return true;
 }
 
@@ -153,6 +153,8 @@ void dv_gui::on_gui_update() {
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0.0f, 0.0f});
 
+    ImRect rectangle = { {0.0f, 0.0f}, {0.0f, 0.0f} };
+
     ImGui::Begin("Root##Window", NULL, flags);
     {
         ImGui::PopStyleVar(1);
@@ -204,7 +206,7 @@ void dv_gui::on_gui_update() {
                         ImGui::Separator();
 
                         if (ImGui::MenuItem("Exit##MenuItem")) {
-                            glfwSetWindowShouldClose(m_native, 1);
+                            close();
                         }
 
                         ImGui::EndMenu();
@@ -260,31 +262,34 @@ void dv_gui::on_gui_update() {
             ImGui::SameLine(0.0f, 0.0f);
             ImGui::SetCursorPosY(min.y - titlebar_padding.y);
             if (ImGui::Button(ICON_FA_MINUS"##MinimizeButton", { 30.0f, titlebar_size.y})) {
-                glfwIconifyWindow(m_native);
+                iconify();
             }
 
             ImGui::SameLine(0.0f, 0.0f);
             ImGui::SetCursorPosY(min.y - titlebar_padding.y);
-            if (!glfwGetWindowAttrib(m_native, GLFW_MAXIMIZED)) {
+            if (!is_maximized()) {
                 ImGui::Button(ICON_FA_WINDOW_MAXIMIZE"##MaximizeButton", { 30.0f, titlebar_size.y });
             }
             else {
                 ImGui::Button(ICON_FA_WINDOW_RESTORE"##RestoreButton", { 30.0f, titlebar_size.y });
             }
 
-            m_maximize_hovered = ImGui::IsItemHovered();
+            get_title_bar().mouseover_maximize_button = ImGui::IsItemHovered();
 
             ImGui::SameLine(0.0f, 0.0f);
             ImGui::SetCursorPosY(min.y - titlebar_padding.y);
             if (ImGui::Button(ICON_FA_XMARK"##ExitButton", { 30.0f, titlebar_size.y })) {
-                glfwSetWindowShouldClose(m_native, 1);
+                close();
             }
 
             ImGui::PopStyleColor(4);
+
+            rectangle = ImGui::GetCurrentWindow()->Rect();
         }
         ImGui::EndChild();
-
         ImGui::PopStyleColor(2);
+
+        get_title_bar().mouseover_title_bar = ImGui::IsMouseHoveringRect(rectangle.Min, rectangle.Max);
 
         m_components.dockspace.render();
     }
@@ -350,13 +355,13 @@ void dv_gui::on_drop(int count, const char* paths[]) {
     }
 }
 
-bool dv_gui::is_title_bar(int32_t x, int32_t y) {
-    return !m_title_bar_hit_test && y > 0 && y <= 25;
-}
-
-bool dv_gui::is_maximize_button(int32_t x, int32_t y) {
-    return m_maximize_hovered;
-}
+//bool dv_gui::is_title_bar(int32_t x, int32_t y) {
+//    return !m_title_bar_hit_test && y > 0 && y <= 25;
+//}
+//
+//bool dv_gui::is_maximize_button(int32_t x, int32_t y) {
+//    return m_maximize_hovered;
+//}
 
 void dv_gui::set_theme() {
     ImGuiStyle& style  = ImGui::GetStyle();
@@ -407,7 +412,7 @@ void dv_gui::set_theme() {
     colors[ImGuiCol_ScrollbarGrabActive]  = ImLerp(colors[ImGuiCol_ScrollbarGrab], ImVec4(0.0f, 0.0f, 0.0f, 1.00f), 0.2f);
 }
 
-devue::uuid dv_gui::create_checkerboard_texture() {
+dvsku::uuid dv_gui::create_checkerboard_texture() {
     plugins::devue_plugin_texture ptexture;
     ptexture.width      = 4;
     ptexture.height     = 4;
@@ -420,7 +425,7 @@ devue::uuid dv_gui::create_checkerboard_texture() {
         0x00, 0x00, 0x00,  0x00, 0x00, 0x00,  0xAA, 0xAA, 0xAA,  0xAA, 0xAA, 0xAA,
     };
 
-    devue::uuid uuid = dv_util_uuid::create("checkerboard");
+    dvsku::uuid uuid = dv_util_uuid::create("checkerboard");
 
     try {
         if (m_systems.texture.textures.contains(uuid))

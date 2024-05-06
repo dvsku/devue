@@ -1,8 +1,6 @@
 #include "devue_plugin_model.hpp"
 #include "systems/dv_sys_model.hpp"
 #include "systems/dv_systems_bundle.hpp"
-#include "dv_gui_opengl/utilities/dv_util_log.hpp"
-#include "utilities/dv_util_string.hpp"
 
 #include <algorithm>
 #include <filesystem>
@@ -28,7 +26,7 @@ bool dv_sys_model::import(const std::string& path, const std::string& material_p
     std::string ext				   = filepath.extension().string();
     
     // Create uuid from path
-    devue::uuid uuid = devue::core::dv_util_uuid::create(path);
+    dvsku::uuid uuid = dvsku::dv_util_uuid::create(path);
 
     if (models.contains(uuid))
         return true;
@@ -85,7 +83,7 @@ bool dv_sys_model::import(const std::string& path, const std::string& material_p
         for (size_t i = 0; i < pmodel.materials.size(); i++) {
             auto& pmaterial = pmodel.materials[i];
 
-            devue::uuid uuid      = dv_util_uuid::create(DV_FORMAT("mat_{}_{}", model.name, i));
+            dvsku::uuid uuid      = dvsku::dv_util_uuid::create(DV_FORMAT("mat_{}_{}", model.name, i));
             model.materials[uuid] = dv_material();
 
             dv_material& material    = model.materials[uuid];
@@ -94,8 +92,8 @@ bool dv_sys_model::import(const std::string& path, const std::string& material_p
         }
 
     	for (auto& pmesh : pmodel.meshes) {
-    		devue::uuid mesh_uuid	  = dv_util_uuid::create(DV_FORMAT("{}_{}", path, pmesh.name));
-    		devue::uuid material_uuid = dv_util_uuid::create(DV_FORMAT("mat_{}_{}", model.name, pmesh.material_index));  
+            dvsku::uuid mesh_uuid	  = dvsku::dv_util_uuid::create(DV_FORMAT("{}_{}", path, pmesh.name));
+            dvsku::uuid material_uuid = dvsku::dv_util_uuid::create(DV_FORMAT("mat_{}_{}", model.name, pmesh.material_index));
 
     		model.meshes[mesh_uuid] = dv_mesh();
 
@@ -121,10 +119,10 @@ bool dv_sys_model::import(const std::string& path, const std::string& material_p
 
     std::string errors = accumulated_errors.str();
     if (tried_importing && !errors.empty()) {
-        DV_LOG("Tried importing model with following importers:\n{}", errors);
+        DV_LOG_ERRO("", "Tried importing model with following importers:\n{}", errors);
     }
     
-    DV_LOG("Failed to import `{}` model | No suitable importer found.", filepath.filename().string());
+    DV_LOG_ERRO("", "Failed to import `{}` model | No suitable importer found.", filepath.filename().string());
     return false;
 }
 

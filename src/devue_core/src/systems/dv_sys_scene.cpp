@@ -1,6 +1,5 @@
 #include "systems/dv_sys_scene.hpp"
 #include "systems/dv_systems_bundle.hpp"
-#include "dv_gui_opengl/utilities/dv_util_log.hpp"
 #include "glad/glad.h"
 
 using namespace devue::core;
@@ -38,7 +37,7 @@ size_t dv_sys_scene::count() const {
 
 dv_scene* dv_sys_scene::create_scene() {
     try {
-    	devue::uuid uuid = dv_util_uuid::create();
+        dvsku::uuid uuid = dvsku::dv_util_uuid::create();
 
     	m_scenes[uuid] = dv_scene();
     	current_scene = &m_scenes[uuid];
@@ -48,11 +47,11 @@ dv_scene* dv_sys_scene::create_scene() {
     	return current_scene;
     }
     catch (const std::exception& e) {
-    	DV_LOG("Failed to create scene. | {}", e.what());
+        DV_LOG_ERRO("", "Failed to create scene. | {}", e.what());
     	return nullptr;
     }
     catch (...) {
-    	DV_LOG("Failed to create scene.",);
+        DV_LOG_ERRO("", "Failed to create scene.",);
     	return nullptr;
     }
 }
@@ -86,7 +85,7 @@ void dv_sys_scene::add_to_scene(dv_model& model) {
     if (!current_scene) return;
 
     try {
-    	devue::uuid uuid			= dv_util_uuid::create();
+    	dvsku::uuid uuid			= dvsku::dv_util_uuid::create();
     	current_scene->models[uuid] = dv_scene_model();
 
     	dv_scene_model& smodel = current_scene->models[uuid];
