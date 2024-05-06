@@ -1,6 +1,5 @@
 #include "gui/components/dv_comp_meshes.hpp"
 #include "gui/dv_components.hpp"
-#include "gui/fonts/font_fontawesome_solid.hpp"
 #include "utilities/dv_util_imgui.hpp"
 
 using namespace devue;

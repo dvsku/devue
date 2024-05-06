@@ -2,8 +2,6 @@
 #include "devue_plugin_texture.hpp"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-#include "gui/fonts/font_average_mono.hpp"
-#include "gui/fonts/font_fontawesome_solid.hpp"
 #include "imgui/imgui.h"
 #include "rendering/dv_multisample_frame_buffer.hpp"
 #include "utilities/dv_util_diag.hpp"
