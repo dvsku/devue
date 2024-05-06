@@ -17,10 +17,10 @@ using namespace dvsku;
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC
 
-dv_gui::dv_gui(uint32_t width, uint32_t height, const std::string& title)
-    : dv_window(width, height, title), m_components(&m_systems) 
+dv_gui::dv_gui(const dvsku::dv_window_settings& settings)
+    : dv_window(settings), m_components(&m_systems)
 {
-    m_scene_render_target = std::make_shared<dv_multisample_frame_buffer>(width, height);
+    m_scene_render_target = std::make_shared<dv_multisample_frame_buffer>(settings.width, settings.height);
 }
 
 dv_gui::~dv_gui() {}

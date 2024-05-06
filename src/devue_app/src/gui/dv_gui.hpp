@@ -2,14 +2,14 @@
 #include "gui/dv_components.hpp"
 #include "systems/dv_systems.hpp"
 #include "rendering/dv_render_target.hpp"
-#include "dv_gui_opengl/dv_window.hpp"
 
+#include <dv_gui_opengl/dv_gui_opengl.hpp>
 #include <memory>
 
 namespace devue {
     class dv_gui : public dvsku::dv_window {
     public:
-    	dv_gui(uint32_t width, uint32_t height, const std::string& title);
+    	dv_gui(const dvsku::dv_window_settings& settings);
     	~dv_gui();
 
     private:
