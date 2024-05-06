@@ -128,8 +128,7 @@ void dv_app::on_update() {
 void dv_app::on_after_update() {}
 
 void dv_app::on_gui_before_update() {
-    glClearColor(0.185f, 0.185f, 0.185f, 1.00f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    clear_frame_buffer(0.185f, 0.185f, 0.185f, 1.00f);
 }
 
 void dv_app::on_gui_update() {
