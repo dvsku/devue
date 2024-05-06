@@ -1,4 +1,4 @@
-#include "gui/dv_gui.hpp"
+#include "dv_app.hpp"
 
 using namespace devue;
 using namespace devue::core;
@@ -16,6 +16,6 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
     settings.enable_docking        = true;
     settings.enable_multi_viewport = false;
 
-    dv_gui gui(settings);
+    dv_app gui(settings);
     gui.show();
 }

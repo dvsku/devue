@@ -7,10 +7,10 @@
 #include <memory>
 
 namespace devue {
-    class dv_gui : public dvsku::dv_window {
+    class dv_app : public dvsku::dv_window {
     public:
-    	dv_gui(const dvsku::dv_window_settings& settings);
-    	~dv_gui();
+    	dv_app(const dvsku::dv_window_settings& settings);
+    	~dv_app();
 
     private:
     	bool prepare()				override final;

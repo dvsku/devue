@@ -1,4 +1,4 @@
-#include "gui/dv_gui.hpp"
+#include "dv_app.hpp"
 #include "devue_plugin_texture.hpp"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
@@ -16,18 +16,18 @@ using namespace dvsku;
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC
 
-dv_gui::dv_gui(const dvsku::dv_window_settings& settings)
+dv_app::dv_app(const dvsku::dv_window_settings& settings)
     : dv_window(settings), m_components(&m_systems)
 {
     m_scene_render_target = std::make_shared<dv_multisample_frame_buffer>(settings.width, settings.height);
 }
 
-dv_gui::~dv_gui() {}
+dv_app::~dv_app() {}
 
 ///////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 
-bool dv_gui::prepare() {
+bool dv_app::prepare() {
     set_theme();
     set_borderless();
 
@@ -98,7 +98,7 @@ bool dv_gui::prepare() {
     return true;
 }
 
-void dv_gui::release() {
+void dv_app::release() {
     // Release plugins
     m_systems.plugin.release();
 
@@ -116,25 +116,25 @@ void dv_gui::release() {
     // Rest can be cleaned up automatically
 }
 
-void dv_gui::on_before_update() {
+void dv_app::on_before_update() {
     dv_util_diag::update();
 }
 
-void dv_gui::on_update() {
+void dv_app::on_update() {
     m_systems.scene.render_current_scene(m_scene_render_target.get());
     
     // This has to be called after scene is done rendering
     m_systems.model.remove_marked_models();
 }
 
-void dv_gui::on_after_update() {}
+void dv_app::on_after_update() {}
 
-void dv_gui::on_gui_before_update() {
+void dv_app::on_gui_before_update() {
     glClearColor(0.185f, 0.185f, 0.185f, 1.00f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void dv_gui::on_gui_update() {
+void dv_app::on_gui_update() {
     m_title_bar_hit_test    = ImGui::IsAnyItemHovered();
     ImGuiViewport* viewport = ImGui::GetMainViewport();
 
@@ -310,9 +310,9 @@ void dv_gui::on_gui_update() {
     //ImGui::ShowDemoWindow();
 }
 
-void dv_gui::on_gui_after_update() {}
+void dv_app::on_gui_after_update() {}
 
-void dv_gui::on_resize(int width, int height) {
+void dv_app::on_resize(int width, int height) {
     if (m_scene_render_target)
     	m_scene_render_target->resize(width, height);
 
@@ -320,16 +320,16 @@ void dv_gui::on_resize(int width, int height) {
     	m_systems.scene.current_scene->camera.set_aspect_ratio(static_cast<float>(width), static_cast<float>(height));
 }
 
-void dv_gui::on_scroll(double dx, double dy) {
+void dv_app::on_scroll(double dx, double dy) {
     if (m_components.scene.is_hovered && m_systems.scene.current_scene)
     	m_systems.scene.current_scene->camera.zoom(static_cast<float>(dy));
 }
 
-void dv_gui::on_mouse_button(int btn, int action, int modifier) {
+void dv_app::on_mouse_button(int btn, int action, int modifier) {
 
 }
 
-void dv_gui::on_mouse_move(double dx, double dy) {
+void dv_app::on_mouse_move(double dx, double dy) {
     if (m_components.scene.is_hovered && m_systems.scene.current_scene) {
     	if (glfwGetMouseButton(glfwGetCurrentContext(), GLFW_MOUSE_BUTTON_RIGHT)) {
     		m_systems.scene.current_scene->camera.rotate(static_cast<float>(dx), static_cast<float>(dy));
@@ -341,7 +341,7 @@ void dv_gui::on_mouse_move(double dx, double dy) {
     }
 }
 
-void dv_gui::on_drop(int count, const char* paths[]) {
+void dv_app::on_drop(int count, const char* paths[]) {
     for (int i = 0; i < count; i++) {
         if (!m_systems.plugin.is_supported_model_type(paths[i])) continue;
 
@@ -355,15 +355,7 @@ void dv_gui::on_drop(int count, const char* paths[]) {
     }
 }
 
-//bool dv_gui::is_title_bar(int32_t x, int32_t y) {
-//    return !m_title_bar_hit_test && y > 0 && y <= 25;
-//}
-//
-//bool dv_gui::is_maximize_button(int32_t x, int32_t y) {
-//    return m_maximize_hovered;
-//}
-
-void dv_gui::set_theme() {
+void dv_app::set_theme() {
     ImGuiStyle& style  = ImGui::GetStyle();
     ImVec4*     colors = style.Colors;
 
@@ -412,7 +404,7 @@ void dv_gui::set_theme() {
     colors[ImGuiCol_ScrollbarGrabActive]  = ImLerp(colors[ImGuiCol_ScrollbarGrab], ImVec4(0.0f, 0.0f, 0.0f, 1.00f), 0.2f);
 }
 
-dvsku::uuid dv_gui::create_checkerboard_texture() {
+dvsku::uuid dv_app::create_checkerboard_texture() {
     plugins::devue_plugin_texture ptexture;
     ptexture.width      = 4;
     ptexture.height     = 4;
