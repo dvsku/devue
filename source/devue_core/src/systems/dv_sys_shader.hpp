@@ -2,6 +2,7 @@
 
 #include "rendering/dv_shader.hpp"
 
+#include <dv_utilities.hpp>
 #include <unordered_map>
 
 namespace devue::core {
@@ -9,7 +10,7 @@ namespace devue::core {
 
     class dv_sys_shader {
     public:
-        std::unordered_map<uint8_t, dv_shader> shaders;
+        std::unordered_map<dvsku::uuid, dv_shader> shaders;
 
     public:
         dv_sys_shader()                     = delete;
@@ -27,5 +28,11 @@ namespace devue::core {
 
     private:
         dv_systems_bundle* m_systems = nullptr;
+
+    private:
+        bool compile_integrated_shaders();
+        bool compile_user_shaders();
+
+        dv_shader compile_shader(const std::string& vertex_code, const std::string& fragment_code);
     };
 }
