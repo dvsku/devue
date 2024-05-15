@@ -38,7 +38,19 @@ SET(BUILD_TESTS OFF CACHE BOOL "" FORCE)
 
 FetchContent_Declare(
     cmrc
-    URL "https://github.com/vector-of-bool/cmrc/archive/refs/heads/master.zip"
+    URL https://github.com/vector-of-bool/cmrc/archive/refs/heads/master.zip
 )
 
 FetchContent_MakeAvailable(cmrc)
+
+###############################################################################
+## devue_official_plugin
+
+IF(DEVUE_BUILD_PLUGINS)
+    FetchContent_Declare(
+        devue_official_plugin
+        URL https://github.com/dvsku/devue_official_plugin/archive/27dbeca6b0af99f5ac84882e2a09ff4da637a410.zip
+    )
+
+    FetchContent_MakeAvailable(devue_official_plugin)
+ENDIF()
