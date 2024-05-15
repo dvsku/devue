@@ -2,25 +2,19 @@
 #include "systems/dv_sys_rendering.hpp"
 #include "systems/dv_systems_bundle.hpp"
 
-#include "glad/glad.h"
-
+#include <glad/glad.h>
 #include <filesystem>
 #include <fstream>
 
 using namespace devue::core;
 
-enum integrated_shader : uint8_t {
-    def  = 0x1,
-    grid = 0x2
-};
+///////////////////////////////////////////////////////////////////////////////
+// PUBLIC
 
 dv_sys_rendering::dv_sys_rendering(dv_systems_bundle* systems)
     : m_systems(systems) {}
 
 void dv_sys_rendering::prepare() {
-    m_shaders[integrated_shader::def]  = create_shader("resources/shaders/default.vert", "resources/shaders/default.frag");
-    m_shaders[integrated_shader::grid] = create_shader("resources/shaders/grid.vert",    "resources/shaders/grid.frag");
-
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
     glEnable(GL_MULTISAMPLE);
@@ -121,7 +115,9 @@ void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_ligh
     if (!smodel.vao || !smodel.vbo)                           return;
     if (!m_systems->model.models.contains(smodel.model_uuid)) return;
 
-    dv_shader* shader = set_shader(integrated_shader::def);
+    static const dvsku::uuid SHADER_ID = dvsku::dv_util_uuid::create("integrated_default");
+
+    dv_shader* shader = set_shader(SHADER_ID);
     if (!shader) return;
 
     const dv_model& model        = m_systems->model.models[smodel.model_uuid];
@@ -212,8 +208,10 @@ void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_ligh
 void dv_sys_rendering::render(dv_scene_grid& sgrid, dv_camera& camera, dv_lighting& lighting) {
     if (!sgrid.vao || !sgrid.vbo) return;
 
+    static const dvsku::uuid SHADER_ID = dvsku::dv_util_uuid::create("integrated_grid");
+
     // Set grid shader
-    dv_shader* shader = set_shader(integrated_shader::grid);
+    dv_shader* shader = set_shader(SHADER_ID);
     if (!shader) return;
 
     shader->set("uf_model_mat", sgrid.transform.get_transform_matrix());
@@ -238,109 +236,15 @@ void dv_sys_rendering::render(dv_scene_grid& sgrid, dv_camera& camera, dv_lighti
 ///////////////////////////////////////////////////////////////////////////////
 // PRIVATE
 
-std::string dv_sys_rendering::get_shader_source(const std::string& path) {
-    std::filesystem::path filepath(path);
+dv_shader* dv_sys_rendering::set_shader(dvsku::uuid id) {
+    if (m_current_shader_id == id)
+        return &m_systems->shader.shaders[m_current_shader_id];
 
-    if (path.empty())
-        throw dv_exception("Failed to load shader source. File path empty.");
+    if (!m_systems->shader.shaders.contains(id))
+        return nullptr;
 
-    if (!std::filesystem::exists(filepath))
-        throw dv_exception(DV_FORMAT("Failed to load shader source. File `{}` not found.", path));
-    
-    std::string source = "";
-    std::ifstream file(filepath);
+    m_current_shader_id = id;
+    m_systems->shader.shaders[m_current_shader_id].use();
 
-    if (!file.is_open())
-        throw dv_exception(DV_FORMAT("Failed to load shader source. Couldn't open `{}` file.", path));
-
-    try {
-        std::string line;
-        while (std::getline(file, line)) {
-            source += line + '\n';
-        }
-        file.close();
-    }
-    catch (const std::exception& e) {
-        throw dv_exception(DV_FORMAT("Failed to load shader source. | {}", e.what()));
-    }
-    catch (...) {
-        throw dv_exception("Failed to load shader source.");
-    }
-
-    return source;
-}
-
-dv_shader dv_sys_rendering::create_shader(const std::string& vertex, const std::string& fragment) {
-    std::string vertex_source   = get_shader_source(vertex);
-    std::string fragment_source = get_shader_source(fragment);
-    
-    const char* vertex_source_c   = vertex_source.c_str();
-    const char* fragment_source_c = fragment_source.c_str();
-
-    dv_shader shader{};
-
-    int status           = 0;
-    uint32_t vertex_id   = 0U;
-    uint32_t fragment_id = 0U;
-
-    int error_msg_len     = 0;
-    std::string error_msg = "";
-
-    vertex_id = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_id, 1, &vertex_source_c, NULL);
-    glCompileShader(vertex_id);
-
-    glGetShaderiv(vertex_id, GL_COMPILE_STATUS, &status);
-    if (!status) {
-        glGetShaderiv(vertex_id, GL_INFO_LOG_LENGTH, &error_msg_len);
-        
-        error_msg.resize(error_msg_len);
-        glGetShaderInfoLog(vertex_id, error_msg_len, NULL, error_msg.data());
-
-        throw dv_exception(DV_FORMAT("Failed to compile vertex shader : {}", error_msg));
-    }
-
-    fragment_id = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_id, 1, &fragment_source_c, NULL);
-    glCompileShader(fragment_id);
-
-    glGetShaderiv(fragment_id, GL_COMPILE_STATUS, &status);
-    if (!status) {
-        glGetShaderiv(fragment_id, GL_INFO_LOG_LENGTH, &error_msg_len);
-
-        error_msg.resize(error_msg_len);
-        glGetShaderInfoLog(fragment_id, error_msg_len, NULL, error_msg.data());
-
-        throw dv_exception(DV_FORMAT("Failed to compile fragment shader : {}", error_msg));
-    }
-
-    shader.shader_id = glCreateProgram();
-    glAttachShader(shader.shader_id, vertex_id);
-    glAttachShader(shader.shader_id, fragment_id);
-    glLinkProgram(shader.shader_id);
-
-    glGetProgramiv(shader.shader_id, GL_LINK_STATUS, &status);
-    if (!status) {
-        glGetShaderiv(shader.shader_id, GL_INFO_LOG_LENGTH, &error_msg_len);
-
-        error_msg.resize(error_msg_len);
-        glGetShaderInfoLog(shader.shader_id, error_msg_len, NULL, error_msg.data());
-
-        throw dv_exception(DV_FORMAT("Failed to link shader : {}", error_msg));
-    }
-
-    glDeleteShader(vertex_id);
-    glDeleteShader(fragment_id);
-
-    return shader;
-}
-
-dv_shader* dv_sys_rendering::set_shader(uint8_t shader_id) {
-    if (m_current_shader_id == shader_id) return &m_shaders[m_current_shader_id];
-    if (!m_shaders.contains(shader_id))   return nullptr;
-
-    m_current_shader_id = shader_id;
-    m_shaders[shader_id].use();
-
-    return &m_shaders[shader_id];
+    return &m_systems->shader.shaders[m_current_shader_id];
 }

@@ -8,6 +8,7 @@
 #include "scene/model/dv_scene_material.hpp"
 #include "scene/model/dv_scene_model.hpp"
 
+#include <dv_utilities.hpp>
 #include <unordered_map>
 
 namespace devue::core {
@@ -37,18 +38,10 @@ namespace devue::core {
     	
     private:
     	dv_systems_bundle* m_systems;
-
-    	std::unordered_map<uint8_t, dv_shader> m_shaders;
-        uint8_t                                m_current_shader_id = 0U;
+        dvsku::uuid        m_current_shader_id = 0U;
 
     private:
-        // Read shader source code file into string
-    	std::string get_shader_source(const std::string& path);
-    	
-        // Compile shader from vertex and frag source code
-        dv_shader create_shader(const std::string& vertex, const std::string& fragment);
-
         // Set shader if it's not set already
-        dv_shader* set_shader(uint8_t shader_id);
+        dv_shader* set_shader(dvsku::uuid id);
     };
 }
