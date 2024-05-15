@@ -49,7 +49,15 @@ bool dv_app::prepare() {
     // Build fonts
     io.Fonts->Build();
 
-    // Create shaders
+    // Compile shaders
+    try {
+        m_systems.shader.prepare();
+    }
+    catch (const std::exception& e) {
+        DV_LOG_ERRO("", "Failed to prepare shader system. | {}", e.what());
+        return false;
+    }
+
     try {
     	m_systems.rendering.prepare();
     }
