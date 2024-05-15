@@ -30,3 +30,15 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(devue_plugin_core)
 
 SET(DEVUE_PLUGIN_CORE_INCLUDES "${devue_plugin_core_SOURCE_DIR}/include" PARENT_SCOPE)
+
+###############################################################################
+## cmrc
+
+SET(BUILD_TESTS OFF CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+    cmrc
+    URL "https://github.com/vector-of-bool/cmrc/archive/refs/heads/master.zip"
+)
+
+FetchContent_MakeAvailable(cmrc)
