@@ -14,8 +14,8 @@ using namespace dvsku;
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC
 
-dv_app::dv_app(const dvsku::dv_window_settings& settings)
-    : dv_window(settings), m_components(&m_systems)
+dv_app::dv_app(const dvsku::gui_window_settings& settings)
+    : gui_window(settings), m_components(&m_systems)
 {
     m_scene_render_target = std::make_shared<dv_multisample_frame_buffer>(settings.width, settings.height);
 }
@@ -422,7 +422,7 @@ dvsku::uuid dv_app::create_checkerboard_texture() {
         0x00, 0x00, 0x00,  0x00, 0x00, 0x00,  0xAA, 0xAA, 0xAA,  0xAA, 0xAA, 0xAA,
     };
 
-    dvsku::uuid uuid = dv_util_uuid::create("checkerboard");
+    dvsku::uuid uuid = util_uuid::create("checkerboard");
 
     try {
         if (m_systems.texture.textures.contains(uuid))

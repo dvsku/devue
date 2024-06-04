@@ -7,7 +7,7 @@ using namespace devue;
 dv_comp_texture::dv_comp_texture(dv_systems* systems, dv_components* components) 
     : dv_comp(systems, components) {}
 
-dvsku::dv_command_state dv_comp_texture::render() {
+dvsku::gui_command_state dv_comp_texture::render() {
     bool* visible = &m_systems->command.is_set_to_execute(dv_commands::flag_show_texture);
 
     std::string name = m_texture_name.empty() ? 
@@ -55,7 +55,7 @@ dvsku::dv_command_state dv_comp_texture::render() {
         m_requested_focus = false;
     }
 
-    return dvsku::dv_command_state::repeat;
+    return dvsku::gui_command_state::repeat;
 }
 
 void dv_comp_texture::set_texture(dvsku::uuid uuid, const std::string& name) {

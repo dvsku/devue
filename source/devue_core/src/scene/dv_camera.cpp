@@ -6,7 +6,7 @@ using namespace devue::core;
 using namespace dvsku;
 
 dv_camera::dv_camera() {
-    uuid = dv_util_uuid::create();
+    uuid = util_uuid::create();
 
     // Call transformations to apply initial values
     translate(0.0f, 0.0f);

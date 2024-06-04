@@ -9,7 +9,7 @@ using namespace devue;
 dv_modal_plugins::dv_modal_plugins(dv_systems* systems, dv_components* components)
     : dv_comp(systems, components) {}
 
-dvsku::dv_command_state dv_modal_plugins::render() {
+dvsku::gui_command_state dv_modal_plugins::render() {
     bool* visible = &m_systems->command.is_set_to_execute(dv_commands::flag_show_modal_plugins);
 
     ImVec2 pos = ImGui::GetMainViewport()->GetCenter();
@@ -47,7 +47,7 @@ dvsku::dv_command_state dv_modal_plugins::render() {
                         for (size_t i = 0; i < plugin.supported_model_types.size(); i++) {
                             ss << plugin.supported_model_types[i].name << " ";
                             ss << "(";
-                            ss << dvsku::dv_util_string::replace(plugin.supported_model_types[i].extensions, ";", " ");
+                            ss << dvsku::util_string::replace(plugin.supported_model_types[i].extensions, ";", " ");
                             ss << ")";
 
                             if (i != plugin.supported_model_types.size() - 1)
@@ -60,7 +60,7 @@ dvsku::dv_command_state dv_modal_plugins::render() {
                         for (size_t i = 0; i < plugin.supported_texture_types.size(); i++) {
                             ss << plugin.supported_texture_types[i].name << " ";
                             ss << "(";
-                            ss << dvsku::dv_util_string::replace(plugin.supported_texture_types[i].extensions, ";", " ");
+                            ss << dvsku::util_string::replace(plugin.supported_texture_types[i].extensions, ";", " ");
                             ss << ")";
 
                             if (i != plugin.supported_texture_types.size() - 1)
@@ -155,5 +155,5 @@ dvsku::dv_command_state dv_modal_plugins::render() {
         ImGui::EndPopup();
     }
 
-    return dvsku::dv_command_state::repeat;
+    return dvsku::gui_command_state::repeat;
 }

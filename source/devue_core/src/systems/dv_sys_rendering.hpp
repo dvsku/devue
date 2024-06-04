@@ -8,7 +8,7 @@
 #include "scene/model/dv_scene_material.hpp"
 #include "scene/model/dv_scene_model.hpp"
 
-#include <dv_utilities.hpp>
+#include <libutil.hpp>
 #include <unordered_map>
 
 namespace devue::core {

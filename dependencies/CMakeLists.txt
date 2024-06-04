@@ -4,20 +4,14 @@ SET(FETCHCONTENT_QUIET OFF)
 SET(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 
 ###############################################################################
-# dv_gui_opengl
-
-SET(DV_GUI_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-SET(DV_GUI_BUILD_OPENGL2  OFF CACHE BOOL "" FORCE)
-SET(DV_GUI_BUILD_OPENGL3   ON CACHE BOOL "" FORCE)
+# libgui
 
 FetchContent_Declare(
-    dv_gui_opengl
-    URL https://github.com/dvsku/dv_gui_opengl/archive/d8a0c3459843a86e6f09a05df67fe8526b6d883c.zip
+    libgui
+    URL https://github.com/dvsku/libgui/archive/refs/heads/master.zip
 )
 
-FetchContent_MakeAvailable(dv_gui_opengl)
-
-SET(DV_GUI_INCLUDES "${dv_gui_opengl_SOURCE_DIR}/include" PARENT_SCOPE)
+FetchContent_MakeAvailable(libgui)
 
 ###############################################################################
 # devue_plugin_core

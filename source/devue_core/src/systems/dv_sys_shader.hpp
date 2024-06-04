@@ -2,7 +2,7 @@
 
 #include "rendering/dv_shader.hpp"
 
-#include <dv_utilities.hpp>
+#include <libutil.hpp>
 #include <unordered_map>
 
 namespace devue::core {

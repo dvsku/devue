@@ -19,5 +19,5 @@ dv_scene_grid::dv_scene_grid() {
     mesh.faces.push_back({ 0, 1, 2 });
     mesh.faces.push_back({ 2, 3, 0 });
 
-    model.meshes[dvsku::dv_util_uuid::create("grid")] = mesh;
+    model.meshes[dvsku::util_uuid::create("grid")] = mesh;
 }

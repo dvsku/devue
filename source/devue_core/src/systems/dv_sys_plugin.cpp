@@ -101,7 +101,7 @@ bool dv_sys_plugin::is_supported_model_type(const std::string& path) {
     std::string ext = filepath.extension().string();
 
     auto cmp_fn = [&](const dv_file_type& type) {
-        return dvsku::dv_util_string::contains(type.extensions, ext);
+        return dvsku::util_string::contains(type.extensions, ext);
     };
 
     for (auto& [plugin_uuid, plugin] : plugins) {
@@ -135,7 +135,7 @@ void dv_sys_plugin::prepare_plugins() {
         if (!filepath.filename().string().starts_with("dv_plg_"))
             continue;
 
-        dvsku::uuid uuid = dvsku::dv_util_uuid::create(filepath.string());
+        dvsku::uuid uuid = dvsku::util_uuid::create(filepath.string());
 
         if (plugins.contains(uuid))
             continue;

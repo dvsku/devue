@@ -2,7 +2,7 @@
 
 #include "glm/glm.hpp"
 
-#include <dv_utilities.hpp>
+#include <libutil.hpp>
 
 namespace devue::core {
     struct dv_light {
@@ -14,7 +14,7 @@ namespace devue::core {
     	bool is_enabled = true;
 
     	dv_light() {
-    		uuid = dvsku::dv_util_uuid::create();
+    		uuid = dvsku::util_uuid::create();
     	}
 
     	virtual glm::vec3 get_light_color() {

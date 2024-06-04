@@ -3,13 +3,13 @@
 #include "systems/dv_systems.hpp"
 #include "rendering/dv_render_target.hpp"
 
-#include <dv_gui_opengl/dv_gui_opengl.hpp>
+#include <libgui.hpp>
 #include <memory>
 
 namespace devue {
-    class dv_app : public dvsku::dv_window {
+    class dv_app : public dvsku::gui_window {
     public:
-    	dv_app(const dvsku::dv_window_settings& settings);
+    	dv_app(const dvsku::gui_window_settings& settings);
     	~dv_app();
 
     private:

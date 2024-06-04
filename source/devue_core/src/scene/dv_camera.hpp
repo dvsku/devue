@@ -3,7 +3,7 @@
 #include "glm/vec3.hpp"
 #include "glm/matrix.hpp"
 
-#include <dv_utilities.hpp>
+#include <libutil.hpp>
 
 namespace devue::core {
     class dv_camera {

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <dv_utilities.hpp>
+#include <libutil.hpp>
 #include <stdexcept>
 
 namespace devue::core {
     #define DV_THROW_EXCEPTION(fmt, ...)    \
-        throw devue::core::dv_exception(dvsku::dv_util_string::format(fmt, __VA_ARGS__))
+        throw devue::core::dv_exception(dvsku::util_string::format(fmt, __VA_ARGS__))
 
     class dv_exception : public std::runtime_error {
     public:

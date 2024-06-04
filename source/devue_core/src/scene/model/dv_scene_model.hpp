@@ -3,7 +3,7 @@
 #include "scene/model/dv_scene_mesh.hpp"
 #include "scene/model/dv_transform.hpp"
 
-#include <dv_utilities.hpp>
+#include <libutil.hpp>
 #include <string>
 #include <vector>
 

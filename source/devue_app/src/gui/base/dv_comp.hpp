@@ -2,7 +2,7 @@
 
 #include "systems/dv_systems.hpp"
 
-#include <dv_gui_opengl/dv_gui_opengl.hpp>
+#include <libgui.hpp>
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 #include <imgui/misc/cpp/imgui_stdlib.h>

@@ -115,7 +115,7 @@ void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_ligh
     if (!smodel.vao || !smodel.vbo)                           return;
     if (!m_systems->model.models.contains(smodel.model_uuid)) return;
 
-    static const dvsku::uuid SHADER_ID = dvsku::dv_util_uuid::create("integrated_default");
+    static const dvsku::uuid SHADER_ID = dvsku::util_uuid::create("integrated_default");
 
     dv_shader* shader = set_shader(SHADER_ID);
     if (!shader) return;
@@ -208,7 +208,7 @@ void dv_sys_rendering::render(dv_scene_model& smodel, dv_camera& camera, dv_ligh
 void dv_sys_rendering::render(dv_scene_grid& sgrid, dv_camera& camera, dv_lighting& lighting) {
     if (!sgrid.vao || !sgrid.vbo) return;
 
-    static const dvsku::uuid SHADER_ID = dvsku::dv_util_uuid::create("integrated_grid");
+    static const dvsku::uuid SHADER_ID = dvsku::util_uuid::create("integrated_grid");
 
     // Set grid shader
     dv_shader* shader = set_shader(SHADER_ID);

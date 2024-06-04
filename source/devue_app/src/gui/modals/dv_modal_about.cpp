@@ -8,7 +8,7 @@ using namespace devue;
 dv_modal_about::dv_modal_about(dv_systems* systems, dv_components* components)
     : dv_comp(systems, components) {}
 
-dvsku::dv_command_state dv_modal_about::render() {
+dvsku::gui_command_state dv_modal_about::render() {
     bool* visible = &m_systems->command.is_set_to_execute(dv_commands::flag_show_modal_about);
 
     ImVec2 pos = ImGui::GetMainViewport()->GetCenter();
@@ -37,5 +37,5 @@ dvsku::dv_command_state dv_modal_about::render() {
         ImGui::EndPopup();
     }
 
-    return dvsku::dv_command_state::repeat;
+    return dvsku::gui_command_state::repeat;
 }

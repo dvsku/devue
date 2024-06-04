@@ -1,6 +1,6 @@
 #pragma once
 
-#include <dv_utilities.hpp>
+#include <libutil.hpp>
 
 namespace devue::core {
     struct dv_scene_material {

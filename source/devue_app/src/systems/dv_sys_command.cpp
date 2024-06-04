@@ -11,23 +11,23 @@ dv_sys_command::dv_sys_command(dv_systems* systems)
 bool dv_sys_command::prepare(dv_components* components) {
     if (!m_systems || !components) return false;
 
-    set_command(dv_commands::flag_show_console, dvsku::dv_command([components] {
+    set_command(dv_commands::flag_show_console, dvsku::gui_command([components] {
         return components->console.render();
     }));
 
-    set_command(dv_commands::flag_show_texture, dvsku::dv_command([components] {
+    set_command(dv_commands::flag_show_texture, dvsku::gui_command([components] {
         return components->texture.render();
     }));
 
-    set_command(dv_commands::flag_show_modal_import, dvsku::dv_command([components] {
+    set_command(dv_commands::flag_show_modal_import, dvsku::gui_command([components] {
         return components->modal_import.render();
     }));
 
-    set_command(dv_commands::flag_show_modal_plugins, dvsku::dv_command([components] {
+    set_command(dv_commands::flag_show_modal_plugins, dvsku::gui_command([components] {
         return components->modal_plugins.render();
     }));
 
-    set_command(dv_commands::flag_show_modal_about, dvsku::dv_command([components] {
+    set_command(dv_commands::flag_show_modal_about, dvsku::gui_command([components] {
         return components->modal_about.render();
     }));
 

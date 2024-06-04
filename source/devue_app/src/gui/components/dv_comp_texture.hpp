@@ -11,7 +11,7 @@ namespace devue {
         dv_comp_texture(dv_systems* systems, dv_components* components);
 
     public:
-        dvsku::dv_command_state render();
+        dvsku::gui_command_state render();
                            void set_texture(dvsku::uuid uuid, const std::string& name);
 
     private:

@@ -26,13 +26,13 @@ bool dv_sys_model::import(const std::string& path, const std::string& material_p
     std::string ext				   = filepath.extension().string();
     
     // Create uuid from path
-    dvsku::uuid uuid = dvsku::dv_util_uuid::create(path);
+    dvsku::uuid uuid = dvsku::util_uuid::create(path);
 
     if (models.contains(uuid))
         return true;
 
     auto cmp_fn = [&](const dv_file_type& type) {
-    	return dv_util_string::contains(type.extensions, ext);
+    	return util_string::contains(type.extensions, ext);
     };
 
     // Flag to check if we tried importing but all importers failed
@@ -83,7 +83,7 @@ bool dv_sys_model::import(const std::string& path, const std::string& material_p
         for (size_t i = 0; i < pmodel.materials.size(); i++) {
             auto& pmaterial = pmodel.materials[i];
 
-            dvsku::uuid uuid      = dvsku::dv_util_uuid::create(DV_FORMAT("mat_{}_{}", model.name, i));
+            dvsku::uuid uuid      = dvsku::util_uuid::create(DV_FORMAT("mat_{}_{}", model.name, i));
             model.materials[uuid] = dv_material();
 
             dv_material& material    = model.materials[uuid];
@@ -92,8 +92,8 @@ bool dv_sys_model::import(const std::string& path, const std::string& material_p
         }
 
     	for (auto& pmesh : pmodel.meshes) {
-            dvsku::uuid mesh_uuid	  = dvsku::dv_util_uuid::create(DV_FORMAT("{}_{}", path, pmesh.name));
-            dvsku::uuid material_uuid = dvsku::dv_util_uuid::create(DV_FORMAT("mat_{}_{}", model.name, pmesh.material_index));
+            dvsku::uuid mesh_uuid	  = dvsku::util_uuid::create(DV_FORMAT("{}_{}", path, pmesh.name));
+            dvsku::uuid material_uuid = dvsku::util_uuid::create(DV_FORMAT("mat_{}_{}", model.name, pmesh.material_index));
 
     		model.meshes[mesh_uuid] = dv_mesh();
 

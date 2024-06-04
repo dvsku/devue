@@ -43,7 +43,7 @@ bool dv_sys_shader::compile_integrated_shaders() {
         std::string source_vert = std::string(file_vert.cbegin(), file_vert.cend());
         std::string source_frag = std::string(file_frag.cbegin(), file_frag.cend());
 
-        auto uuid = dvsku::dv_util_uuid::create("integrated_default");
+        auto uuid = dvsku::util_uuid::create("integrated_default");
 
         shaders[uuid] = compile_shader(source_vert, source_frag);
     }
@@ -58,7 +58,7 @@ bool dv_sys_shader::compile_integrated_shaders() {
         std::string source_vert = std::string(file_vert.cbegin(), file_vert.cend());
         std::string source_frag = std::string(file_frag.cbegin(), file_frag.cend());
 
-        auto uuid = dvsku::dv_util_uuid::create("integrated_grid");
+        auto uuid = dvsku::util_uuid::create("integrated_grid");
 
         shaders[uuid] = compile_shader(source_vert, source_frag);
     }
