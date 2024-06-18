@@ -8,17 +8,16 @@ dv_comp_properties::dv_comp_properties(dv_systems* systems, dv_components* compo
     : dv_comp(systems, components) {}
 
 void dv_comp_properties::render() {
-    ImGui::Begin("Properties##Window");
-
-    switch (m_systems->properties.get_inspected().inspected_type) {
-        case inspectable::type::model:             render_model();             break;
-    	case inspectable::type::scene_model:	   render_scene_model();       break;
-    	case inspectable::type::camera:			   render_camera();            break;
-        case inspectable::type::ambient_light:	   render_ambient_light();     break;
-    	case inspectable::type::directional_light: render_directional_light(); break;
-    	default: break;
+    if (ImGui::Begin("Properties##Window")) {
+        switch (m_systems->properties.get_inspected().inspected_type) {
+            case inspectable::type::model:             render_model();             break;
+            case inspectable::type::scene_model:	   render_scene_model();       break;
+            case inspectable::type::camera:			   render_camera();            break;
+            case inspectable::type::ambient_light:	   render_ambient_light();     break;
+            case inspectable::type::directional_light: render_directional_light(); break;
+            default: break;
+        }
     }
-
     ImGui::End();
 }
 
