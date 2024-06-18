@@ -71,9 +71,9 @@ void dv_sys_scene::render_current_scene(dv_render_target* render_target) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Render the scene
-    for (auto& kvp : current_scene->models)
-    	if (kvp.second.visible)				// TODO: Add remove flag
-    		m_systems->rendering.render(kvp.second, current_scene->camera, current_scene->lighting);
+    for (auto& [scene_model_id, scene_model] : current_scene->models)
+    	if (scene_model.visible && !scene_model.marked_for_removal)
+    		m_systems->rendering.render(scene_model, current_scene->camera, current_scene->lighting);
 
     m_systems->rendering.render(current_scene->grid, current_scene->camera, current_scene->lighting);
 
