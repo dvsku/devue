@@ -9,21 +9,16 @@ dv_comp_assets::dv_comp_assets(dv_systems* systems, dv_components* components)
     : dv_comp(systems, components) {}
 
 void dv_comp_assets::render() {
-    ImGui::Begin("Assets##Window");
+    if (ImGui::Begin("Assets##Window")) {
+        for (auto& [uuid, model] : m_systems->model.models) {
+            bool is_selected = m_systems->properties.is_inspected(model);
+            if (dv_util_imgui::selectable(DV_FORMAT("{}##Asset{}", model.name, model.uuid).c_str(), is_selected)) {
+                m_systems->properties.set_inspected(model);
+            }
 
-    for (auto& [uuid, model] : m_systems->model.models) {
-    	ImGui::PushID(DV_FORMAT("{}", model.uuid).c_str());
-
-        bool is_selected = m_systems->properties.is_inspected(model);
-    	if (dv_util_imgui::selectable(DV_FORMAT("{}##Asset", model.name).c_str(), is_selected)) {
-            m_systems->properties.set_inspected(model);
-    	}
-
-        render_context_menu(model);
-
-    	ImGui::PopID();
+            render_context_menu(model);
+        }
     }
-
     ImGui::End();
 }
 
