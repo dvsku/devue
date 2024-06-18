@@ -98,7 +98,7 @@ bool dv_sys_model::import(const std::string& path, const std::string& material_p
     		model.meshes[mesh_uuid] = dv_mesh();
 
             dv_mesh& mesh      = model.meshes[mesh_uuid];
-            mesh.name          = pmesh.name;
+            mesh.name          = pmesh.name != "" ? pmesh.name : DV_FORMAT("unnamed_{}", mesh_uuid);
             mesh.uuid          = mesh_uuid;
             mesh.material_uuid = model.materials.contains(material_uuid) ? material_uuid : 0U;
     		
