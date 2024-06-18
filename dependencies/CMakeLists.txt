@@ -8,7 +8,7 @@ SET(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 
 FetchContent_Declare(
     libgui
-    URL https://github.com/dvsku/libgui/archive/176ecf4d472d015ae8edb5b28d93e8f09412cda7.zip
+    URL https://github.com/dvsku/libgui/archive/34d97c845decb81a94ec938c1164b1ab25356510.zip
 )
 
 FetchContent_MakeAvailable(libgui)
