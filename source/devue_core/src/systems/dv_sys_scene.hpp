@@ -36,12 +36,13 @@ namespace devue::core {
     	void add_to_scene(dv_model& model);
     	void remove_from_scene(dv_scene_model& smodel);
 
+        void remove_marked_models();
+
     private:
     	dv_systems_bundle* m_systems = nullptr;
     	std::unordered_map<dvsku::uuid, dv_scene> m_scenes;
 
     private:
-    	void remove_marked_models();
         void rescale_model(dv_model& model, dv_scene_model& smodel);
     };
 }

@@ -109,12 +109,14 @@ void dv_app::on_before_update() {
 
 void dv_app::on_update() {
     m_systems.scene.render_current_scene(m_scene_render_target.get());
-    
-    // This has to be called after scene is done rendering
-    m_systems.model.remove_marked_models();
 }
 
-void dv_app::on_after_update() {}
+void dv_app::on_after_update() {
+    // This has to be called after scene is done rendering
+
+    m_systems.scene.remove_marked_models();
+    m_systems.model.remove_marked_models();
+}
 
 void dv_app::on_gui_before_update() {
     clear_frame_buffer(0.185f, 0.185f, 0.185f, 1.00f);
