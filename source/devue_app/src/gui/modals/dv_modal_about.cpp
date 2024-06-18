@@ -29,7 +29,7 @@ libgui::command::state dv_modal_about::render() {
 
         ImGui::Text("Website:");
         ImGui::Indent(15.0f);
-        if (dv_util_imgui::link(DV_WEBSITE)) {
+        if (libgui::imgui::link(DV_WEBSITE)) {
             ShellExecuteA(NULL, "open", DV_WEBSITE, NULL, NULL, SW_SHOWDEFAULT);
         }
         ImGui::Unindent(15.0f);

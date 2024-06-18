@@ -97,7 +97,7 @@ libgui::command::state dv_modal_plugins::render() {
 
                 ImGui::Text("File name:");
                 ImGui::Indent(indent);
-                if (dv_util_imgui::link(plugin.filename.c_str())) {
+                if (libgui::imgui::link(plugin.filename.c_str())) {
                     auto path = std::filesystem::current_path() / "plugins";
 
                     if (std::filesystem::exists(path) && std::filesystem::is_directory(path)) {
@@ -126,7 +126,7 @@ libgui::command::state dv_modal_plugins::render() {
                 if (!plugin.website.empty()) {
                     ImGui::Text("Website:");
                     ImGui::Indent(indent);
-                    if (dv_util_imgui::link(plugin.website.c_str())) {
+                    if (libgui::imgui::link(plugin.website.c_str())) {
                         ShellExecuteA(NULL, "open", plugin.website.c_str(), NULL, NULL, SW_SHOWDEFAULT);
                     }
                     ImGui::Unindent(indent);

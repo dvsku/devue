@@ -22,7 +22,7 @@ void dv_comp_meshes::render() {
         if (is_disabled)
             ImGui::BeginDisabled();
 
-        if (dv_util_imgui::icon_button(ICON_FA_CHEVRON_LEFT"##BackToMeshes", { 19.0f, 19.0f })) {
+        if (libgui::imgui::icon_button(ICON_FA_CHEVRON_LEFT"##BackToMeshes", {19.0f, 19.0f})) {
             m_current_mesh_id = 0U;
         }
 

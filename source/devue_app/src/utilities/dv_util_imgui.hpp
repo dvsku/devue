@@ -1,6 +1,5 @@
 #pragma once
 
-#define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
 
@@ -17,10 +16,6 @@ namespace devue {
         static bool selectable(const char* label, bool selected = false, ImGuiSelectableFlags flags = 0, const ImVec2& size = ImVec2(0, 0));
 
         static void help_marker(const char* str);
-
-        static bool link(const char* str);
-
-        static bool icon_button(const char* label, const ImVec2& size = ImVec2(0, 0));
 
     private:
         enum class widget_color : uint16_t {
