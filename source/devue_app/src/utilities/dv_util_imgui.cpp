@@ -1,54 +1,31 @@
 #include "utilities/dv_util_imgui.hpp"
+#include "dv_theme.hpp"
+
+#include <libgui/theme.hpp>
 
 using namespace devue;
-
-void dv_util_imgui::init() {
-    m_colors[widget_color::collapsible]           = ImVec4(0.29020f, 0.24314f, 0.61176f, 1.00f);
-    m_colors[widget_color::collapsible_hovered]   = ImLerp(m_colors[widget_color::collapsible], ImVec4(1.0f, 1.0f, 1.0f, 1.00f), 0.1f);
-    m_colors[widget_color::collapsible_activated] = ImLerp(m_colors[widget_color::collapsible], ImVec4(0.0f, 0.0f, 0.0f, 1.00f), 0.2f);
-
-    m_colors[widget_color::selectable]            = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
-    m_colors[widget_color::selectable_hovered]    = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
-    m_colors[widget_color::selectable_activated]  = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
-    m_colors[widget_color::selectable_selected]   = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
-
-    m_colors[widget_color::link]                  = ImVec4(0.38824f, 0.32157f, 0.79608f, 1.00f);
-    m_colors[widget_color::link_hovered]          = ImLerp(m_colors[widget_color::link], ImVec4(1.0f, 1.0f, 1.0f, 1.00f), 0.1f);
-    m_colors[widget_color::link_activated]        = ImLerp(m_colors[widget_color::link], ImVec4(0.0f, 0.0f, 0.0f, 1.00f), 0.2f);
-
-    m_colors[widget_color::icon_button]           = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
-    m_colors[widget_color::icon_button_hovered]   = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
-    m_colors[widget_color::icon_button_activated] = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
-    m_colors[widget_color::icon_button_text]      = ImVec4(0.77255f, 0.77255f, 0.77255f, 1.00f);
-    
-}
+using namespace libgui;
 
 bool dv_util_imgui::collapsible(const char* label, ImGuiTreeNodeFlags flags) {
-    ImGui::PushStyleColor(ImGuiCol_Header,        m_colors[widget_color::collapsible]);
-    ImGui::PushStyleColor(ImGuiCol_HeaderHovered, m_colors[widget_color::collapsible_hovered]);
-    ImGui::PushStyleColor(ImGuiCol_HeaderActive,  m_colors[widget_color::collapsible_activated]);
+    theme::push_col(ImGuiCol_Header,        theme::get_col(extensions_col::collapsible));
+    theme::push_col(ImGuiCol_HeaderHovered, theme::get_col(extensions_col::collapsible_hovered));
+    theme::push_col(ImGuiCol_HeaderActive,  theme::get_col(extensions_col::collapsible_activated));
 
-    bool result = ImGui::CollapsingHeader(label, flags);
+    bool retval = ImGui::CollapsingHeader(label, flags);
 
-    ImGui::PopStyleColor(3);
-
-    return result;
+    theme::pop_col(3);
+    return retval;
 }
 
 bool dv_util_imgui::selectable(const char* label, bool selected, ImGuiSelectableFlags flags, const ImVec2& size) {
-    if (!selected)
-        ImGui::PushStyleColor(ImGuiCol_Header, m_colors[widget_color::selectable]);
-    else
-        ImGui::PushStyleColor(ImGuiCol_Header, m_colors[widget_color::selectable_selected]);
+    theme::push_col(ImGuiCol_Header,        theme::get_col(selected ? extensions_col::selectable_selected : extensions_col::selectable));
+    theme::push_col(ImGuiCol_HeaderHovered, theme::get_col(extensions_col::selectable_hovered));
+    theme::push_col(ImGuiCol_HeaderActive,  theme::get_col(extensions_col::selectable_activated));
 
-    ImGui::PushStyleColor(ImGuiCol_HeaderHovered, m_colors[widget_color::selectable_hovered]);
-    ImGui::PushStyleColor(ImGuiCol_HeaderActive,  m_colors[widget_color::selectable_activated]);
+    bool retval = ImGui::Selectable(label, selected, flags, size);
 
-    bool result = ImGui::Selectable(label, selected, flags, size);
-
-    ImGui::PopStyleColor(3);
-
-    return result;
+    theme::pop_col(3);
+    return retval;
 }
 
 void dv_util_imgui::help_marker(const char* str) {

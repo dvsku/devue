@@ -1,11 +1,12 @@
 #include "dv_app.hpp"
+#include "dv_theme.hpp"
 #include "devue_plugin_texture.hpp"
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
-#include "imgui/imgui.h"
 #include "rendering/dv_multisample_frame_buffer.hpp"
 #include "utilities/dv_util_diag.hpp"
 #include "utilities/dv_util_imgui.hpp"
+
+#include <GLFW/glfw3.h>
+#include <imgui/imgui.h>
 
 using namespace devue;
 using namespace devue::core;
@@ -27,14 +28,7 @@ dv_app::~dv_app() {}
 
 bool dv_app::prepare() {
     set_borderless();
-
-    dv_util_imgui::init();
-
-    theme::add_font("default", 13.0f, {
-        font_average_mono,
-        font_fontawesome_solid,
-        font_fontawesome_regular
-    });
+    dv_theme::set();
 
     // Compile shaders
     try {
