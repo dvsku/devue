@@ -13,7 +13,7 @@ namespace devue {
         void set_materials_path(const std::string& path);
 
     public:
-        dvsku::gui_command_state render();
+        libgui::command::state render();
 
     private:
         bool        m_keep_materials = false;

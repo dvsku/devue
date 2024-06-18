@@ -19,8 +19,8 @@ void dv_modal_import::set_materials_path(const std::string& path) {
     m_materials_path = path;
 }
 
-dvsku::gui_command_state dv_modal_import::render() {
-    dvsku::gui_command_state status = dvsku::gui_command_state::repeat;
+libgui::command::state dv_modal_import::render() {
+    libgui::command::state status = libgui::command::state::repeat;
 
     ImGui::OpenPopup("Import##Popup");
 
@@ -43,7 +43,7 @@ dvsku::gui_command_state dv_modal_import::render() {
 
         ImGui::SameLine();
         if (ImGui::Button("Select##File", ImVec2(120, 0))) {
-            auto selected = dvsku::util_dialog::open_file("Import model", m_file_path, m_systems->plugin.get_model_file_types());
+            auto selected = libgui::dialog::open_file("Import model", m_file_path, m_systems->plugin.get_model_file_types());
 
             // By default set texture folder to be the same
             // as the file
@@ -57,7 +57,7 @@ dvsku::gui_command_state dv_modal_import::render() {
 
         ImGui::SameLine();
         if (ImGui::Button("Select##Materials", ImVec2(120, 0))) {
-            std::string dir = dvsku::util_dialog::select_dir("Select material folder", m_materials_path);
+            std::string dir = libgui::dialog::select_dir("Select material folder", m_materials_path);
 
             if (!dir.empty())
                 set_materials_path(dir);
@@ -78,7 +78,7 @@ dvsku::gui_command_state dv_modal_import::render() {
             m_systems->model.import(m_file_path, m_materials_path);
             reset();
             ImGui::CloseCurrentPopup();
-            status = dvsku::gui_command_state::finished;
+            status = libgui::command::state::finished;
         }
 
         if (is_path_empty)
@@ -90,7 +90,7 @@ dvsku::gui_command_state dv_modal_import::render() {
         if (ImGui::Button("Cancel", ImVec2(120, 0))) {
             reset();
             ImGui::CloseCurrentPopup();
-            status = dvsku::gui_command_state::finished;
+            status = libgui::command::state::finished;
         }
 
         ImGui::PopID();

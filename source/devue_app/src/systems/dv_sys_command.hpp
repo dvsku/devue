@@ -1,6 +1,6 @@
 #pragma once
 
-#include <libgui/systems/gui_sys_command.hpp>
+#include <libgui/systems/sys_command.hpp>
 #include <map>
 
 namespace devue {
@@ -15,7 +15,7 @@ namespace devue {
         flag_show_modal_about
     };
 
-    class dv_sys_command : public dvsku::gui_sys_command<dv_commands> {
+    class dv_sys_command : public libgui::sys_command<dv_commands> {
     public:
         dv_sys_command() = delete;
         dv_sys_command(dv_systems* systems);

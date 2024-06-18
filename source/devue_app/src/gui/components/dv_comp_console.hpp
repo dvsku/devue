@@ -12,7 +12,7 @@ namespace devue {
         ~dv_comp_console();
     
     public:
-        dvsku::gui_command_state render();
+        libgui::command::state render();
 
     private:
         std::stringstream m_text;

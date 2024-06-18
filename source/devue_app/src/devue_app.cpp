@@ -9,7 +9,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 
     dvsku::util_log::init(log_settings);
 
-    dvsku::gui_window_settings settings;
+    libgui::window_settings settings;
     settings.width                 = 1360U;
     settings.height                = 768U;
     settings.title                 = "devue";

@@ -9,13 +9,13 @@
 
 using namespace devue;
 using namespace devue::core;
-using namespace dvsku;
+using namespace libgui;
 
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC
 
-dv_app::dv_app(const dvsku::gui_window_settings& settings)
-    : gui_window(settings), m_components(&m_systems)
+dv_app::dv_app(const window_settings& settings)
+    : window(settings), m_components(&m_systems)
 {
     m_scene_render_target = std::make_shared<dv_multisample_frame_buffer>(settings.width, settings.height);
 }
@@ -26,28 +26,15 @@ dv_app::~dv_app() {}
 // PRIVATE
 
 bool dv_app::prepare() {
-    set_theme();
     set_borderless();
 
     dv_util_imgui::init();
 
-    ImFontConfig config;
-    config.FontDataOwnedByAtlas = false;
-    config.RasterizerMultiply   = 1.2f;
-    config.SizePixels           = 13.0f;
-
-    ImGuiIO& io = ImGui::GetIO();
-
-    // Add default font
-    io.Fonts->AddFontFromMemoryTTF(AVERAGE_MONO, (int)AVERAGE_MONO_LEN, 13.0f, &config);
-
-    // Add font awesome
-    config.MergeMode                   = true;
-    static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
-    io.Fonts->AddFontFromMemoryTTF(FONTAWESOME_SOLID, (int)FONTAWESOME_SOLID_LEN, 13.0f, &config, icon_ranges);
-
-    // Build fonts
-    io.Fonts->Build();
+    theme::add_font("default", 13.0f, {
+        font_average_mono,
+        font_fontawesome_solid,
+        font_fontawesome_regular
+    });
 
     // Compile shaders
     try {
@@ -360,55 +347,6 @@ void dv_app::on_drop(int count, const char* paths[]) {
     }
 }
 
-void dv_app::set_theme() {
-    ImGuiStyle& style  = ImGui::GetStyle();
-    ImVec4*     colors = style.Colors;
-
-    style.TabRounding              = 0.0f;
-    style.TabBarBorderSize         = 2.0f;
-    style.DockingSeparatorSize     = 1.0f;
-    style.WindowBorderSize         = 0.0f;
-    style.WindowMenuButtonPosition = ImGuiDir_Right;
-
-    colors[ImGuiCol_WindowBg]             = ImVec4(0.14118f, 0.14118f, 0.14118f, 1.00f);
-    colors[ImGuiCol_ChildBg]              = ImVec4(0.14118f, 0.14118f, 0.14118f, 1.00f);
-    colors[ImGuiCol_PopupBg]              = ImVec4(0.14118f, 0.14118f, 0.14118f, 1.00f);
-                                          
-    colors[ImGuiCol_TitleBg]              = ImVec4(0.12157f, 0.12157f, 0.12157f, 1.00f);
-    colors[ImGuiCol_TitleBgActive]        = ImVec4(0.12157f, 0.12157f, 0.12157f, 1.00f);
-                                          
-    colors[ImGuiCol_FrameBg]              = ImVec4(0.12157f, 0.12157f, 0.12157f, 1.00f);
-    colors[ImGuiCol_FrameBgHovered]       = ImVec4(0.12157f, 0.12157f, 0.12157f, 1.00f);
-    colors[ImGuiCol_FrameBgActive]        = ImVec4(0.12157f, 0.12157f, 0.12157f, 1.00f);
-                                          
-    colors[ImGuiCol_Button]               = ImVec4(0.29020f, 0.24314f, 0.61176f, 1.00f);
-    colors[ImGuiCol_ButtonHovered]        = ImLerp(colors[ImGuiCol_Button], ImVec4(1.0f, 1.0f, 1.0f, 1.00f), 0.1f);
-    colors[ImGuiCol_ButtonActive]         = ImLerp(colors[ImGuiCol_Button], ImVec4(0.0f, 0.0f, 0.0f, 1.00f), 0.2f);
-                                          
-    colors[ImGuiCol_CheckMark]            = ImVec4(0.44314f, 0.37647f, 0.90980f, 1.00f);
-                                          
-    colors[ImGuiCol_SliderGrab]           = ImVec4(0.29020f, 0.24314f, 0.61176f, 1.00f);
-    colors[ImGuiCol_SliderGrabActive]     = ImLerp(colors[ImGuiCol_SliderGrab], ImVec4(0.0f, 0.0f, 0.0f, 1.00f), 0.2f);
-                                          
-    colors[ImGuiCol_Tab]                  = ImVec4(0.18039f, 0.18039f, 0.18039f, 1.00f);
-    colors[ImGuiCol_TabHovered]           = ImVec4(0.29020f, 0.24314f, 0.61176f, 1.00f);
-    colors[ImGuiCol_TabUnfocused]         = ImVec4(0.18039f, 0.18039f, 0.18039f, 1.00f);
-    colors[ImGuiCol_TabActive]            = ImVec4(0.29020f, 0.24314f, 0.61176f, 1.00f);
-    colors[ImGuiCol_TabUnfocusedActive]   = ImLerp(colors[ImGuiCol_TabActive], ImVec4(0.0f, 0.0f, 0.0f, 1.00f), 0.2f);
-                                          
-    colors[ImGuiCol_ResizeGripHovered]    = ImVec4(0.44314f, 0.37647f, 0.90980f, 1.00f);
-    colors[ImGuiCol_ResizeGripActive]     = ImVec4(0.44314f, 0.37647f, 0.90980f, 1.00f);
-                                          
-    colors[ImGuiCol_Header]               = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
-    colors[ImGuiCol_HeaderHovered]        = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
-    colors[ImGuiCol_HeaderActive]         = ImVec4(0.23922f, 0.23922f, 0.23922f, 1.00f);
-                                          
-    colors[ImGuiCol_ScrollbarBg]          = ImVec4(0.14118f, 0.14118f, 0.14118f, 1.00f);
-    colors[ImGuiCol_ScrollbarGrab]        = ImVec4(0.29020f, 0.24314f, 0.61176f, 1.00f);
-    colors[ImGuiCol_ScrollbarGrabHovered] = ImLerp(colors[ImGuiCol_ScrollbarGrab], ImVec4(1.0f, 1.0f, 1.0f, 1.00f), 0.1f);
-    colors[ImGuiCol_ScrollbarGrabActive]  = ImLerp(colors[ImGuiCol_ScrollbarGrab], ImVec4(0.0f, 0.0f, 0.0f, 1.00f), 0.2f);
-}
-
 dvsku::uuid dv_app::create_checkerboard_texture() {
     plugins::devue_plugin_texture ptexture;
     ptexture.width      = 4;
@@ -422,7 +360,7 @@ dvsku::uuid dv_app::create_checkerboard_texture() {
         0x00, 0x00, 0x00,  0x00, 0x00, 0x00,  0xAA, 0xAA, 0xAA,  0xAA, 0xAA, 0xAA,
     };
 
-    dvsku::uuid uuid = util_uuid::create("checkerboard");
+    dvsku::uuid uuid = dvsku::util_uuid::create("checkerboard");
 
     try {
         if (m_systems.texture.textures.contains(uuid))

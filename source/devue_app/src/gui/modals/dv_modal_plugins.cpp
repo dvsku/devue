@@ -9,7 +9,7 @@ using namespace devue;
 dv_modal_plugins::dv_modal_plugins(dv_systems* systems, dv_components* components)
     : dv_comp(systems, components) {}
 
-dvsku::gui_command_state dv_modal_plugins::render() {
+libgui::command::state dv_modal_plugins::render() {
     bool* visible = &m_systems->command.is_set_to_execute(dv_commands::flag_show_modal_plugins);
 
     ImVec2 pos = ImGui::GetMainViewport()->GetCenter();
@@ -155,5 +155,5 @@ dvsku::gui_command_state dv_modal_plugins::render() {
         ImGui::EndPopup();
     }
 
-    return dvsku::gui_command_state::repeat;
+    return libgui::command::state::repeat;
 }

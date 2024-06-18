@@ -9,7 +9,7 @@ namespace devue {
         dv_modal_plugins(dv_systems* systems, dv_components* components);
 
     public:
-        dvsku::gui_command_state render();
+        libgui::command::state render();
 
     private:
         dvsku::uuid m_current_plugin_id       = 0U;

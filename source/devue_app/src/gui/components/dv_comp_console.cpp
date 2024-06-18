@@ -13,7 +13,7 @@ dv_comp_console::~dv_comp_console() {
     dvsku::util_log::remove_source("gui_console");
 }
 
-dvsku::gui_command_state dv_comp_console::render() {
+libgui::command::state dv_comp_console::render() {
     bool* visible = &m_systems->command.is_set_to_execute(dv_commands::flag_show_console);
 
     if(ImGui::Begin("Console##Window", visible, ImGuiWindowFlags_HorizontalScrollbar)) {
@@ -22,5 +22,5 @@ dvsku::gui_command_state dv_comp_console::render() {
     }    
     ImGui::End();
 
-    return dvsku::gui_command_state::repeat;
+    return libgui::command::state::repeat;
 }

@@ -7,9 +7,9 @@
 #include <memory>
 
 namespace devue {
-    class dv_app : public dvsku::gui_window {
+    class dv_app : public libgui::window {
     public:
-    	dv_app(const dvsku::gui_window_settings& settings);
+    	dv_app(const libgui::window_settings& settings);
     	~dv_app();
 
     private:
@@ -28,8 +28,6 @@ namespace devue {
     	void on_mouse_button(int btn, int action, int modifier) override final;
     	void on_mouse_move(double dx, double dy)				override final;
         void on_drop(int count, const char* paths[])            override final;
-
-        void set_theme();
 
     private:
     	dv_systems    m_systems;
