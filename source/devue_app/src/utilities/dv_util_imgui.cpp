@@ -51,52 +51,6 @@ bool dv_util_imgui::selectable(const char* label, bool selected, ImGuiSelectable
     return result;
 }
 
-bool dv_util_imgui::begin_menu(const char* label, bool enabled) {
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 8.0f, 6.0f });
-    ImGui::PushStyleColor(ImGuiCol_PopupBg, 0xFF2E2E2E);
-
-    ImGui::SetNextWindowSize({ 225.0f, 0.0f });
-    bool result = ImGui::BeginMenu(label, enabled);
-
-    ImGui::PopStyleVar(1);
-    ImGui::PopStyleColor(1);
-
-    return result;
-}
-
-bool dv_util_imgui::begin_item_context_menu(const char* str_id, ImGuiPopupFlags popup_flags) {
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 8.0f, 6.0f });
-    ImGui::PushStyleColor(ImGuiCol_PopupBg, 0xFF2E2E2E);
-
-    ImGui::SetNextWindowSize({ 225.0f, 0.0f });
-
-    ImGuiContext& g     = *GImGui;
-    ImGuiWindow* window = g.CurrentWindow;
-
-    if (window->SkipItems)
-        return false;
-
-    ImGuiID id = str_id ? window->GetID(str_id) : g.LastItemData.ID;
-    IM_ASSERT(id != 0);
-
-    int mouse_button = (popup_flags & ImGuiPopupFlags_MouseButtonMask_);
-    if (ImGui::IsMouseReleased(mouse_button) && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup))
-        ImGui::OpenPopupEx(id, popup_flags);
-
-    ImGuiWindowFlags flags = 0;
-    flags |= ImGuiWindowFlags_AlwaysAutoResize;
-    flags |= ImGuiWindowFlags_NoMove;
-    flags |= ImGuiWindowFlags_NoTitleBar;
-    flags |= ImGuiWindowFlags_NoSavedSettings;
-
-    bool result = ImGui::BeginPopupEx(id, flags);
-
-    ImGui::PopStyleVar(1);
-    ImGui::PopStyleColor(1);
-
-    return result;
-}
-
 void dv_util_imgui::help_marker(const char* str) {
     ImGui::TextDisabled("(?)");
 

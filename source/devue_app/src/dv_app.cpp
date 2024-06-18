@@ -190,7 +190,7 @@ void dv_app::on_gui_update() {
                 if (ImGui::BeginMenuBar()) {
                     ImGui::PushID("FileMenu");
 
-                    if (dv_util_imgui::begin_menu("File")) {
+                    if (libgui::imgui::begin_menu("File")) {
                         if (ImGui::MenuItem("Import##MenuItem")) {
                             m_systems.command.set_to_execute(dv_commands::flag_show_modal_import);
                         }
@@ -201,24 +201,24 @@ void dv_app::on_gui_update() {
                             close();
                         }
 
-                        ImGui::EndMenu();
+                        libgui::imgui::end_menu();
                     }
 
                     ImGui::PopID();
 
                     ImGui::PushID("ViewMenu");
 
-                    if (dv_util_imgui::begin_menu("View")) {
+                    if (libgui::imgui::begin_menu("View")) {
                         bool* is_executable = &m_systems.command.is_set_to_execute(dv_commands::flag_show_console);
                         ImGui::MenuItem("Console##MenuItem", "", is_executable);
 
                         is_executable = &m_systems.command.is_set_to_execute(dv_commands::flag_show_texture);
                         ImGui::MenuItem("Texture##MenuItem", "", is_executable);
 
-                        ImGui::EndMenu();
+                        libgui::imgui::end_menu();
                     }
 
-                    if (dv_util_imgui::begin_menu("Plugins")) {
+                    if (libgui::imgui::begin_menu("Plugins")) {
                         ImGui::MenuItem("Reload##MenuItem", 0, false, false);
 
                         ImGui::Separator();
@@ -226,14 +226,14 @@ void dv_app::on_gui_update() {
                         bool* is_executable = &m_systems.command.is_set_to_execute(dv_commands::flag_show_modal_plugins);
                         ImGui::MenuItem("View plugins##MenuItem", "", is_executable);
 
-                        ImGui::EndMenu();
+                        libgui::imgui::end_menu();
                     }
 
-                    if (dv_util_imgui::begin_menu("Help")) {
+                    if (libgui::imgui::begin_menu("Help")) {
                         bool* is_executable = &m_systems.command.is_set_to_execute(dv_commands::flag_show_modal_about);
                         ImGui::MenuItem("About##MenuItem", "", is_executable);
 
-                        ImGui::EndMenu();
+                        libgui::imgui::end_menu();
                     }
 
                     ImGui::PopID();
