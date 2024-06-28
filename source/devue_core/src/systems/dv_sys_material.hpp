@@ -12,7 +12,7 @@ namespace devue::core {
 
     class dv_sys_material {
     public:
-        std::unordered_map<dvsku::uuid, std::pair<uint16_t, dv_scene_material>> materials;
+        std::unordered_map<libutil::uuid, std::pair<uint16_t, dv_scene_material>> materials;
 
     public:
         dv_sys_material() = delete;
@@ -25,7 +25,7 @@ namespace devue::core {
         dv_sys_material& operator=(dv_sys_material&&)      = delete;
 
     public:
-    	const dv_scene_material* get_material(dvsku::uuid uuid);
+    	const dv_scene_material* get_material(libutil::uuid uuid);
 
     	void prepare_model_materials(dv_model& model);
     	void release_materials(dv_scene_model& smodel);

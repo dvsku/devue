@@ -28,7 +28,7 @@ namespace devue {
         dv_modal_plugins modal_plugins;
         dv_modal_about   modal_about;
 
-        dvsku::uuid checkerboard_uuid = 0U;
+        libutil::uuid checkerboard_uuid = 0U;
 
     	dv_components() = delete;
     	dv_components(dv_systems* systems);

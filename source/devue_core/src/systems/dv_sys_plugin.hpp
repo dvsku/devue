@@ -11,7 +11,7 @@ namespace devue::core {
 
     class dv_sys_plugin {
     public:
-        std::unordered_map<dvsku::uuid, dv_plugin> plugins;
+        std::unordered_map<libutil::uuid, dv_plugin> plugins;
 
     public:
         dv_sys_plugin() = delete;
@@ -43,6 +43,6 @@ namespace devue::core {
 
         void release_plugin(dv_plugin& plugin);
 
-        void load_plugin(const std::filesystem::path& path, dvsku::uuid uuid);
+        void load_plugin(const std::filesystem::path& path, libutil::uuid uuid);
     };
 }

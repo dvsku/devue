@@ -10,7 +10,7 @@ namespace devue::core {
 
     class dv_sys_model {
     public:
-    	std::unordered_map<dvsku::uuid, dv_model> models;
+    	std::unordered_map<libutil::uuid, dv_model> models;
 
     public:
         dv_sys_model() = delete;

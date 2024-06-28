@@ -12,8 +12,8 @@ namespace devue {
         libgui::command::state render();
 
     private:
-        dvsku::uuid m_current_plugin_id       = 0U;
-        std::string m_supported_model_types   = "";
-        std::string m_supported_texture_types = "";
+        libutil::uuid m_current_plugin_id       = 0U;
+        std::string   m_supported_model_types   = "";
+        std::string   m_supported_texture_types = "";
     };
 }

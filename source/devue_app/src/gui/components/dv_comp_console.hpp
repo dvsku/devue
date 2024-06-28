@@ -13,8 +13,5 @@ namespace devue {
     
     public:
         libgui::command::state render();
-
-    private:
-        std::stringstream m_text;
     };
 }

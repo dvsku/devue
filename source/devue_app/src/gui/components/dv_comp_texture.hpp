@@ -13,10 +13,10 @@ namespace devue {
     public:
         libgui::command::state render();
 
-        void set_texture(dvsku::uuid uuid, const std::string& name);
+        void set_texture(libutil::uuid uuid, const std::string& name);
 
     private:
-        dvsku::uuid m_texture_uuid = 0U;
-        std::string m_texture_name = "";
+        libutil::uuid m_texture_uuid = 0U;
+        std::string   m_texture_name = "";
     };
 }

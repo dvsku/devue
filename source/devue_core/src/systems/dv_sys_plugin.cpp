@@ -101,7 +101,7 @@ bool dv_sys_plugin::is_supported_model_type(const std::string& path) {
     std::string ext = filepath.extension().string();
 
     auto cmp_fn = [&](const dv_file_type& type) {
-        return dvsku::util_string::contains(type.extensions, ext);
+        return libutil::string::contains(type.extensions, ext);
     };
 
     for (auto& [plugin_uuid, plugin] : plugins) {
@@ -135,7 +135,7 @@ void dv_sys_plugin::prepare_plugins() {
         if (!filepath.filename().string().starts_with("dv_plg_"))
             continue;
 
-        dvsku::uuid uuid = dvsku::util_uuid::create(filepath.string());
+        libutil::uuid uuid = libutil::create_uuid(filepath.string());
 
         if (plugins.contains(uuid))
             continue;
@@ -174,7 +174,7 @@ void dv_sys_plugin::release_plugin(dv_plugin& plugin) {
     DV_LOG_INFO("", "Released plugin `{}`", plugin.filename);
 }
 
-void dv_sys_plugin::load_plugin(const std::filesystem::path& path, dvsku::uuid uuid) {
+void dv_sys_plugin::load_plugin(const std::filesystem::path& path, libutil::uuid uuid) {
     auto phandle = create_handle(path.string().c_str());
 
     dv_plugin plugin;

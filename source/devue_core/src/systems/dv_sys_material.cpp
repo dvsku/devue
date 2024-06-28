@@ -7,7 +7,7 @@ using namespace devue::core;
 dv_sys_material::dv_sys_material(dv_systems_bundle* systems) 
     : m_systems(systems) {}
 
-const dv_scene_material* dv_sys_material::get_material(dvsku::uuid uuid) {
+const dv_scene_material* dv_sys_material::get_material(libutil::uuid uuid) {
     if (!materials.contains(uuid)) return nullptr;
     return &materials[uuid].second;
 }

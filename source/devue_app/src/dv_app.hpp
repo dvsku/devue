@@ -39,6 +39,6 @@ namespace devue {
         bool m_title_bar_hit_test = false;
 
     private:
-        dvsku::uuid create_checkerboard_texture();
+        libutil::uuid create_checkerboard_texture();
     };
 }

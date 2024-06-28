@@ -40,7 +40,7 @@ namespace devue::core {
 
     private:
     	dv_systems_bundle* m_systems = nullptr;
-    	std::unordered_map<dvsku::uuid, dv_scene> m_scenes;
+    	std::unordered_map<libutil::uuid, dv_scene> m_scenes;
 
     private:
         void rescale_model(dv_model& model, dv_scene_model& smodel);

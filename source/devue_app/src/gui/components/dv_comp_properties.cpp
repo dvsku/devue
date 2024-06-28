@@ -22,7 +22,7 @@ void dv_comp_properties::render() {
 }
 
 void dv_comp_properties::render_model() {
-    dvsku::uuid uuid = m_systems->properties.get_inspected().inspected_id;
+    libutil::uuid uuid = m_systems->properties.get_inspected().inspected_id;
 
     if (!m_systems->model.models.contains(uuid)) return;
     core::dv_model& model = m_systems->model.models[uuid];
@@ -41,7 +41,7 @@ void dv_comp_properties::render_model() {
 }
 
 void dv_comp_properties::render_scene_model() {
-    dvsku::uuid uuid = m_systems->properties.get_inspected().inspected_id;
+    libutil::uuid uuid = m_systems->properties.get_inspected().inspected_id;
     
     if (!m_systems->scene.current_scene)                        return;
     if (!m_systems->scene.current_scene->models.contains(uuid)) return;

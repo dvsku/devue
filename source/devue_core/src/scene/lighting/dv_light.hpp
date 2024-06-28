@@ -6,7 +6,7 @@
 
 namespace devue::core {
     struct dv_light {
-    	dvsku::uuid uuid = 0U;
+        libutil::uuid uuid = 0U;
 
     	glm::vec3 color = { 1.0f, 1.0f, 1.0f };
     	float intensity = 1.0f;
@@ -14,7 +14,7 @@ namespace devue::core {
     	bool is_enabled = true;
 
     	dv_light() {
-    		uuid = dvsku::util_uuid::create();
+    		uuid = libutil::create_uuid();
     	}
 
     	virtual glm::vec3 get_light_color() {

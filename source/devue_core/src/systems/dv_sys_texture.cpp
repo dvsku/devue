@@ -28,7 +28,7 @@ void dv_sys_texture::release() {
     textures.clear();
 }
 
-const dv_scene_texture* dv_sys_texture::get_texture(dvsku::uuid uuid) {
+const dv_scene_texture* dv_sys_texture::get_texture(libutil::uuid uuid) {
     if (!textures.contains(uuid)) return nullptr;
     return &textures[uuid].second;
 }
@@ -38,7 +38,7 @@ void dv_sys_texture::prepare_material_textures(dv_model& model,
 {
     if (!material.diffuse_texture.empty()) {
         std::filesystem::path texture = std::filesystem::path(model.texture_dir).append(material.diffuse_texture);
-        dvsku::uuid uuid = dvsku::util_uuid::create(texture.string());
+        libutil::uuid uuid = libutil::create_uuid(texture.string());
     
         try {
             if (textures.contains(uuid)) {
@@ -123,7 +123,7 @@ dv_scene_texture dv_sys_texture::create_scene_texture(std::filesystem::path& fil
     std::string ext = filepath.extension().string();
 
     auto cmp_fn = [&](const dv_file_type& type) {
-        return dvsku::util_string::contains(type.extensions, ext);
+        return libutil::string::contains(type.extensions, ext);
     };
 
     // Flag to check if we tried importing but all importers failed

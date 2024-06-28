@@ -37,7 +37,7 @@ size_t dv_sys_scene::count() const {
 
 dv_scene* dv_sys_scene::create_scene() {
     try {
-        dvsku::uuid uuid = dvsku::util_uuid::create();
+        libutil::uuid uuid = libutil::create_uuid();
 
     	m_scenes[uuid] = dv_scene();
     	current_scene = &m_scenes[uuid];
@@ -85,7 +85,7 @@ void dv_sys_scene::add_to_scene(dv_model& model) {
     if (!current_scene) return;
 
     try {
-    	dvsku::uuid uuid			= dvsku::util_uuid::create();
+        libutil::uuid uuid			= libutil::create_uuid();
     	current_scene->models[uuid] = dv_scene_model();
 
     	dv_scene_model& smodel = current_scene->models[uuid];

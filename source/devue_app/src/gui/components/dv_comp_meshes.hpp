@@ -14,7 +14,7 @@ namespace devue {
         void render();
 
     private:
-        dvsku::uuid m_current_mesh_id = 0U;
+        libutil::uuid m_current_mesh_id = 0U;
 
     private:
         void render_model();

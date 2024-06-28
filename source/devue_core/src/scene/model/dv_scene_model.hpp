@@ -14,8 +14,8 @@ namespace devue::core {
 
     	std::string name = "";
 
-    	dvsku::uuid uuid	   = 0U;
-    	dvsku::uuid model_uuid = 0U;
+        libutil::uuid uuid	   = 0U;
+        libutil::uuid model_uuid = 0U;
 
         uint32_t vao = 0U;
         uint32_t vbo = 0U;

@@ -10,7 +10,7 @@ namespace devue::core {
 
     class dv_sys_shader {
     public:
-        std::unordered_map<dvsku::uuid, dv_shader> shaders;
+        std::unordered_map<libutil::uuid, dv_shader> shaders;
 
     public:
         dv_sys_shader()                     = delete;

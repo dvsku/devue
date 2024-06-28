@@ -11,12 +11,12 @@
 namespace devue::core {
     class dv_scene {
     public:
-    	dvsku::uuid uuid = 0U;
+        libutil::uuid uuid = 0U;
 
     	dv_camera camera;
     	dv_lighting lighting;
     	dv_scene_grid grid;
-    	std::unordered_map<dvsku::uuid, dv_scene_model> models;
+    	std::unordered_map<libutil::uuid, dv_scene_model> models;
 
     	dv_scene()					= default;
     	dv_scene(const dv_scene&)	= delete;

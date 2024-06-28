@@ -14,7 +14,7 @@ namespace devue::core {
 
     class dv_sys_texture {
     public:
-        std::unordered_map<dvsku::uuid, std::pair<uint16_t, dv_scene_texture>> textures;
+        std::unordered_map<libutil::uuid, std::pair<uint16_t, dv_scene_texture>> textures;
 
     public:
         dv_sys_texture() = delete;
@@ -30,7 +30,7 @@ namespace devue::core {
         bool prepare();
         void release();
 
-        const dv_scene_texture* get_texture(dvsku::uuid uuid);
+        const dv_scene_texture* get_texture(libutil::uuid uuid);
 
         void prepare_material_textures(dv_model& model, dv_material& material, dv_scene_material& smaterial);
         void release_material_textures(dv_scene_material& smaterial);

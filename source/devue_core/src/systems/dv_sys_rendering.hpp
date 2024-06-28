@@ -38,10 +38,10 @@ namespace devue::core {
     	
     private:
     	dv_systems_bundle* m_systems;
-        dvsku::uuid        m_current_shader_id = 0U;
+        libutil::uuid      m_current_shader_id = 0U;
 
     private:
         // Set shader if it's not set already
-        dv_shader* set_shader(dvsku::uuid id);
+        dv_shader* set_shader(libutil::uuid id);
     };
 }

@@ -14,15 +14,15 @@
 
 namespace devue::core {
     struct dv_model {
-    	dvsku::uuid uuid = 0U;
+        libutil::uuid uuid = 0U;
 
     	std::string name				  = "";
     	std::filesystem::path texture_dir = "";
     	
-    	dv_skeleton                                  skeleton;
-        std::vector<dv_vertex>	                     vertices;
-    	std::unordered_map<dvsku::uuid, dv_mesh>     meshes;
-    	std::unordered_map<dvsku::uuid, dv_material> materials;
+    	dv_skeleton                                    skeleton;
+        std::vector<dv_vertex>	                       vertices;
+    	std::unordered_map<libutil::uuid, dv_mesh>     meshes;
+    	std::unordered_map<libutil::uuid, dv_material> materials;
 
         dv_bounding_box bounding_box;
 

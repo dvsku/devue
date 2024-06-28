@@ -6,19 +6,19 @@ using namespace devue;
 dv_comp_console::dv_comp_console(dv_systems* systems, dv_components* components) 
     : dv_comp(systems, components) 
 {
-    dvsku::util_log::create_source("gui_console", &m_text);
+    libutil::log::create_stream("gui_console");
 }
 
 dv_comp_console::~dv_comp_console() {
-    dvsku::util_log::remove_source("gui_console");
+    libutil::log::remove_stream("gui_console");
 }
 
 libgui::command::state dv_comp_console::render() {
     bool* visible = &m_systems->command.is_set_to_execute(dv_commands::flag_show_console);
 
     if(ImGui::Begin("Console##Window", visible, ImGuiWindowFlags_HorizontalScrollbar)) {
-        auto view = m_text.view();
-        ImGui::TextUnformatted(view.data(), view.data() + view.length());
+        auto content = libutil::log::get_stream_content("gui_console");
+        ImGui::TextUnformatted(content.c_str());
     }    
     ImGui::End();
 

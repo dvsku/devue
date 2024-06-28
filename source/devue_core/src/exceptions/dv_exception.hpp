@@ -5,7 +5,7 @@
 
 namespace devue::core {
     #define DV_THROW_EXCEPTION(fmt, ...)    \
-        throw devue::core::dv_exception(dvsku::util_string::format(fmt, __VA_ARGS__))
+        throw devue::core::dv_exception(libutil::string::format(fmt, __VA_ARGS__))
 
     class dv_exception : public std::runtime_error {
     public:

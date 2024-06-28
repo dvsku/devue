@@ -60,7 +60,7 @@ bool dv_app::prepare() {
         return false;
     }
     
-    dvsku::uuid checkerboard_uuid = create_checkerboard_texture();
+    libutil::uuid checkerboard_uuid = create_checkerboard_texture();
     if (!checkerboard_uuid) {
         DV_LOG_ERRO("", "Failed to create checkerboard texture.");
         return false;
@@ -343,7 +343,7 @@ void dv_app::on_drop(int count, const char* paths[]) {
     }
 }
 
-dvsku::uuid dv_app::create_checkerboard_texture() {
+libutil::uuid dv_app::create_checkerboard_texture() {
     plugins::devue_plugin_texture ptexture;
     ptexture.width      = 4;
     ptexture.height     = 4;
@@ -356,7 +356,7 @@ dvsku::uuid dv_app::create_checkerboard_texture() {
         0x00, 0x00, 0x00,  0x00, 0x00, 0x00,  0xAA, 0xAA, 0xAA,  0xAA, 0xAA, 0xAA,
     };
 
-    dvsku::uuid uuid = dvsku::util_uuid::create("checkerboard");
+    libutil::uuid uuid = libutil::create_uuid("checkerboard");
 
     try {
         if (m_systems.texture.textures.contains(uuid))

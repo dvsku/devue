@@ -8,7 +8,7 @@
 namespace devue::core {
     class dv_camera {
     public:
-    	dvsku::uuid uuid = 0U;
+    	libutil::uuid uuid = 0U;
 
     	float speed_translate	= 0.005f;
     	float speed_rotate		= 0.1f;

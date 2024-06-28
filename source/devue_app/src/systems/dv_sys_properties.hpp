@@ -18,7 +18,7 @@ namespace devue {
         };
 
         inspectable::type inspected_type = inspectable::type::none;
-        dvsku::uuid       inspected_id   = 0U;
+        libutil::uuid     inspected_id   = 0U;
     };
 
     class dv_sys_properties {
@@ -58,6 +58,6 @@ namespace devue {
         std::unordered_map<std::type_index, inspectable::type> m_supported_types;
 
     private:
-        void inspect(inspectable::type type = inspectable::type::none, dvsku::uuid id = 0U);
+        void inspect(inspectable::type type = inspectable::type::none, libutil::uuid id = 0U);
     };
 }

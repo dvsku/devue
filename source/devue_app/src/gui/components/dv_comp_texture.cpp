@@ -58,7 +58,7 @@ libgui::command::state dv_comp_texture::render() {
     return libgui::command::state::repeat;
 }
 
-void dv_comp_texture::set_texture(dvsku::uuid uuid, const std::string& name) {
+void dv_comp_texture::set_texture(libutil::uuid uuid, const std::string& name) {
     m_texture_uuid = uuid;
     m_texture_name = name;
 }

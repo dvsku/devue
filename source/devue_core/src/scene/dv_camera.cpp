@@ -3,10 +3,9 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 using namespace devue::core;
-using namespace dvsku;
 
 dv_camera::dv_camera() {
-    uuid = util_uuid::create();
+    uuid = libutil::create_uuid();
 
     // Call transformations to apply initial values
     translate(0.0f, 0.0f);

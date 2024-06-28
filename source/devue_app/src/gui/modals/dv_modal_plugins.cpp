@@ -47,7 +47,7 @@ libgui::command::state dv_modal_plugins::render() {
                         for (size_t i = 0; i < plugin.supported_model_types.size(); i++) {
                             ss << plugin.supported_model_types[i].name << " ";
                             ss << "(";
-                            ss << dvsku::util_string::replace(plugin.supported_model_types[i].extensions, ";", " ");
+                            ss << libutil::string::replace(plugin.supported_model_types[i].extensions, ";", " ");
                             ss << ")";
 
                             if (i != plugin.supported_model_types.size() - 1)
@@ -60,7 +60,7 @@ libgui::command::state dv_modal_plugins::render() {
                         for (size_t i = 0; i < plugin.supported_texture_types.size(); i++) {
                             ss << plugin.supported_texture_types[i].name << " ";
                             ss << "(";
-                            ss << dvsku::util_string::replace(plugin.supported_texture_types[i].extensions, ";", " ");
+                            ss << libutil::string::replace(plugin.supported_texture_types[i].extensions, ";", " ");
                             ss << ")";
 
                             if (i != plugin.supported_texture_types.size() - 1)

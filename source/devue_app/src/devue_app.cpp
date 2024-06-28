@@ -4,10 +4,11 @@ using namespace devue;
 using namespace devue::core;
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdShow) {
-    dvsku::util_log::settings log_settings;
-    log_settings.level = dvsku::util_log::level::debug;
+    libutil::log::settings log_settings;
+    log_settings.log_to_console = false;
+    log_settings.level          = libutil::log::level::debug;
 
-    dvsku::util_log::init(log_settings);
+    libutil::log::init(log_settings);
 
     libgui::window_settings settings;
     settings.width                 = 1360U;
